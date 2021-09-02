@@ -19,6 +19,7 @@ tgetnum, tgetstr, tgoto, tputs
 
 ### To do List
 
+Your shell should:
 1. Not interpret unclosed quotes or unspecified special characters like \ or ;.
 2. Not use more than one global variable, think about it and be ready to explain why you do it.
 3. Show a prompt when waiting for a new command.

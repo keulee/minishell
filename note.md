@@ -55,7 +55,26 @@ Your shelle should
  * “<<” read input from the current source until a line containing only the delimiter is seen.
     it doesn’t need to update history!
  * “>>” should redirect output with append mode
-> 리다이렉션
+> 리다이렉션 (pipex)
 > < 은 인풋을, > 은 아웃풋을 리다이렉션 해야함.
 > "<<"는 한정자(limiter)를 만나기 전까지 현재 소스를 기반으로 인풋을 읽어야 하고, history에는 추가하지 않음.
 > ">>"는 추가 모드(append mode)로 아웃풋 리다이렉션 해야함.
+
+10. Pipes | The output of each command in the pipeline is connected via a pipe to the input of the next command.
+> 파이프라인에 있는 각 명령어에 대한 출력은 파이프를 통해 다음 명령어의 입력에 연결된다. (pipex)
+
+11. Environment variables ($ followed by characters) should expand to their values.
+> 환경 변수($뒤에 붙는 문자들)는 해당 하는 값들을 반환할 수 있어야 한다.
+
+12. $? should expand to the exit status of the most recently executed foreground pipeline.
+> $? 는 가장 최근 실행된 포어그라운드 파이프라인의 종료 상태를 반환해야 한다.
+
+13. ctrl-C ctrl-D ctrl-\ should work like in bash.
+> Ctrl -C, ctrl -D 그리고 ctrl -\ 는 bash와 같은 결과를 가져야 한다.
+> ctrl-C: 새로운 프롬프터 라인 출력
+> ctrl-D: 쉘 종료
+> ctrl-\: 아무 작동 안함.
+
+### readline은 leaks가 나올 수 있음. 이 부분은 매니징하지 않아도 괜찮지만 나머지 코드에서는 leaks가 나와서는 안됨.
+### 이 외 요구되지 않은 부분에 대해서는 할 필요없음.
+### 헷갈리는 부분이 있다면 bash 사이트를 기준으로 살펴보고 구현하면 됨.

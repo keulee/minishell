@@ -36,6 +36,7 @@ Your shelle should
  * exit with no options
 > 아래 명령어들을 bash에서 실행 가능하도록 해야 함.
 > echo (-n 옵션도 함께)
+>> 새로 개행하지 않고 출력
 > cd (절대/상대 경로로)
 > pwd (다른 옵션 없이)
 > export (다른 옵션 없이)
@@ -64,7 +65,8 @@ Your shelle should
 > 파이프라인에 있는 각 명령어에 대한 출력은 파이프를 통해 다음 명령어의 입력에 연결된다. (pipex)
 
 11. Environment variables ($ followed by characters) should expand to their values.
-> 환경 변수($뒤에 붙는 문자들)는 해당 하는 값들을 반환할 수 있어야 한다.
+> 환경 변수($뒤에 붙는 문자들)는 해당 하는 값들을 반환할 수 있어야 한다. (실행 가능 하도록 만들어야 함)
+> 만약 실행이 불가능 할 경우 오류 메시지를 리턴하고 새 프롬프터ㄹ 라인을 표시해야 한다.
 
 12. $? should expand to the exit status of the most recently executed foreground pipeline.
 > $? 는 가장 최근 실행된 포어그라운드 파이프라인의 종료 상태를 반환해야 한다.

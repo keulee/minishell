@@ -17,7 +17,6 @@ rl_clear_history
 rl_on_new_line
 rl_replace_line
 rl_redisplay
-
 wait3
 wait4
 signal

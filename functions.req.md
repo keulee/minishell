@@ -13,10 +13,18 @@ char *readline(const char *str);
 int	add_history(const char *);
 - add_history에 저장된 문자열은 up & down 방향키를 이용해 확인할 수 있다.
 
-rl_clear_history
-rl_on_new_line
-rl_replace_line
-rl_redisplay
+## rl_clear_history
+void rl_clear_history (void)
+- Clear the history list by deleting all of the entries, in the same manner as the History library's clear_history() function. This differs from clear_history because it frees private data Readline saves in the history list.
+
+## rl_on_new_line
+int rl_on_new_line (void)
+- Tell the update functions that we have moved onto a new (empty) line, usually after outputting a newline.
+
+## rl_replace_line
+void rl_replace_line (const char *text, int clear_undo)
+- Replace the contents of rl_line_buffer with text. The point and mark are preserved, if possible. If clear_undo is non-zero, the undo list associated with the current line is cleared.rl_redisplay
+
 wait3
 wait4
 signal

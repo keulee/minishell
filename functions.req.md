@@ -2,9 +2,13 @@
 
 ## readline
 
+#include <stdio.h>
 #include <readline/readline.h>
+#include <readline/history.h>
 char *readline(const char *str);
-- 입력받은 문자열을 저장하고 그 메모리 주소를 반환한다.
+- 입력받은 문자열을 저장하고 그 문자열을 반환한다. 빈 줄의 경우 빈 스트링을 반환.
+- 라인을 읽는 중 EOF를 만나면서 라인이 비어있다면 NULL을 리턴, 반면 EOF를 만나면서 라인에 내용이 있다면 개행(newline)으로 처리된다.
+- 리턴되는 line의 경우 개행 문자가 함께하지 않음. (\n이 없다)
 - 사용시 입력 받은 문자열은 힙 메모리를 사용하므로 사용이 끝났다면 메모리 할당(free)을 해줘야함.
 - 컴파일 시 옵션에 readline 폴더를 반드시 추가해줘야 한다. (-lreadline)
 

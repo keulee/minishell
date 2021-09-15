@@ -52,17 +52,40 @@ void rl_redisplay(void);
 ## wait3
 #include <sys/wait.h>
 pid_t wait3(int *status, int options, struct rusage *rusage);
-- 자식 프로레스가 종료되는 것을 기다리며, 종료된 프로세스의 상태와 자원 사용량을 알려준다.
-- waitpid, waitid 함수의 사용과 동시에 더이상 사용하지 않게 된 함수. (기능 자체는 waitpid와 동일)
+- 자식 프로세스가 종료되는 것을 기다리며, 종료된 프로세스의 상태와 자원 사용량을 알려준다.
+- waitpid, waitid 함수의 사용과 동시에 (표준화를 이유로) 더이상 사용하지 않게 된 함수. (기능 자체는 waitpid와 동일)
 - wait3(status, options, rusage) == waitpid(-1, status, options)
 - status : 자식 프로세스의 종료 상태를 나타내는 정보를 담음
 - options : 프로세스의 종료 상태 체크를 위한 옵션
 - rusage(Resource Usage) : 자식 프로세스의 리소스 사용량에 대한 정보가 담김
 - return
-> 성공시 process id, 실패 시 -1, WNOHANG 옵션으로 실행, 자식 프로레스가 아직 종료되지 않았다면 0.
+> 성공시 process id, 실패 시(함수 수행에 문제 혹은 자식 프로세스가 시그널에 의해서 종료된 경우) -1, WNOHANG 옵션으로 실행, 자식 프로세스가 아직 종료되지 않았다면 0.
+
+## wait4
+#include <sys/wait.h>
+pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage);
+- waitpid, waitid 함수의 사용과 동시에 (표준화를 이유로) 더이상 사용하지 않게 된 함수. (기능 자체는 waitpid와 동일)
+- wait3와의 차이 : 어떤 특정 자식 프로세스에 작업을 할 수 있음. 변수 pid에 해당하는 프로세스만 기다림. (자식 프로세스를 특정할 수 있다는 점 외에 wait3함수와 동일 작동)
+- wait4(pid, status, options, rusage) == waitpid(pid, status, options)
+- status 변수에 사용할 수 있는 매크로
+|매크로|내용|
+|------|---|
+|WIFEXITED(status)|자식 프로세스가 정상적으로 종료된 경우 true|
+|WEXITESTATUS(status)|exit()의 인자에서 하위 8비트 값을 리턴|
+|WIFSIGNALED(status)|자식 프로세스가 시그널을 받아 비정상적으로 종료된 경우 true|
+|WIFTERMSIG(status)|시그널 번호를 리턴|
+|WIFCOREDUMP(status)|코어 파일이 생성된 경우 true|
+|WIFSTOPPED(status)|현재 중지 상태이면 true|
+|WSTOPSIG(status)|실행을 중단시킨 시그널 번호를 리턴|
+|WIFCONTINUED(status)|작업 제어 중지 이후 실행이 재개되었으면 true|
+- options 변수에 사용할 수 있는 매크로
+|매크로|내용|
+|------|---|
+|WCONTINUED|중지되었다가 실행을 재개한 이후 상태가 아직 보고되지 않은 자식도 리턴|
+|WNOHANG|종료 상태를 즉시 회수 할 수 없는 상황이라고 하여도 waitpid() 호출이 차단되지 않고 0 리턴|
+|WUNTRACED|중지되었으나 그 상태가 아직 보고되지 않은 자식도 리턴|
 
 
-wait4
 signal
 kill
 getcwd

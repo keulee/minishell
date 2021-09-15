@@ -68,16 +68,16 @@ pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage);
 - wait3와의 차이 : 어떤 특정 자식 프로세스에 작업을 할 수 있음. 변수 pid에 해당하는 프로세스만 기다림. (자식 프로세스를 특정할 수 있다는 점 외에 wait3함수와 동일 작동)
 - wait4(pid, status, options, rusage) == waitpid(pid, status, options)
 - status 변수에 사용할 수 있는 매크로
-|매크로|내용|
-|------|---|
-|WIFEXITED(status)|자식 프로세스가 정상적으로 종료된 경우 true|
-|WEXITESTATUS(status)|exit()의 인자에서 하위 8비트 값을 리턴|
-|WIFSIGNALED(status)|자식 프로세스가 시그널을 받아 비정상적으로 종료된 경우 true|
-|WIFTERMSIG(status)|시그널 번호를 리턴|
-|WIFCOREDUMP(status)|코어 파일이 생성된 경우 true|
-|WIFSTOPPED(status)|현재 중지 상태이면 true|
-|WSTOPSIG(status)|실행을 중단시킨 시그널 번호를 리턴|
-|WIFCONTINUED(status)|작업 제어 중지 이후 실행이 재개되었으면 true|
+| 매크로 | 내용 |
+| ------ | --- |
+| WIFEXITED(status) | 자식 프로세스가 정상적으로 종료된 경우 true |
+| WEXITESTATUS(status) | exit()의 인자에서 하위 8비트 값을 리턴 |
+| WIFSIGNALED(status) | 자식 프로세스가 시그널을 받아 비정상적으로 종료된 경우 true |
+| WIFTERMSIG(status) | 시그널 번호를 리턴 |
+| WIFCOREDUMP(status) | 코어 파일이 생성된 경우 true |
+| WIFSTOPPED(status) | 현재 중지 상태이면 true |
+| WSTOPSIG(status) | 실행을 중단시킨 시그널 번호를 리턴 |
+| WIFCONTINUED(status) | 작업 제어 중지 이후 실행이 재개되었으면 true |
 - options 변수에 사용할 수 있는 매크로
 |매크로|내용|
 |------|---|

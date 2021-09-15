@@ -1,7 +1,6 @@
 # functions 공부
 
 ## readline
-
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -17,6 +16,8 @@ char *readline(const char *str);
 (UNIX) int add_history(const char *line); 
 (GNU LIB)void add_history(const char *line);
 - add_history의 인자인 line으로 기재한 문자열은 위와 아래 방향키를 통해서 readline 함수 실행 도중에 다시 불러올 수 있다.
+- line을 history list의 맨 끝에 위치시킨다. 관련 데이터 필드는 NULL로 세팅.
+- history 항목이 최대 개수를 넘을 경우, 오래된 항목들은 삭제됨.
 - return
 > Unix 계열 : readline 디렉토리를 이용하는 경우에는 int 타입 반환, 함수 수행에 문제가 없다면 0을, 그렇지 않다면 -1을 반환
 > GNU 라이브러리 : void 타입의 반환
@@ -48,7 +49,19 @@ void rl_redisplay(void);
 - 사용자가 입력하여 유지 중이 rl_line_buffer 값을 프롬프트와 함께 출력함. 이 때, 프롬프터 값은 readline 함수에 str으로 준 문자열로 이용.
 - 주로 시그널을 받았을 때의 상황에서 rl_redisplay를 이용.
 
-wait3
+## wait3
+#include <sys/wait.h>
+pid_t wait3(int *status, int options, struct rusage *rusage);
+- 자식 프로레스가 종료되는 것을 기다리며, 종료된 프로세스의 상태와 자원 사용량을 알려준다.
+- waitpid, waitid 함수의 사용과 동시에 더이상 사용하지 않게 된 함수. (기능 자체는 waitpid와 동일)
+- wait3(status, options, rusage) == waitpid(-1, status, options)
+- status : 자식 프로세스의 종료 상태를 나타내는 정보를 담음
+- options : 프로세스의 종료 상태 체크를 위한 옵션
+- rusage(Resource Usage) : 자식 프로세스의 리소스 사용량에 대한 정보가 담김
+- return
+> 성공시 process id, 실패 시 -1, WNOHANG 옵션으로 실행, 자식 프로레스가 아직 종료되지 않았다면 0.
+
+
 wait4
 signal
 kill

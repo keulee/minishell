@@ -6,6 +6,12 @@
 #include <signal.h>
 #include <unistd.h>
 
+void handler(int signum)
+{
+    (void)signum;
+    write(STDOUT_FILENO, "minishell : \n", 14);
+}
+
 int	main(void)
 {
 /* readline함수의 리턴값을 저장하기위해 임의로 포인터를 하나 선언한다 */
@@ -13,6 +19,7 @@ int	main(void)
     int i;
 
     str = NULL;
+    signal(SIGINT, handler);
 /* 무한루프를 돌리면서 readline();함수를 반복적으로 호출할 것이다 */
     while(1)
     {

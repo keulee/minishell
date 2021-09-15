@@ -87,30 +87,193 @@ pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage);
 |WNOHANG|종료 상태를 즉시 회수 할 수 없는 상황이라고 하여도 waitpid() 호출이 차단되지 않고 0 리턴|
 |WUNTRACED|중지되었으나 그 상태가 아직 보고되지 않은 자식도 리턴|
 
+## signal
+#include <signal.h>  
+typedef void (*sighandler_t)(int);  
+sighandler_t signal(int signum, sighandler_t handler);  
+- signum : 정의하고자 하는 시그널 번호
+- handler : sighandler_t 타입의 정의하고자 하는 함수
+- sighandler_t ? sighandler_t는 void를 반환하고 signum을 받기 위한 int 타입의 인자를 받는 함수를 참조하는 함수 포인터
+- return 
+> 특정 handler 반환. 그러나 signal함수에 사용된 handler 함수가 아닌, 시그널 처리 동작이 handler로 정의되기 이전에 정의된 핸들러를 의미
+- 시그널 처리하는 방법  
 
-signal
-kill
-getcwd
-chdir
-stat
-lstat
-fstat
-unlink
-opendir
-readdir
-closedir
-isatty
-ttyname
-ttyslot
-ioctl
-getenv
-tcsetattr
-tcgetattr
-tgetent
-tgetflag
-tgetnum
-tgetstr
-tgoto
-tputs
+| 유형 | 의미 |
+| --- | ---|
+| SIG_DFL | 기존 방법을 따른다. |
+| SIG_IGN | 시그널을 무시한다. |
+| 함수 이름 | 시그널이 발생하면 지정된 함수 호출 |
 
-printf, malloc, free, write, open, read, close, fork, wait, waitpid, exit, execve, dup, dup2, pipe, strerror, perror
+> 문제 발생 시, SIG_ERR를 반환함.
+> 주의 사항
+>> 함수 내에서는 반드시 Async-Signal-Safe 함수들만 이용해야 함. Async-Signal-Safe한 함수들은 대체적으로 Reentrant가 가능한 함수인데, Reentrant가 불가능한 대표적인 함수로는 printf가 있다. printf는 (Async-Signal-Safe 아님, printf의 호출로 출력 중인 상태에서 시그널을 받아서 시그널 처리 동작에서도 printf를 호출시, 원하는 출력 결과가 나오지 않을 수도 있음.) printf의 출력 자체는 Buffer Management를 통해 출력을 하게 되므로 내부에 별도로 둔 Buffer를 토대로 메모리에 쓰는 작업을 진행하게 되는데, 제시된 상황에서는 메모리에 쓰는 작업에 이용되는 기존의 Buffer의 내용이 손실될 수 있기 때문이다. 따라서 핸들러 내에서 처리되는 동작들이 문제가 없다는 것을 보장하기 위해선 반드시 Async-Signal-Safe 함수들만 이용되어야 한다. [signal 함수 내에서 이용할 수 있는 함수](https://www.man7.org/linux/man-pages/man7/signal-safety.7.html)
+>> SIGFPE, SIGILL, SIGSEGV 등의 시그널에 대해서는 signal 함수를 이용하여 처리 동작을 정의해서는 안 된다. 이와 같은 시그널들의 무시 혹은 사용자 정의는 오류 상황에서도 프로그램이 종료되지 않아 문제 상황 속에서 무한히 지속되는 프로그램이 될 수 있다. 
+
+## ill
+#include <signal.h>  
+int kill(pid_t pid, int sig);  
+- 프로세스에 시그널을 전송하는 함수.
+- 프로세스에 SIGKILL을 보내면 쉘 명령의 kill과 같은 역할을 함.
+- pid : 프로세스 id
+- sig : 시그널 번호
+| pid 값 | 의미 |
+| --- | --- |
+| pid > 0 | pid와 같은 프로세스 id를 가진 프로세스에 sig를 전송 |
+| pid == 0 | 그룹 id가 프로세스 그룹 id랑 동일한 권한을 가진 프로세스에 sig를 전송 |
+| pid == -1 | 만약 사용자가 super-user라면, 권한을 가진 모든 프로세스에 sig를 전송, 시스템 프로세스와 sig를 보낸 프로세스는 제외. 사용자가 super-user가 아니라면, 같은 uid를 가진 user의 모든 프로세스에 sig가 전송됨. |
+| pid < 0 (not -1)| 프로세스 그룹 id가 프로세스 번호의 절대값과 동일한 모든 프로세스에 sig 전송 |
+- return 
+> 성공 시 0, 실패 시 -1 (errno)
+
+## getcwd
+#include <unistd.h>  
+getcwd(char *buf, size_t size);  
+- getcwd를 호출한 프로그램이 실행되고 있는 절대 경로를 문자열로 얻게 해주는 함수.
+- 현재 작업중인 디렉토리의 절대 경로를 buf에 복사하고 buf의 포인터를 리턴.
+- buf : 작업 디렉토리 문자열을 담을 버퍼
+- size : 버퍼의 크기 (bytes)
+- buf == NULL 이라면 경로 이름 저장을 위한 공간이 메모리 할당 되고, 이후 free필요.
+- return
+> 성공시 현재 작업 디렉토리(경로 포인터), 실패시 NULL (errno)
+
+## chdir
+#include <unistd.h>  
+int chdir(const char *path);  
+- 현재 구동되고 있는 프로그램의 경로를 path로 변경. (path의 시작이 "면 안됨) (path 이름이 슬래시(\')로 시작하지 않음)
+- 디렉토리의 실행 권한이 있어야 한다.
+- path : 경로 (the pathname of a directory)
+- return 
+> 성공 시 0, 실패 시 -1 (errno)
+
+## stat
+#include <sys/stat.h>  
+int stat(const char *restrict path, struct stat *restrict buf);  
+- 파일의 크기, 권한, 생성일시, 최종 변경일등 파일의 상태나 정보를 얻는 함수.
+- 파일의 읽기, 쓰기, 실행 권한을 요구하지는 않는다.
+- symbolic link인 파일을 path 로 넘기면 그 원본 파일의 정보를 얻음.
+- path : 파일명 또는 파일에 대한 상대/절대 경로 
+- buf : 파일의 상태 및 정보를 저장할 [buf 구조체](https://www.it-note.kr/173)
+- return
+> 성공 시 0, 실패 시 -1 (errno)
+
+## lstat
+#include <sys/stat.h>  
+int lstat(const char *restrict path, struct stat *restrict buf);  
+- stat 함수와 동작 기능 같으나, 파일 이름(path)이 symbolic link일 때는 다름. 후자의 경우 symbolic link인 파일 자체의 정보를 얻음.
+- return
+> 성공 시 0, 실패 시 -1 (errno)
+
+## fstat
+#include <sys/stat.h>  
+int fstat(int fildes, struct stat *buf);  
+- fildes에 따라 현재 열려있는 파일의 크기, 권한, 생성일시, 최종 변경일 등 파일의 상태나 파일의 정보를 얻음.
+- fildes : 생성한 file descriptor
+- buf : 파일의 상태 및 정보를 저장할 buf 구조체
+- return
+> 성공 시 0, 실패 시 -1 (errno)
+
+## unlink
+#include <unistd.h>  
+int unlink(const char *path)  
+- path 파일의 링크를 삭제하고, 링크 카운트를 감소한다.
+- return
+> 성공 시 0, 실패 시 -1 (errno)
+
+## opendir
+#include <dirent.h>  
+DIR *opendir(const char *name);  
+- 
+
+## readdir
+#include <dirent.h> 
+struct dirent *readdir(DIR *dirp);  
+- 
+
+## closedir
+#include <dirent.h>  
+int closedir(DIR *dirp);  
+- 
+
+## isatty
+#include <unistd.h>  
+int isatty(int fd);  
+- 
+
+## ttyname
+#include <unistd.h>  
+char *ttyname(int fd);  
+- 
+
+## ttyslot
+#include <unistd.h>  
+int ttyslot(void);  
+- 
+
+## ioctl
+#include <sys/ioctl.h>  
+int ioctl(int fildes, unsigned long request, ...);  
+- 
+
+## getenv
+#include <stdlib.h>  
+char *getenv(const char *name);  
+- 
+
+## tcsetattr
+#include <termios.h>  
+int tcsetattr(int fildes, int optional_actions, const struct termios *termios_p);  
+- 
+
+## tcgetattr
+#include <termios.h>  
+int tcgetattr(int fildes, struct termios *termios_p);  
+- 
+
+## tgetent
+#include <curses.h>  
+#include <term.h>  
+int tgetent(char *bp, const char *name);  
+- 
+
+## tgetflag
+#include <curses.h>  
+#include <term.h>  
+int tgetflag(char *id);  
+- 
+
+## tgetnum
+#include <curses.h>  
+#include <term.h>  
+int tgetnum(char *id);  
+- 
+
+## tgetstr
+#include <curses.h>  
+#include <term.h>  
+char *tgetstr(char *id, char **area);  
+- 
+
+## tgoto
+#include <curses.h>  
+#include <term.h>  
+char *tgoto(const char *cap, int col, int row);  
+- 
+
+## tputs
+#include <curses.h>  
+#include <term.h>  
+int tputs(const char *str, int affcnt, int (*putc)(int));  
+- 
+
+
+----
+
+## open
+#include <fcntl.h>  
+int open (const char *path, int oflag, ...)  
+- 파일을 여는 데 사용하는 함수 (fopen() : C 라이브러리 / open() : 리눅스)
+- path : 파일 이름
+- oflag : 파일 열기 옵션 (O_RDONLY, O_WRONLY, O_RDWR, O_NONBLOCK, O_APPEND, O_CREAT,O_TRUNC, O_EXCL, O_SHLOCK, O_EXLOCK, O_NOFOLLOW, O_SYMLINK, O_EVTONLY, O_CLOEXEC)
+- ... : 파일 접근 권한
+
+printf, malloc, free, write, read, close, fork, wait, waitpid, exit, execve, dup, dup2, pipe, strerror, perror

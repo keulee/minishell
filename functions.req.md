@@ -104,24 +104,26 @@ sighandler_t signal(int signum, sighandler_t handler);
 | SIG_IGN | 시그널을 무시한다. |
 | 함수 이름 | 시그널이 발생하면 지정된 함수 호출 |
 
-> 문제 발생 시, SIG_ERR를 반환함.
-> 주의 사항
->> 함수 내에서는 반드시 Async-Signal-Safe 함수들만 이용해야 함. Async-Signal-Safe한 함수들은 대체적으로 Reentrant가 가능한 함수인데, Reentrant가 불가능한 대표적인 함수로는 printf가 있다. printf는 (Async-Signal-Safe 아님, printf의 호출로 출력 중인 상태에서 시그널을 받아서 시그널 처리 동작에서도 printf를 호출시, 원하는 출력 결과가 나오지 않을 수도 있음.) printf의 출력 자체는 Buffer Management를 통해 출력을 하게 되므로 내부에 별도로 둔 Buffer를 토대로 메모리에 쓰는 작업을 진행하게 되는데, 제시된 상황에서는 메모리에 쓰는 작업에 이용되는 기존의 Buffer의 내용이 손실될 수 있기 때문이다. 따라서 핸들러 내에서 처리되는 동작들이 문제가 없다는 것을 보장하기 위해선 반드시 Async-Signal-Safe 함수들만 이용되어야 한다. [signal 함수 내에서 이용할 수 있는 함수](https://www.man7.org/linux/man-pages/man7/signal-safety.7.html)
->> SIGFPE, SIGILL, SIGSEGV 등의 시그널에 대해서는 signal 함수를 이용하여 처리 동작을 정의해서는 안 된다. 이와 같은 시그널들의 무시 혹은 사용자 정의는 오류 상황에서도 프로그램이 종료되지 않아 문제 상황 속에서 무한히 지속되는 프로그램이 될 수 있다. 
+> 문제 발생 시, SIG_ERR를 반환함.  
+주의 사항.   
+함수 내에서는 반드시 Async-Signal-Safe 함수들만 이용해야 함. Async-Signal-Safe한 함수들은 대체적으로 Reentrant가 가능한 함수인데, Reentrant가 불가능한 대표적인 함수로는 printf가 있다. printf는 (Async-Signal-Safe 아님, printf의 호출로 출력 중인 상태에서 시그널을 받아서 시그널 처리 동작에서도 printf를 호출시, 원하는 출력 결과가 나오지 않을 수도 있음.) printf의 출력 자체는 Buffer Management를 통해 출력을 하게 되므로 내부에 별도로 둔 Buffer를 토대로 메모리에 쓰는 작업을 진행하게 되는데, 제시된 상황에서는 메모리에 쓰는 작업에 이용되는 기존의 Buffer의 내용이 손실될 수 있기 때문이다. 따라서 핸들러 내에서 처리되는 동작들이 문제가 없다는 것을 보장하기 위해선 반드시 Async-Signal-Safe 함수들만 이용되어야 한다. [signal 함수 내에서 이용할 수 있는 함수](https://www.man7.org/linux/man-pages/man7/signal-safety.7.html).   
+SIGFPE, SIGILL, SIGSEGV 등의 시그널에 대해서는 signal 함수를 이용하여 처리 동작을 정의해서는 안 된다. 이와 같은 시그널들의 무시 혹은 사용자 정의는 오류 상황에서도 프로그램이 종료되지 않아 문제 상황 속에서 무한히 지속되는 프로그램이 될 수 있다. 
 
-## ill
+## kill
 #include <signal.h>  
 int kill(pid_t pid, int sig);  
 - 프로세스에 시그널을 전송하는 함수.
 - 프로세스에 SIGKILL을 보내면 쉘 명령의 kill과 같은 역할을 함.
 - pid : 프로세스 id
 - sig : 시그널 번호
+- 
 | pid 값 | 의미 |
-| --- | --- |
+| ------ | --- |
 | pid > 0 | pid와 같은 프로세스 id를 가진 프로세스에 sig를 전송 |
 | pid == 0 | 그룹 id가 프로세스 그룹 id랑 동일한 권한을 가진 프로세스에 sig를 전송 |
 | pid == -1 | 만약 사용자가 super-user라면, 권한을 가진 모든 프로세스에 sig를 전송, 시스템 프로세스와 sig를 보낸 프로세스는 제외. 사용자가 super-user가 아니라면, 같은 uid를 가진 user의 모든 프로세스에 sig가 전송됨. |
 | pid < 0 (not -1)| 프로세스 그룹 id가 프로세스 번호의 절대값과 동일한 모든 프로세스에 sig 전송 |
+
 - return 
 > 성공 시 0, 실패 시 -1 (errno)
 
@@ -182,27 +184,27 @@ int unlink(const char *path)
 ## opendir
 #include <dirent.h>  
 DIR *opendir(const char *name);  
-- 
+- The opendir() function opens the directory named by filename, associates a directory stream with it and returns a pointer to be used to identify the directory stream in subsequent operations. The pointer NULL is returned if filename cannot be accessed, or if it cannot malloc(3) enough memory to hold the whole thing.
 
 ## readdir
 #include <dirent.h> 
 struct dirent *readdir(DIR *dirp);  
-- 
+- The readdir() function returns a pointer to the next directory entry.  The directory entry remains valid until the next call to readdir() or closedir() on the same directory stream.  The function returns NULL upon reaching the end of the directory or on error.  In the event of an error, errno may be set to any of the values documented for the getdirentries(2) system call.  Note that the order of the directory entries vended by readdir() is not specified.  Some filesystems may return entries in lexicographic sort order and others may not.  Also note that not all filesystems will provide a value for d_type and may instead set the field to DT_UNKNOWN.
 
 ## closedir
 #include <dirent.h>  
 int closedir(DIR *dirp);  
-- 
+- The closedir() function closes the named directory stream and frees the structure associated with the dirp pointer, returning 0 on success.  On failure, -1 is returned and the global variable errno is set to indicate the error.
 
 ## isatty
 #include <unistd.h>  
 int isatty(int fd);  
-- 
+- The isatty() function determines if the file descriptor fd refers to a valid terminal type device.
 
 ## ttyname
 #include <unistd.h>  
 char *ttyname(int fd);  
-- 
+- The ttyname() function gets the related device name of a file descriptor for which isatty() is true. The ttyname() function returns the name stored in a static buffer which will be overwritten on subsequent calls. 
 
 ## ttyslot
 #include <unistd.h>  
@@ -212,58 +214,62 @@ int ttyslot(void);
 ## ioctl
 #include <sys/ioctl.h>  
 int ioctl(int fildes, unsigned long request, ...);  
-- 
+- The ioctl() function manipulates the underlying device parameters of special files.  In particular, many operating characteristics of character special files (e.g. terminals) may be controlled with ioctl() requests.  The argument fildes must be an open file descriptor.
+- An ioctl request has encoded in it whether the argument is an ``in'' parameter or ``out'' parameter, and the size of the argument argp in bytes.  Macros and defines used in specifying an ioctl request are located in the file <sys/ioctl.h>.
 
 ## getenv
 #include <stdlib.h>  
 char *getenv(const char *name);  
-- 
+- The getenv() function obtains the current value of the environment variable, name.  The application should not modify the string pointed to by the getenv() function.
 
 ## tcsetattr
 #include <termios.h>  
 int tcsetattr(int fildes, int optional_actions, const struct termios *termios_p);  
-- 
+- The tcgetattr(), and tcsetattr() functions are provided for getting and setting the termios structure.
 
 ## tcgetattr
 #include <termios.h>  
 int tcgetattr(int fildes, struct termios *termios_p);  
-- 
+- The tcgetattr(), and tcsetattr() functions are provided for getting and setting the termios structure.
 
 ## tgetent
 #include <curses.h>  
 #include <term.h>  
 int tgetent(char *bp, const char *name);  
-- 
+- The tgetent routine loads the entry for name.  It returns 1 on success, 0 if there is no such entry, and -1 if the terminfo database could not be found.  The emulation ignores the buffer pointer bp.
 
 ## tgetflag
 #include <curses.h>  
 #include <term.h>  
 int tgetflag(char *id);  
-- 
+- The tgetflag routine gets the boolean entry for id, or zero if it is not available.
+- Only the first two characters of the id parameter of tgetflag, tgetnum and tgetstr are compared in lookups.
 
 ## tgetnum
 #include <curses.h>  
 #include <term.h>  
 int tgetnum(char *id);  
-- 
+- The tgetnum routine gets the numeric entry for id, or -1 if it is not available.
+- Only the first two characters of the id parameter of tgetflag, tgetnum and tgetstr are compared in lookups.
 
 ## tgetstr
 #include <curses.h>  
 #include <term.h>  
 char *tgetstr(char *id, char **area);  
-- 
+- The  tgetstr  routine returns the string entry for id, or zero if it is not available.  Use tputs to output the returned string.  The return value will also be copied to the buffer pointed to by area, and the area value will be updated to point past the null ending this value.
+- Only the first two characters of the id parameter of tgetflag, tgetnum and tgetstr are compared in lookups.
 
 ## tgoto
 #include <curses.h>  
 #include <term.h>  
 char *tgoto(const char *cap, int col, int row);  
-- 
+- The tgoto routine instantiates the parameters into the given capability.  The output from this routine is to be passed to tputs.
 
 ## tputs
 #include <curses.h>  
 #include <term.h>  
 int tputs(const char *str, int affcnt, int (*putc)(int));  
-- 
+- The tputs routine is described on the curs_terminfo(3X) manual page.  It can retrieve capabilities by either termcap or terminfo name.
 
 
 ----

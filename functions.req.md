@@ -185,21 +185,36 @@ int unlink(const char *path)
 #include <dirent.h>  
 DIR *opendir(const char *name);  
 - The opendir() function opens the directory named by filename, associates a directory stream with it and returns a pointer to be used to identify the directory stream in subsequent operations. The pointer NULL is returned if filename cannot be accessed, or if it cannot malloc(3) enough memory to hold the whole thing.
+- 파일 절대/상대 경로(name)로 DIR * (디렉토리 스트림, DIR *타입의 포인터)를 생성하는 함수.
+- _디렉토리 스트림은 디렉토리와 관련된 작업을 보다 쉽게 수행할 수 있도록 주고 받는 데이터의 흐름이며 이를 추상화한 구조체가 DIR이라고 이해할 수 있다._
+- return
+> 성공 시 DIR 포인터를, 실패 시 NULL(name에 접근 불가 혹은 malloc 불가)을 리턴
 
 ## readdir
 #include <dirent.h> 
 struct dirent *readdir(DIR *dirp);  
 - The readdir() function returns a pointer to the next directory entry.  The directory entry remains valid until the next call to readdir() or closedir() on the same directory stream.  The function returns NULL upon reaching the end of the directory or on error.  In the event of an error, errno may be set to any of the values documented for the getdirentries(2) system call.  Note that the order of the directory entries vended by readdir() is not specified.  Some filesystems may return entries in lexicographic sort order and others may not.  Also note that not all filesystems will provide a value for d_type and may instead set the field to DT_UNKNOWN.
+- opendir()로 연 디렉토리에 대해, 그 안에 있는 모든 파일, 디렉토리 정보를 얻는 함수. 그 안에 있는 파일과 디렉토리들은 정렬 돼 있지 않다.
+- [struct dirent 정보](https://www.it-note.kr/14)
+- return
+> 성공 시 파일 또는 디렉토리 정보, 실패 시 NULL 리턴(errno).  
+한편, 더 이상 읽을 정보가 없을 때도 NULL을 리턴하므로 오류일 경우와 구분해줘야 한다.
 
 ## closedir
 #include <dirent.h>  
 int closedir(DIR *dirp);  
 - The closedir() function closes the named directory stream and frees the structure associated with the dirp pointer, returning 0 on success.  On failure, -1 is returned and the global variable errno is set to indicate the error.
+- opendir() 함수로 열어둔 디렉토리 스트림을 닫고 DIR *포인터(dirp)와 관련된 구조체를 free하는 함수.
+- return
+> 성공 시 0, 실패 시 -1
 
 ## isatty
 #include <unistd.h>  
 int isatty(int fd);  
 - The isatty() function determines if the file descriptor fd refers to a valid terminal type device.
+- 인자인 파일 디스크립터(fd)가 유효한 터미널을 참조하는지 확인하는 함수.
+- return
+> 성공 시 0, 실패 시 -1
 
 ## ttyname
 #include <unistd.h>  
@@ -209,34 +224,71 @@ char *ttyname(int fd);
 ## ttyslot
 #include <unistd.h>  
 int ttyslot(void);  
-- 
+- ttyslot 함수가 호출한 프로그램이 참조하고 있는 터미널의 index(번호)를 반환.
+- legacy 함수
+- return
+> 성공 시 index를, 실패 시 0(또는 -1)
 
 ## ioctl
 #include <sys/ioctl.h>  
 int ioctl(int fildes, unsigned long request, ...);  
 - The ioctl() function manipulates the underlying device parameters of special files.  In particular, many operating characteristics of character special files (e.g. terminals) may be controlled with ioctl() requests.  The argument fildes must be an open file descriptor.
 - An ioctl request has encoded in it whether the argument is an ``in'' parameter or ``out'' parameter, and the size of the argument argp in bytes.  Macros and defines used in specifying an ioctl request are located in the file <sys/ioctl.h>.
+- 시스템콜, 장치에게 요청을 보낼때 사용되는 함수로, ioctl 함수로 하드웨어의 제어, 상태 정보를 얻을 수 있다.
+- fildes : 장치를 참조하는 파일 디스크립터 (fd)
+- request : files에 해당하는 장치에게 보낼 장치에서 제공되는 코드
+- ... : 특정 메모리 공간을 참조하는 포인터. (가변 인자인 이유 : 함수 원형에서 해당 포인터의 타입을 명시하지 않기 위함, 일반적으로 char *타입을 이용)
+- return
+> 성공 시 0, 실패 시 -1 
 
 ## getenv
 #include <stdlib.h>  
 char *getenv(const char *name);  
 - The getenv() function obtains the current value of the environment variable, name.  The application should not modify the string pointed to by the getenv() function.
+- 인자 name에 해당하는 환경 변수의 값에 대한 문자열을 반환.
+- getenv 함수에 의해 참조되고 있는 값들은 내부적으로 static 형태로 할당되기 때문에 free를 하면 안됨.
+- return
+> 성공 시 char *형 환경 변수 값 반환, 그렇지 않으면 NULL 반환.
 
 ## tcsetattr
 #include <termios.h>  
 int tcsetattr(int fildes, int optional_actions, const struct termios *termios_p);  
 - The tcgetattr(), and tcsetattr() functions are provided for getting and setting the termios structure.
+- 터미널 파일 fildes에 대한 터미널 속성을 설정하는 함수
+- fildes : 터미널 파일 디스크립터
+- optional_actions : 동작 선택
+
+| optional_actions | 내용 |
+| ---------------- | --- |
+| TCSANOW | 속성 (termios 구조체의 값으로) 즉시 변경 (change immediate) |
+| TCSADRAIN | 송신 완료 후 속성 변경 (fildes에 모든 쓰기작업이 이뤄진 후 변경, 처리 중인 입력 작업 폐기 하지 않음) |
+| TCSAFLUSH | 송수신 완료 후 속성 변경 (fildes에 모든 쓰기작업이 이뤄진 후 변경, 처리 중인 입력 작업 폐기) |
+| TCSASOFT | termios 구조체 내 c_cflag, c_ispeed, c_ospeed 값 무시 |
+
+- struct termios *termios_p : 터미널 속성을 저장할 주소 (구조체)
+- return
+> 성공 시 0, 실패 시 -1 (errno)
 
 ## tcgetattr
 #include <termios.h>  
 int tcgetattr(int fildes, struct termios *termios_p);  
 - The tcgetattr(), and tcsetattr() functions are provided for getting and setting the termios structure.
+- 터미널 파일 fildes에 대한 터미널 속성을 termios 구조체에 저장하는 함수
+- fildes : 터미널 파일 디스크립터
+- struct termios *termios_p : 터미널 속성을 저장할 주소 (구조체)
+- return
+> 성공 시 0, 실패 시 -1 (errno)
 
 ## tgetent
 #include <curses.h>  
 #include <term.h>  
 int tgetent(char *bp, const char *name);  
 - The tgetent routine loads the entry for name.  It returns 1 on success, 0 if there is no such entry, and -1 if the terminfo database could not be found.  The emulation ignores the buffer pointer bp.
+- 인자 name에 해당하는 터미널 타입의 엔트리로 설정하여, 해당 엔트리에 대한 TermCap의 쿼리를 수행할 수 있도록 만드는 루틴 함수. name의 입력을 bp에 추출.
+- bp는 사이즈 1024의 char형 버퍼. tgetnum(), tgetflag(), tgetstr()을 호출해도 보관 유지된다.
+- bp 인자는 buffer pointer를 의미하는 데, 무시되는 인자이므로 일반적으로 NULL을 할당해줌.
+- retrun
+> 루틴 작업 성공 시 1, 만약 루틴 시 name의 값이 NULL과 같이 비어있는 값이라면 0을 반환. 실패 시(DB 검색 불가) -1 반환
 
 ## tgetflag
 #include <curses.h>  
@@ -244,6 +296,10 @@ int tgetent(char *bp, const char *name);
 int tgetflag(char *id);  
 - The tgetflag routine gets the boolean entry for id, or zero if it is not available.
 - Only the first two characters of the id parameter of tgetflag, tgetnum and tgetstr are compared in lookups.
+- 루틴 함수로 id가 단말 엔트리에 존재하는지에 대한 불린 정보를 가져옴.
+- id의 처음 두 문자만 비교됨.
+- return
+> id가 존재한다면 1, 존재하지 않는다면 0을 반환
 
 ## tgetnum
 #include <curses.h>  
@@ -251,26 +307,48 @@ int tgetflag(char *id);
 int tgetnum(char *id);  
 - The tgetnum routine gets the numeric entry for id, or -1 if it is not available.
 - Only the first two characters of the id parameter of tgetflag, tgetnum and tgetstr are compared in lookups.
+- 루틴 함수로 id가 단말 엔트리에 존재하는지에 대한 숫자 정보를 가져옴.
+- id의 처음 두 문자만 비교됨.
+- return
+> 숫자 정보가 있다면 양수의 숫자 정보, 존재하지 않는다면 -1을 리턴.
 
 ## tgetstr
 #include <curses.h>  
 #include <term.h>  
 char *tgetstr(char *id, char **area);  
-- The  tgetstr  routine returns the string entry for id, or zero if it is not available.  Use tputs to output the returned string.  The return value will also be copied to the buffer pointed to by area, and the area value will be updated to point past the null ending this value.
+- The  tgetstr  routine returns the string entry for id, or zero if it is not available.  Use tputs to output the returned string. The return value will also be copied to the buffer pointed to by area, and the area value will be updated to point past the null ending this value.
 - Only the first two characters of the id parameter of tgetflag, tgetnum and tgetstr are compared in lookups.
+- 루틴 함수로 id가 단말 엔트리에 존재하는지에 대한 string 정보를 가져옴.
+- id의 처음 두 문자만 비교됨.
+- area인자에는 리턴 str이 복사 돼 들어간다. 일반적으로 무시되는 인자로 간주 돼 NULL을 준다고 이해할 수 있다.
+- return 
+> 존재 한다면 문자열 포인터, 존재하지 않는다면 NULL 반환
 
 ## tgoto
 #include <curses.h>  
 #include <term.h>  
 char *tgoto(const char *cap, int col, int row);  
-- The tgoto routine instantiates the parameters into the given capability.  The output from this routine is to be passed to tputs.
+- The tgoto routine instantiates the parameters into the given capability. The output from this routine is to be passed to tputs.
+- 루틴 함수로 매개변수를 지정된 기능으로 인스턴스화 하는 함수.
+- cap : ??
+- col : 터미널 세로 열의 위치
+- row : 터미널 가로 행의 위치
+- 이 함수의 리턴값은 tputs함수로 전달됨.
+- return
+> 실패 시 NULL 반환
 
 ## tputs
 #include <curses.h>  
 #include <term.h>  
 int tputs(const char *str, int affcnt, int (*putc)(int));  
 - The tputs routine is described on the curs_terminfo(3X) manual page.  It can retrieve capabilities by either termcap or terminfo name.
-
+- The tputs routine applies padding information to the string str and outputs it. The str must be a terminfo string variable or the return value from tparm, tgetstr, or tgoto. affcnt is the number of lines affected, or 1 if not applicable.
+- 루틴 함수로 str에 padding 정보를 적용하여 출력함.
+- str : terminfo 문자열 변수이거나 tparm, tgetstr, tgoto의 반환 값이어야 함.
+- affcnt : 영향을 받는 줄의 수. 해당 사항이 없다면 1로 주는 것이 일반적.
+- (*putc)(int) : ASCII 문자 값을 인자로 받아 표준 출력의 쓰기 작업으로 터미널에 ASCII 문자 값을 출력해주는 함수.
+- return
+> 문제 없이 수행 시 0, 그렇지 않다면 -1 반환
 
 ----
 

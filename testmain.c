@@ -7,11 +7,17 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <errno.h>
+#include <stdbool.h>
 
 void handler(int signum)
 {
-    (void)signum;
-    write(STDOUT_FILENO, "minishell : \n", 14);
+    if (signum != SIGINT)
+        return ;
+    write(STDOUT_FILENO, "\n", 1);
+    if (rl_on_new_line() == -1)
+        exit(1);
+    rl_replace_line("", 1);
+    rl_redisplay();
 }
 
 void	classify(struct dirent *ent)
@@ -36,58 +42,63 @@ void	classify(struct dirent *ent)
 int	main(void)
 {
 /* readline함수의 리턴값을 저장하기위해 임의로 포인터를 하나 선언한다 */
-    // char *str;
-    // int i;
-    DIR *test;
-    struct dirent *file;
-    int tmp;
+    char *str;
+    int i;
 
-    test = opendir("/Users/keulee/mygithub/minishell");
-    if (!test)
+    str = NULL;
+
+    signal(SIGINT, handler);
+/* 무한루프를 돌리면서 readline();함수를 반복적으로 호출할 것이다 */
+    while(1)
     {
-        write(1, "error\n", 6);
-        return (1);
+        /* readline함수가 호출되면 인자(prompt : )를 터미널에 출력하고 저장할 라인을 입력받는다 */
+        str = readline("minishell : ");/* read함수는 저장한 문자열의 메모리주소를 반환한다 */
+        // if (str)/* 입력이 된다면 (주소가 존재한다면) */
+		// {
+        //     printf("%s\n", str);/* 주소안에 문자열을 출력해보자 */
+		// 	// printf("%p\n", str);
+		// }
+        if (str == NULL)/* str = NULL 이라면 (EOF, cntl + D)*/
+            break ;/* 반복문을 탈출해준다.*/
+        if (strcmp(str, "exit") == 0)
+            break ;
+	/* add_history에 저장된 문자열은 up & down 방향키를 이용해 확인할수있다 */
+        i = add_history(str);
+        printf("rl_one_new_line : %d\n", rl_on_new_line());
+        // printf("return of add_history : %d\n", i);
+	/* 라인은 힙메모리에 저장되기때문에 다 사용한 메모리는 할당을 해제해줘야한다 */
+        free(str);
+        str = NULL;
     }
-    while (1)
-    {
-        tmp = errno;
-        file = readdir(test);
-        if (!file && tmp != errno)
-        {
-            write(1, "error\n", 6);
-            break;
-        }
-        if (!file)
-            break;
-        classify(file);
-    }
-    closedir(test);
-    return (0);
 
 
-//     str = NULL;
-//     signal(SIGINT, handler);
-// /* 무한루프를 돌리면서 readline();함수를 반복적으로 호출할 것이다 */
-//     while(1)
-//     {
-//         /* readline함수가 호출되면 인자(prompt : )를 터미널에 출력하고 저장할 라인을 입력받는다 */
-//         str = readline("minishell : ");/* read함수는 저장한 문자열의 메모리주소를 반환한다 */
-//         // if (str)/* 입력이 된다면 (주소가 존재한다면) */
-// 		// {
-//         //     printf("%s\n", str);/* 주소안에 문자열을 출력해보자 */
-// 		// 	// printf("%p\n", str);
-// 		// }
-//         if (str == NULL)/* str = NULL 이라면 (EOF, cntl + D)*/
-//             break ;/* 반복문을 탈출해준다.*/
-//         if (strcmp(str, "exit") == 0)
-//             break ;
-// 	/* add_history에 저장된 문자열은 up & down 방향키를 이용해 확인할수있다 */
-//         i = add_history(str);
-//         // printf("return of add_history : %d\n", i);
-// 	/* 라인은 힙메모리에 저장되기때문에 다 사용한 메모리는 할당을 해제해줘야한다 */
-//         free(str);
-//         str = NULL;
-//     }
+
+
+    // DIR *test;
+    // struct dirent *file;
+    // int tmp;
+
+    // test = opendir("/Users/keulee/mygithub/minishell");
+    // if (!test)
+    // {
+    //     write(1, "error\n", 6);
+    //     return (1);
+    // }
+    // while (1)
+    // {
+    //     tmp = errno;
+    //     file = readdir(test);
+    //     if (!file && tmp != errno)
+    //     {
+    //         write(1, "error\n", 6);
+    //         break;
+    //     }
+    //     if (!file)
+    //         break;
+    //     classify(file);
+    // }
+    // closedir(test);
+    // return (0);
 
     
     /* 함수종료 */

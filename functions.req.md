@@ -30,7 +30,7 @@ void rl_clear_history (void)
 #include <readline/readline.h>  
 int rl_on_new_line (void)  
 - Tell the update functions that we have moved onto a new (empty) line, usually after outputting a newline.
-- readline 디렉토리 내에서 Update 관련 함수들에게 커서가 개행 문자를 통해 다음 줄로 이동했음을 알려줄 때 이용되는 함수 (개행 문자 수행하지 않음)
+- readline 디렉토리 내에서 Update 관련 함수(rl_redisplay도 포함)에게 커서가 개행 문자를 통해 다음 줄로 이동했음을 알려줄 때 이용되는 함수 (개행 문자 수행하지 않음)
 - return
 > 오류 시 -1, 그렇지 않다면 0을 반환
 

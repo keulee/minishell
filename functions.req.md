@@ -34,7 +34,7 @@ int rl_on_new_line (void)
 - return
 > 오류 시 -1, 그렇지 않다면 0을 반환
 
-## rl_replace_line
+## rl_replace_line (리눅스에만 존재???)
 #include <readline/readline.h>  
 void rl_replace_line (const char *text, int clear_undo)  
 - Replace the contents of rl_line_buffer with text. The point and mark are preserved, if possible. If clear_undo is non-zero, the undo list associated with the current line is cleared.

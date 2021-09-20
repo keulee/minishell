@@ -2,13 +2,13 @@ NAME = minishell
 
 SRCS = testmain.c
 
+HEADER = minishell.h
+
 OBJS = $(SRCS:.c=.o)
 
-LIB = /usr/local/opt/readline/lib
+LIBREADLIND = -lreadline -L /usr/local/opt/readline/lib
 
-INCLUDE = /usr/local/opt/readline/include
-
-COM = -lreadline -L$(LIB) -I$(INCLUDE)
+INCREADLINE = -I /usr/local/opt/readline/include
 
 CC = clang
 
@@ -20,12 +20,15 @@ RM = rm -f
 
 all: $(NAME)
 
-$(NAME): $(LIBFT) $(OBJS) 
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) 
+$(NAME): $(LIBFT) $(OBJS)
+	$(CC) $(CFLAGS) $(LIBREADLIND) $(OBJS) -o $(NAME) 
 
 $(LIBFT):
 	$(MAKE) -C libft
 	mv libft/$(LIBFT) .
+
+$(OBJS): $(SRCS) $(HEADER)
+	$(CC) $(CFLAGS) -c $< -o $@ $(INCREADLINE)
 
 clean:
 	$(MAKE) -C libft clean

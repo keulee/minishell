@@ -1,13 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <string.h>
-#include <signal.h>
-#include <unistd.h>
-#include <dirent.h>
-#include <errno.h>
-#include <stdbool.h>
+#include "minishell.h"
 
 void handler(int signum)
 {

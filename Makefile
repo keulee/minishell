@@ -4,7 +4,11 @@ SRCS = testmain.c
 
 OBJS = $(SRCS:.c=.o)
 
-READLINE = -lreadline -L /usr/local/opt/readline/lib -I /usr/local/opt/readline/include
+LIB = /usr/local/opt/readline/lib
+
+INCLUDE = /usr/local/opt/readline/include
+
+COM = -lreadline -L$(LIB) -I$(INCLUDE)
 
 CC = clang
 
@@ -16,8 +20,8 @@ RM = rm -f
 
 all: $(NAME)
 
-$(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(READLINE)
+$(NAME): $(LIBFT) $(OBJS) 
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) 
 
 $(LIBFT):
 	$(MAKE) -C libft

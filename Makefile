@@ -6,9 +6,9 @@ HEADER = minishell.h
 
 OBJS = $(SRCS:.c=.o)
 
-LIBREADLIND = -lreadline -L /usr/local/opt/readline/lib
+LIB = -L. -lft -lreadline -L /usr/local/opt/readline/lib
 
-INCREADLINE = -I /usr/local/opt/readline/include
+INC = -I /usr/local/opt/readline/include
 
 CC = clang
 
@@ -21,14 +21,14 @@ RM = rm -f
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) $(LIBREADLIND) $(OBJS) -o $(NAME) 
+	$(CC) $(CFLAGS) $(LIB) $(OBJS) -o $(NAME) 
 
 $(LIBFT):
 	$(MAKE) -C libft
 	mv libft/$(LIBFT) .
 
 $(OBJS): $(SRCS) $(HEADER)
-	$(CC) $(CFLAGS) -c $< -o $@ $(INCREADLINE)
+	$(CC) $(CFLAGS) -c $< -o $@ $(INC)
 
 clean:
 	$(MAKE) -C libft clean

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keulee <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/17 18:22:42 by keulee            #+#    #+#             */
-/*   Updated: 2021/05/17 18:22:43 by keulee           ###   ########.fr       */
+/*   Updated: 2021/09/22 10:18:49 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ int		ft_uppercase(char c);
 int		ft_space(int i);
 int		ft_digit(char c);
 char	**ft_split(char const *s, char c);
-int		ft_strcmp(char *s1, char *s2);
 int		ft_strstr_cub(char *str, char *cub);
 int		ft_only_digit(char *str);
 int		ft_atoi(const char *str);
@@ -41,5 +40,9 @@ void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t count, size_t size);
 void	*ft_memset(void *b, int c, size_t len);
 char	*ft_itoa(int n);
+void	ft_putstr_fd(char *s, int fd);
+void	ft_putendl_fd(char *s, int fd);
+void	ft_putchar_fd(char c, int fd);
+int		ft_strcmp(char *s1, char *s2);
 
 #endif

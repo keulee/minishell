@@ -129,7 +129,7 @@ int kill(pid_t pid, int sig);
 
 ## getcwd
 #include <unistd.h>  
-getcwd(char *buf, size_t size);  
+char *getcwd(char *buf, size_t size);  
 - getcwd를 호출한 프로그램이 실행되고 있는 절대 경로를 문자열로 얻게 해주는 함수.
 - 현재 작업중인 디렉토리의 절대 경로를 buf에 복사하고 buf의 포인터를 리턴.
 - buf : 작업 디렉토리 문자열을 담을 버퍼

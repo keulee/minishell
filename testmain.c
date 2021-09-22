@@ -34,7 +34,7 @@ int	main(void)
 {
 /* readline함수의 리턴값을 저장하기위해 임의로 포인터를 하나 선언한다 */
     char *str;
-    int i;
+    int i = 0;
 
     str = NULL;
 
@@ -50,9 +50,12 @@ int	main(void)
 		// 	// printf("%p\n", str);
 		// }
         if (str == NULL)/* str = NULL 이라면 (EOF, cntl + D)*/
-            break ;/* 반복문을 탈출해준다.*/
-        if (strcmp(str, "exit") == 0)
-            break ;
+        {
+		    ft_putstr_fd(" exit\n", 1);
+            exit (1);/* 반복문을 탈출해준다.*/
+        }
+        // if (ft_strcmp(str, "exit") == 0)
+        //     exit (1) ;
 	/* add_history에 저장된 문자열은 up & down 방향키를 이용해 확인할수있다 */
         // i = add_history(str);
         (void)i;

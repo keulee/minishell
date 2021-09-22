@@ -49,9 +49,9 @@ int	main(void)
         //     printf("%s\n", str);/* 주소안에 문자열을 출력해보자 */
 		// 	// printf("%p\n", str);
 		// }
-        if (str == NULL)/* str = NULL 이라면 (EOF, cntl + D)*/
+        if (str == NULL || (ft_strcmp(str, "exit") == 0))/* str = NULL 이라면 (EOF, cntl + D)*/
         {
-		    ft_putstr_fd(" exit\n", 1);
+		    ft_putstr_fd("minishell exit\n", 1);
             exit (1);/* 반복문을 탈출해준다.*/
         }
         // if (ft_strcmp(str, "exit") == 0)

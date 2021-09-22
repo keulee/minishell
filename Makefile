@@ -1,8 +1,8 @@
 NAME = minishell
 
-SRCS = testmain.c
+SRCS = srcs/minishell.c
 
-HEADER = minishell.h
+HEADER = ./includes/minishell.h
 
 OBJS = $(SRCS:.c=.o)
 

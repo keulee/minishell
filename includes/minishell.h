@@ -12,6 +12,6 @@
 # include <errno.h>
 # include <stdbool.h>
 
-# include "libft/libft.h"
+# include "../libft/libft.h"
 
 #endif

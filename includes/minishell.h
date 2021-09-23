@@ -14,4 +14,11 @@
 
 # include "../libft/libft.h"
 
+typedef struct s_pars {
+	int				type;
+	char 			*content;
+	struct s_pars	*prev;
+	struct s_pars	*next;
+} t_pars;
+
 #endif

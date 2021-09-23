@@ -46,7 +46,7 @@ Your shell should:
  * “>>” should redirect output with append mode
 ```
 10. Pipes | The output of each command in the pipeline is connected via a pipe to the input of the next command.
-11. Environment variables ($ followed by characters) should expand to their values.
+11. Environment variables ($ followed by characters) should expand to their values.rrrrr
 12. $? should expand to the exit status of the most recently executed foreground pipeline.
 13. ctrl-C ctrl-D ctrl-\ should work like in bash.
 14. When interactive:

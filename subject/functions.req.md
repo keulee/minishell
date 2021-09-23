@@ -109,6 +109,11 @@ sighandler_t signal(int signum, sighandler_t handler);
 함수 내에서는 반드시 Async-Signal-Safe 함수들만 이용해야 함. Async-Signal-Safe한 함수들은 대체적으로 Reentrant가 가능한 함수인데, Reentrant가 불가능한 대표적인 함수로는 printf가 있다. printf는 (Async-Signal-Safe 아님, printf의 호출로 출력 중인 상태에서 시그널을 받아서 시그널 처리 동작에서도 printf를 호출시, 원하는 출력 결과가 나오지 않을 수도 있음.) printf의 출력 자체는 Buffer Management를 통해 출력을 하게 되므로 내부에 별도로 둔 Buffer를 토대로 메모리에 쓰는 작업을 진행하게 되는데, 제시된 상황에서는 메모리에 쓰는 작업에 이용되는 기존의 Buffer의 내용이 손실될 수 있기 때문이다. 따라서 핸들러 내에서 처리되는 동작들이 문제가 없다는 것을 보장하기 위해선 반드시 Async-Signal-Safe 함수들만 이용되어야 한다. [signal 함수 내에서 이용할 수 있는 함수](https://www.man7.org/linux/man-pages/man7/signal-safety.7.html).   
 SIGFPE, SIGILL, SIGSEGV 등의 시그널에 대해서는 signal 함수를 이용하여 처리 동작을 정의해서는 안 된다. 이와 같은 시그널들의 무시 혹은 사용자 정의는 오류 상황에서도 프로그램이 종료되지 않아 문제 상황 속에서 무한히 지속되는 프로그램이 될 수 있다. 
 
+## sigaction
+#include <signal.h>  
+int sigaction(int sig, const struct sigaction *restrict act, struct sigaction *restrict oact);  
+
+
 ## kill
 #include <signal.h>  
 int kill(pid_t pid, int sig);  

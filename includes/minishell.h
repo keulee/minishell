@@ -14,8 +14,8 @@
 
 # include "../libft/libft.h"
 
-# define TEXT 0
-# define SPACE 1
+# define ARG 0
+# define SPCE 1
 # define SINQ 2
 # define DOUQ 3
 # define BSLA 4
@@ -34,5 +34,11 @@ typedef struct s_pars {
 	struct s_pars	*prev;
 	struct s_pars	*next;
 } t_pars;
+
+typedef	struct s_info {
+	char **env;
+} t_info;
+
+t_info	g_info;
 
 #endif

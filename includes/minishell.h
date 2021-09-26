@@ -39,6 +39,7 @@ typedef	struct s_info {
 	char **env;
 } t_info;
 
+/* one global variable */
 t_info	g_info;
 
 #endif

@@ -40,13 +40,19 @@ int	main(int ac, char **av, char **env)
 /* readline함수의 리턴값을 저장하기위해 임의로 포인터를 하나 선언한다 */
     char *str;
 
+    /* Init before launch*/
     (void)ac;
     (void)av;
     str = NULL;
     g_info.env = NULL;
+    
+    /* copy env variable with malloc */
     copy_env(env);
+
+    /* signal to manage CTL+C, CTL+D
+    ** need to manage CTL+/ also */
     signal(SIGINT, handler);
-/* 무한루프를 돌리면서 readline();함수를 반복적으로 호출할 것이다 */
+    /* 무한루프를 돌리면서 readline();함수를 반복적으로 호출할 것이다 */
     while(1)
     {
         /* readline함수가 호출되면 인자(prompt : )를 터미널에 출력하고 저장할 라인을 입력받는다 */
@@ -63,6 +69,10 @@ int	main(int ac, char **av, char **env)
         free(str);
         str = NULL;
     }
+    /* 
+    ** here : parsing process with str
+    */
+
     // free_tab2(g_info.env);
     return(0);
 }

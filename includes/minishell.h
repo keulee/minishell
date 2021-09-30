@@ -28,6 +28,9 @@
 # define DRIGHT 11
 # define LEFT 12
 
+# define TRUE 1
+# define FALSE 0
+
 typedef struct s_pars {
 	int				type;
 	char 			*str;

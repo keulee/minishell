@@ -32,18 +32,18 @@ void    copy_env(char **env)
         g_info.env[i] = ft_strdup(env[i]);
         i++;
     }
-    g_info.env[i] = NULL;        
+    g_info.env[i] = NULL;    
 }
 
 int	main(int ac, char **av, char **env)
 {
-/* readline함수의 리턴값을 저장하기위해 임의로 포인터를 하나 선언한다 */
-    char *str;
+    /* readline함수의 리턴값을 저장하기위해 임의로 포인터를 하나 선언한다 */
+    char *line;
 
     /* Init before launch*/
     (void)ac;
     (void)av;
-    str = NULL;
+    line = NULL;
     g_info.env = NULL;
     
     /* copy env variable with malloc */
@@ -56,15 +56,15 @@ int	main(int ac, char **av, char **env)
     while(1)
     {
         /* readline함수가 호출되면 인자(prompt : )를 터미널에 출력하고 저장할 라인을 입력받는다 */
-        str = readline("minishell : ");/* read함수는 저장한 문자열의 메모리주소를 반환한다 */
-        if (str == NULL || (ft_strcmp(str, "exit") == 0))/* str = NULL 이라면 (EOF, cntl + D)*/
+        line = readline("minishell : ");/* read함수는 저장한 문자열의 메모리주소를 반환한다 */
+        if (line == NULL || (ft_strcmp(line, "exit") == 0))/* str = NULL 이라면 (EOF, cntl + D)*/
         {
 		    ft_putstr_fd("minishell exit\n", 1);
             // free_tab2(g_info.env);
             exit (1);/* 반복문을 탈출해준다.*/
         }
 	/* add_history에 저장된 문자열은 up & down 방향키를 이용해 확인할수있다 */
-        add_history(str);
+        add_history(line);
 	/* 라인은 힙메모리에 저장되기때문에 다 사용한 메모리는 할당을 해제해줘야한다 */
         free(str);
         str = NULL;
@@ -72,8 +72,6 @@ int	main(int ac, char **av, char **env)
         ** here : parsing process with str
         */
     }
-   
-
     // free_tab2(g_info.env);
     return(0);
 }

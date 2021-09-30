@@ -15,18 +15,19 @@
 # include "../libft/libft.h"
 
 # define ARG 0
-# define SPCE 1
-# define SINQ 2
-# define DOUQ 3
-# define BSLA 4
-# define DOLR 5
-# define PIPE 6
-# define DPIP 7
-# define SEMC 8
-# define DSEM 9
-# define RIGHT 10
-# define DRIGHT 11
-# define LEFT 12
+# define CMD 1
+# define SPCE 2
+# define SINQ 3
+# define DOUQ 4
+# define BSLA 5
+# define DOLR 6
+# define PIPE 7
+# define DPIP 8
+# define SEMC 9
+# define DSEM 10
+# define RIGHT 11
+# define DRIGHT 12
+# define LEFT 13
 
 # define TRUE 1
 # define FALSE 0

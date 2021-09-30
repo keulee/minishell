@@ -66,8 +66,8 @@ int	main(int ac, char **av, char **env)
 	/* add_history에 저장된 문자열은 up & down 방향키를 이용해 확인할수있다 */
         add_history(line);
 	/* 라인은 힙메모리에 저장되기때문에 다 사용한 메모리는 할당을 해제해줘야한다 */
-        free(str);
-        str = NULL;
+        free(line);
+        line = NULL;
         /* 
         ** here : parsing process with str
         */

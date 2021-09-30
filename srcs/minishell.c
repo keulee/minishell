@@ -68,10 +68,11 @@ int	main(int ac, char **av, char **env)
 	/* 라인은 힙메모리에 저장되기때문에 다 사용한 메모리는 할당을 해제해줘야한다 */
         free(str);
         str = NULL;
+        /* 
+        ** here : parsing process with str
+        */
     }
-    /* 
-    ** here : parsing process with str
-    */
+   
 
     // free_tab2(g_info.env);
     return(0);

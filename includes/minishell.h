@@ -14,7 +14,7 @@
 
 # include "../libft/libft.h"
 
-# define ARG 0
+# define WORD 0
 # define CMD 1
 # define SPCE 2
 # define SINQ 3
@@ -25,18 +25,24 @@
 # define DPIP 8
 # define SEMC 9
 # define DSEM 10
-# define RIGHT 11
-# define DRIGHT 12
-# define LEFT 13
+# define LESS 11
+# define GREAT 12
+# define DLESS 13
+# define DGREAT 14
 
 # define TRUE 1
 # define FALSE 0
 
-typedef struct s_pars {
+typedef struct s_lex {
 	int				type;
 	char 			*str;
-	struct s_pars	*next;
-} t_pars;
+	struct s_lex	*next;
+} t_lex;
+
+typedef struct s_cmd {
+	char		*cmd;
+	struct		s_cmd
+} t_cmd;
 
 typedef	struct s_info {
 	char **env;

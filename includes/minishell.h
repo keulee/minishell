@@ -14,34 +14,36 @@
 
 # include "../libft/libft.h"
 
+/*
+** TYPE in s_pars
+*/
 # define WORD 0
-# define CMD 1
-# define SPCE 2
-# define SINQ 3
-# define DOUQ 4
-# define BSLA 5
-# define DOLR 6
-# define PIPE 7
-# define DPIP 8
-# define SEMC 9
-# define DSEM 10
-# define LESS 11
-# define GREAT 12
-# define DLESS 13
-# define DGREAT 14
+# define SPCE 1
+# define SINQ 2
+# define DOUQ 3
+# define BSLA 4
+# define DOLR 5
+# define PIPE 6
+# define DPIP 7
+# define SEMC 8
+# define DSEM 9
+# define LESS 10
+# define GREAT 11
+# define DLESS 12
+# define DGREAT 13
 
 # define TRUE 1
 # define FALSE 0
 
-typedef struct s_lex {
+typedef struct s_pars {
 	int				type;
 	char 			*str;
-	struct s_lex	*next;
-} t_lex;
+	struct s_pars	*next;
+} t_pars;
 
 typedef struct s_cmd {
-	char			*cmd;
-	struct s_cmd	*next;
+	int				size;
+	struct s_pars	*next;
 } t_cmd;
 
 typedef	struct s_info {

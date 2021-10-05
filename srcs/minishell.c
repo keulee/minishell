@@ -6,34 +6,34 @@
 ** 리다이렉션 그룹 : >, >>, <
 */
 
-void handler(int signum)
-{
-	if (signum != SIGINT)
-		return ;
-	write(STDOUT_FILENO, "\n", 1);
-	if (rl_on_new_line() == -1)
-		exit(1);
-	rl_replace_line("", 1);
-	rl_redisplay();
-}
+// void handler(int signum)
+// {
+// 	if (signum != SIGINT)
+// 		return ;
+// 	write(STDOUT_FILENO, "\n", 1);
+// 	if (rl_on_new_line() == -1)
+// 		exit(1);
+// 	rl_replace_line("", 1);
+// 	rl_redisplay();
+// }
 
-void    copy_env(char **env)
-{
-	int i;
-	int count;
+// void    copy_env(char **env)
+// {
+// 	int i;
+// 	int count;
 
-	i = 0;
-	count = 0;
-	while (env[count])
-		count++;
-	g_info.env = (char **)malloc(sizeof(char *) * (count + 1));
-	while (env[i])
-	{
-		g_info.env[i] = ft_strdup(env[i]);
-		i++;
-	}
-	g_info.env[i] = NULL;    
-}
+// 	i = 0;
+// 	count = 0;
+// 	while (env[count])
+// 		count++;
+// 	g_info.env = (char **)malloc(sizeof(char *) * (count + 1));
+// 	while (env[i])
+// 	{
+// 		g_info.env[i] = ft_strdup(env[i]);
+// 		i++;
+// 	}
+// 	g_info.env[i] = NULL;    
+// }
 
 int	main(int ac, char **av, char **env)
 {

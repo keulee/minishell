@@ -1,10 +1,14 @@
 NAME = minishell
 
-SRCS = srcs/minishell.c
+SRCS = srcs/minishell.c \
+		srcs/signal.c \
+		srcs/copy_env.c 
 
 HEADER = ./includes/minishell.h
 
 OBJS = $(SRCS:.c=.o)
+
+SRCS_DIR = ./srcs
 
 LIB = -L. -lft -lreadline -L /usr/local/opt/readline/lib
 #~/.brew/opt/readline/lib  // ecole42 complie
@@ -31,7 +35,7 @@ $(LIBFT):
 	$(MAKE) -C libft
 	mv libft/$(LIBFT) .
 
-$(OBJS): $(SRCS) $(HEADER)
+%.o : %.c $(HEADER)
 	$(CC) $(CFLAGS) -c $< -o $@ $(INC)
 
 clean:

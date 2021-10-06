@@ -6,34 +6,46 @@
 ** 리다이렉션 그룹 : >, >>, <
 */
 
-// void handler(int signum)
-// {
-// 	if (signum != SIGINT)
-// 		return ;
-// 	write(STDOUT_FILENO, "\n", 1);
-// 	if (rl_on_new_line() == -1)
-// 		exit(1);
-// 	rl_replace_line("", 1);
-// 	rl_redisplay();
-// }
+int	is_quotes_pair(char *line, int *index)
+{
+	char	pair;
 
-// void    copy_env(char **env)
-// {
-// 	int i;
-// 	int count;
+	pair = line[*index];
+	while (line[*index])
+	{
+		(*index)++;
+		if (line[*index] == pair)
+			return (0);
+	}
+	return (1);
+}
 
-// 	i = 0;
-// 	count = 0;
-// 	while (env[count])
-// 		count++;
-// 	g_info.env = (char **)malloc(sizeof(char *) * (count + 1));
-// 	while (env[i])
-// 	{
-// 		g_info.env[i] = ft_strdup(env[i]);
-// 		i++;
-// 	}
-// 	g_info.env[i] = NULL;    
-// }
+int ft_parsing(char *line)
+{
+	int i;
+
+	i = 0;
+	while (line[i])
+	{
+		while (line[i] == ' ')
+			i++;
+		if (line[i] == '\"' || line[i] == '\'')
+		{
+			if (is_quotes_pair(line, &i))
+			{
+				ft_putendl_fd("Error (single quote)", 1); /* 임시 message */
+				return (1);
+			}
+			i++;
+		}
+		else if (ft_is_letter(line[i]))
+		{
+			while (ft_is_letter(line[i]))
+				i++;
+		}
+	}
+	return (0);
+}
 
 int	main(int ac, char **av, char **env)
 {
@@ -52,35 +64,23 @@ int	main(int ac, char **av, char **env)
 	/* signal to manage CTL+C, CTL+D
 	** need to manage CTL+/ also */
 	signal(SIGINT, handler);
-	/* 무한루프를 돌리면서 readline();함수를 반복적으로 호출할 것이다 */
 	while(1)
 	{
-		/* readline함수가 호출되면 인자(prompt : )를 터미널에 출력하고 저장할 라인을 입력받는다 */
-		line = readline("minishell : ");/* read함수는 저장한 문자열의 메모리주소를 반환한다 */
-		if (line == NULL || (ft_strcmp(line, "exit") == 0))/* str = NULL 이라면 (EOF, cntl + D)*/
+		line = readline("minishell : ");
+		if (line == NULL || (ft_strcmp(line, "exit") == 0))
 		{
 			ft_putstr_fd("minishell exit\n", 1);
 			// free_tab2(g_info.env);
-			exit (1);/* 반복문을 탈출해준다.*/
+			exit(1);
 		}
-	/* add_history에 저장된 문자열은 up & down 방향키를 이용해 확인할수있다 */
-		add_history(line);
-	/* 라인은 힙메모리에 저장되기때문에 다 사용한 메모리는 할당을 해제해줘야한다 */
+		add_history(line); /* add_history에 저장된 문자열은 up & down 방향키를 이용해 확인할수있다 */
 		/* 
 		** here : parsing process with str
 		*/
-		int i = 0;
-		while (line[i])
+		if (ft_parsing(line))
 		{
-			while (line[i] == ' ')
-				i++;
-			if (ft_is_letter(line[i]))
-			{
-				while (ft_is_letter(line[i]))
-					i++;
-			}
-			printf("i? : %d\n", i);
-			break;
+			ft_putendl_fd("Minishell: Syntax error", 1); /* 임시 message */
+			continue ;
 		}
 		free(line);
 		line = NULL;

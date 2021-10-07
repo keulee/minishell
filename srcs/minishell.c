@@ -36,7 +36,13 @@ int ft_parsing(char *line)
 				ft_putendl_fd("Error (single quote)", 1); /* 임시 message */
 				return (1);
 			}
+			/* parsing string with quotes*/
 			i++;
+		}
+		else if (line[i] == ';' || line[i] == '\\')
+		{
+			ft_putendl_fd("Syntax error", 1); /* 임시 message */
+				return (1);
 		}
 		else if (ft_is_letter(line[i]))
 		{
@@ -80,6 +86,7 @@ int	main(int ac, char **av, char **env)
 		if (ft_parsing(line))
 		{
 			ft_putendl_fd("Minishell: Syntax error", 1); /* 임시 message */
+			/* if there's memory allocations, need to free here */
 			continue ;
 		}
 		free(line);

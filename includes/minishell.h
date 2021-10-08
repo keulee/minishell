@@ -35,6 +35,12 @@
 # define TRUE 1
 # define FALSE 0
 
+/* 3 parsing groupes
+** 문자그룹 : 문자, 스페이스, 싱글따옴표, 더블따옴표, 백슬래시(\), 달러
+** 연산자그룹 : 파이프, 더블파이프, 세미콜론, 더블세미콜론 (더블파이프, 더블세미콜론 에러 처리 가능)
+** 리다이렉션 그룹 : >, >>, <
+*/
+
 typedef struct s_pars {
 	int				type;
 	char 			*str;

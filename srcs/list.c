@@ -1,5 +1,14 @@
 #include "../includes/minishell.h"
 
+void	init_cmd(t_cmd *cmd)
+{
+	cmd = (t_cmd *)malloc(sizeof(t_cmd));
+	if (!cmd)
+		return ;
+	cmd->size = 0;
+	cmd->cmd_node = NULL;
+}
+
 void	insert_node(t_node **node, int type, char *str)
 {
 	t_node *new;
@@ -37,17 +46,15 @@ int		get_listsize(t_node **node)
 	return (size);
 }
 
-void	print_cmdline(t_cmd *cmd)
+void	print_cmdline(t_node **node)
 {
-	t_cmd *tmp;
+	t_node *tmp;
 
-	tmp = cmd;
+	tmp = *node;
 	while (tmp)
 	{
-		ft_putstr("type: ");
-		ft_putendl_fd(tmp->cmd_node->type, 1);
-		ft_putstr("str: ");
-		ft_putendl_fd(tmp->cmd_node->str, 1);
-		tmp = tmp->cmd_node;
+		printf("type: %d\n", tmp->type);
+		printf("str: %s\n", tmp->str);
+		tmp = tmp->next;
 	}
 }

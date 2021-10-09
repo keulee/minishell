@@ -6,13 +6,12 @@ void	ft_exit(int exit_code)
 	exit(exit_code);
 }
 
-void	init_cmd(t_cmd *cmd)
+void	ascii_art_lol(void)
 {
-	cmd = (t_cmd *)malloc(sizeof(t_cmd));
-	if (!cmd)
-		return ;
-	cmd->size = 0;
-	cmd->cmd_node = NULL;
+	ft_putendl_fd("\033[38;5;41m___  ___ __ __  __ __  __  __  __  ____ __    __", 1);
+	ft_putendl_fd("\033[38;5;41m||\\\\//|| || ||\\ || || (( \\ ||  || ||    ||    ||", 1);
+	ft_putendl_fd("\033[38;5;41m|| \\/ || || ||\\\\|| ||  \\\\  ||==|| ||==  ||    ||", 1);
+	ft_putendl_fd("\033[38;5;41m||    || || || \\|| || \\_)) ||  || ||___ ||__| ||__|\033[0m"" @hyungyoo @keulee", 1);
 }
 
 int	main(int ac, char **av, char **env)
@@ -28,20 +27,19 @@ int	main(int ac, char **av, char **env)
 	cmd = NULL;
 
 	/* t_cmd init with malloc */
-	init_cmd(cmd);
 	/* copy env variable with malloc */
 	ft_initial(env);
 	/* signal to manage CTL+C, CTL+D
 	** need to manage CTL+/ also */
-	signal(SIGINT, handler);
+	ascii_art_lol();
 	while(1)
 	{
 		signal(SIGINT, handler);
 		signal(SIGQUIT, handler);
-		line = readline("\033[38;5;41mminishell $>\033[0m");
+		line = readline("\033[38;5;41mminishell $> \033[0m");
 		if (line == NULL || (ft_strcmp(line, "exit") == 0))
 		{
-			ft_putstr_fd("minishell exit\n", 1);
+			ft_putendl_fd("\033[38;5;31mminishell exit \033[0m", 1);
 			free_tab2(g_info.env);
 			ft_exit(1);
 		}

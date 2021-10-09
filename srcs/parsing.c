@@ -5,7 +5,7 @@ int ft_parsing(char *line, t_cmd *cmd)
 	int i;
 
 	i = 0;
-	(void)cmd;
+	init_cmd(cmd);
 	while (line[i])
 	{
 		while (line[i] == ' ')

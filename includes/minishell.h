@@ -67,4 +67,13 @@ void	ft_initial(char **env);
 int		ft_parsing(char *line, t_cmd *cmd);
 int		is_quotes_pair(char *line, int *index);
 
+void	init_cmd(t_cmd *cmd);
+void	insert_node(t_node **node, int type, char *str);
+int		get_listsize(t_node **node);
+void	print_cmdline(t_node **node); /* tmp */
+
+
+
+
+
 #endif

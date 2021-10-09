@@ -1,5 +1,11 @@
 #include "../includes/minishell.h"
 
+void	ft_exit(int exit_code)
+{
+	rl_clear_history();
+	exit(exit_code);
+}
+
 void	init_cmd(t_cmd *cmd)
 {
 	cmd = (t_cmd *)malloc(sizeof(t_cmd));
@@ -30,12 +36,14 @@ int	main(int ac, char **av, char **env)
 	signal(SIGINT, handler);
 	while(1)
 	{
-		line = readline("minishell : ");
+		signal(SIGINT, handler);
+		signal(SIGQUIT, handler);
+		line = readline("\033[38;5;41mminishell $>\033[0m");
 		if (line == NULL || (ft_strcmp(line, "exit") == 0))
 		{
 			ft_putstr_fd("minishell exit\n", 1);
 			free_tab2(g_info.env);
-			exit(1);
+			ft_exit(1);
 		}
 		add_history(line); /* add_history에 저장된 문자열은 up & down 방향키를 이용해 확인할수있다 */
 		/* 

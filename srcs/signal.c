@@ -1,12 +1,20 @@
 #include "../includes/minishell.h"
 
-void handler(int signum)
+void	handler(int signum)
 {
-	if (signum != SIGINT)
-		return ;
-	write(STDOUT_FILENO, "\n", 1);
-	if (rl_on_new_line() == -1)
-		exit(1);
-	rl_replace_line("", 1);
-	rl_redisplay();
+	if (signum == SIGINT || signum == SIGQUIT)
+	{
+		printf("\r");
+		rl_on_new_line();
+		rl_redisplay();
+		printf("  \b\b");
+		if (signum == SIGINT)
+		{
+			printf("\n");
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_redisplay();
+		}
+	}
+	return ;
 }

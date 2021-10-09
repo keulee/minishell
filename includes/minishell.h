@@ -58,6 +58,8 @@ t_info	g_info;
 
 void	handler(int signum);
 
+void	ft_exit(int exit_code);
+
 void    copy_env(char **env);
 void	ft_initial_g(void);
 void	ft_initial(char **env);

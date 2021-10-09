@@ -17,20 +17,17 @@
 /*
 ** TYPE in s_pars
 */
-# define WORD 0
-# define SPCE 1
+# define WORD 1
 # define SINQ 2
 # define DOUQ 3
 # define BSLA 4
 # define DOLR 5
 # define PIPE 6
-# define DPIP 7
-# define SEMC 8
-# define DSEM 9
-# define LESS 10
-# define GREAT 11
-# define DLESS 12
-# define DGREAT 13
+# define SEMC 7
+# define LESS 8
+# define GREAT 9
+# define DLESS 10
+# define DGREAT 11
 
 # define TRUE 1
 # define FALSE 0
@@ -41,15 +38,15 @@
 ** 리다이렉션 그룹 : >, >>, <
 */
 
-typedef struct s_pars {
+typedef struct s_node {
 	int				type;
 	char 			*str;
-	struct s_pars	*next;
-} t_pars;
+	struct s_node	*next;
+} t_node;
 
 typedef struct s_cmd {
 	int				size;
-	struct s_pars	*next;
+	struct s_node	*next;
 } t_cmd;
 
 typedef	struct s_info {
@@ -62,5 +59,8 @@ t_info	g_info;
 void	handler(int signum);
 
 void    copy_env(char **env);
+
+int		ft_parsing(char *line);
+int		is_quotes_pair(char *line, int *index);
 
 #endif

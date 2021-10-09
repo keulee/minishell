@@ -1,56 +1,10 @@
 #include "../includes/minishell.h"
 
-int	is_quotes_pair(char *line, int *index)
-{
-	char	pair;
-
-	pair = line[*index];
-	while (line[*index])
-	{
-		(*index)++;
-		if (line[*index] == pair)
-			return (0);
-	}
-	return (1);
-}
-
-int ft_parsing(char *line)
-{
-	int i;
-
-	i = 0;
-	while (line[i])
-	{
-		while (line[i] == ' ')
-			i++;
-		if (line[i] == '\"' || line[i] == '\'')
-		{
-			if (is_quotes_pair(line, &i))
-			{
-				ft_putendl_fd("Error (single quote)", 1); /* 임시 message */
-				return (1);
-			}
-			/* parsing string with quotes*/
-			i++;
-		}
-		else if (line[i] == ';' || line[i] == '\\')
-		{
-			ft_putendl_fd("Syntax error", 1); /* 임시 message */
-				return (1);
-		}
-		else if (ft_is_letter(line[i]))
-		{
-			while (ft_is_letter(line[i]))
-				i++;
-		}
-	}
-	return (0);
-}
-
 int	main(int ac, char **av, char **env)
 {
 	/* readline함수의 리턴값을 저장하기위해 임의로 포인터를 하나 선언한다 */
 	char *line;
+	t_cmd *cmd;
 
 	/* Init before launch*/
 	(void)ac;

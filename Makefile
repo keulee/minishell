@@ -2,7 +2,8 @@ NAME = minishell
 
 SRCS = srcs/minishell.c \
 		srcs/signal.c \
-		srcs/copy_env.c 
+		srcs/copy_env.c \
+		srcs/parsing.c
 
 HEADER = ./includes/minishell.h
 

@@ -46,7 +46,7 @@ typedef struct s_node {
 
 typedef struct s_cmd {
 	int				size;
-	struct s_node	*next;
+	struct s_node	*cmd_node;
 } t_cmd;
 
 typedef	struct s_info {
@@ -59,8 +59,10 @@ t_info	g_info;
 void	handler(int signum);
 
 void    copy_env(char **env);
+void	ft_initial_g(void);
+void	ft_initial(char **env);
 
-int		ft_parsing(char *line);
+int		ft_parsing(char *line, t_cmd *cmd);
 int		is_quotes_pair(char *line, int *index);
 
 #endif

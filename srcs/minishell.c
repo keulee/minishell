@@ -1,5 +1,14 @@
 #include "../includes/minishell.h"
 
+void	init_cmd(t_cmd *cmd)
+{
+	cmd = (t_cmd *)malloc(sizeof(t_cmd));
+	if (!cmd)
+		return ;
+	cmd->size = 0;
+	cmd->cmd_node = NULL;
+}
+
 int	main(int ac, char **av, char **env)
 {
 	/* readline함수의 리턴값을 저장하기위해 임의로 포인터를 하나 선언한다 */
@@ -10,11 +19,12 @@ int	main(int ac, char **av, char **env)
 	(void)ac;
 	(void)av;
 	line = NULL;
-	g_info.env = NULL;
-	
-	/* copy env variable with malloc */
-	copy_env(env);
+	cmd = NULL;
 
+	/* t_cmd init with malloc */
+	init_cmd(cmd);
+	/* copy env variable with malloc */
+	ft_initial(env);
 	/* signal to manage CTL+C, CTL+D
 	** need to manage CTL+/ also */
 	signal(SIGINT, handler);
@@ -24,14 +34,14 @@ int	main(int ac, char **av, char **env)
 		if (line == NULL || (ft_strcmp(line, "exit") == 0))
 		{
 			ft_putstr_fd("minishell exit\n", 1);
-			// free_tab2(g_info.env);
+			free_tab2(g_info.env);
 			exit(1);
 		}
 		add_history(line); /* add_history에 저장된 문자열은 up & down 방향키를 이용해 확인할수있다 */
 		/* 
 		** here : parsing process with str
 		*/
-		if (ft_parsing(line))
+		if (ft_parsing(line, cmd))
 		{
 			ft_putendl_fd("Minishell: Syntax error", 1); /* 임시 message */
 			/* if there's memory allocations, need to free here */

@@ -12,7 +12,7 @@ t_cmd	*init_cmd(void)
 	return (cmd);
 }
 
-void	insert_node(t_cmd *cmd, int type, char *str)
+void	insert_node(t_cmd **cmd, int type, char *str)
 {
 	t_node *new;
 	t_node *tmp;
@@ -23,16 +23,16 @@ void	insert_node(t_cmd *cmd, int type, char *str)
 	new->next = NULL;
 	new->str = str;
 	new->type = type;
-	tmp = cmd->cmd_node;
+	tmp = (*cmd)->cmd_node;
 	if (tmp == NULL)
-		cmd->cmd_node = new;
+		(*cmd)->cmd_node = new;
 	else
 	{
 		while (tmp->next != NULL)
 			tmp = tmp->next;
 		tmp->next = new;
 	}
-	cmd->size++;
+	(*cmd)->size++;
 }
 
 int		get_listsize(t_node **node)
@@ -50,18 +50,18 @@ int		get_listsize(t_node **node)
 	return (size);
 }
 
-void	print_cmdline(t_cmd *cmd)
+void	print_cmdline(t_cmd **cmd)
 {
 	t_node *tmp;
 
 	if (!cmd)
 		return ;
-	tmp = cmd->cmd_node;
-	while (cmd->size)
+	tmp = (*cmd)->cmd_node;
+	while ((*cmd)->size)
 	{
 		printf("type: %d\n", tmp->type);
 		printf("str: %s\n", tmp->str);
 		tmp = tmp->next;
-		cmd->size--;
+		(*cmd)->size--;
 	}
 }

@@ -1,13 +1,11 @@
 #include "../includes/minishell.h"
 
-int	parsing_quotes(char *line, int *index, t_cmd *cmd)
+int	parsing_quotes(char *line, int *index, t_cmd **cmd)
 {
 	int		tmp;
 	char	*str;
 
 	tmp = *index;
-	// (void)str;
-	(void)cmd;
 	printf("index : %d\n", tmp);
 	if (is_quotes_pair(line, index))
 		return (EXIT_FAILURE);
@@ -30,7 +28,7 @@ int ft_parsing(char *line, t_cmd **cmd)
 			i++;
 		if (line[i] == '\"' || line[i] == '\'')
 		{
-			if (parsing_quotes(line, &i, *cmd))
+			if (parsing_quotes(line, &i, cmd))
 			// if (is_quotes_pair(line, &i))
 			{
 				ft_putendl_fd("Error", 1); /* 임시 message */

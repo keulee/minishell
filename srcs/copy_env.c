@@ -25,8 +25,10 @@ void	ft_initial_g(void)
 	g_info.env = NULL;
 }
 
-void	ft_initial(char **env)
+void	ft_initial(char **env, int ac, char **av)
 {
+	(void)ac;
+	(void)av;
 	ft_initial_g();
 	copy_env(env);
 }

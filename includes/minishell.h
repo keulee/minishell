@@ -60,15 +60,16 @@ void	ft_exit(int exit_code);
 
 void    copy_env(char **env);
 void	ft_initial_g(void);
-void	ft_initial(char **env);
+void	ft_initial(char **env, int ac, char **av);
 
 int		ft_parsing(char *line, t_cmd **cmd);
 int		is_quotes_pair(char *line, int *index);
+int		parsing_quotes(char *line, int *index, t_cmd **cmd);
 
 t_cmd	*init_cmd(void);
-void	insert_node(t_cmd *cmd, int type, char *str);
+void	insert_node(t_cmd **cmd, int type, char *str);
 int		get_listsize(t_node **node);
-void	print_cmdline(t_cmd *cmd); /* tmp */
+void	print_cmdline(t_cmd **cmd); /* tmp */
 
 
 

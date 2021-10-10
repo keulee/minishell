@@ -13,12 +13,7 @@ int	main(int ac, char **av, char **env)
 	t_cmd *cmd;
 
 	/* Init before launch*/
-	(void)ac;
-	(void)av;
-	line = NULL;
-	cmd = NULL;
-
-	ft_initial(env); /* copy env variable with malloc */
+	ft_initial(env, ac, av); /* copy env variable with malloc */
 	ascii_logo_lol();
 	while(1)
 	{
@@ -41,7 +36,7 @@ int	main(int ac, char **av, char **env)
 			/* if there's memory allocations, need to free here */
 			continue ;
 		}
-		print_cmdline(cmd);
+		print_cmdline(&cmd);
 		free(line);
 		line = NULL;
 	}

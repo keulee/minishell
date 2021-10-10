@@ -1,20 +1,39 @@
 #include "../includes/minishell.h"
 
-int ft_parsing(char *line, t_cmd *cmd)
+int	parsing_quotes(char *line, int *index, t_cmd *cmd)
+{
+	int		tmp;
+	char	*str;
+
+	tmp = *index;
+	// (void)str;
+	(void)cmd;
+	printf("index : %d\n", tmp);
+	if (is_quotes_pair(line, index))
+		return (EXIT_FAILURE);
+	printf("index : %d\n", *index);
+	str = ft_substr(line, tmp, *index - tmp + 1);
+	printf("str : %s\n", str);
+	insert_node(cmd, WORD, str);
+	return (EXIT_SUCCESS);
+}
+
+int ft_parsing(char *line, t_cmd **cmd)
 {
 	int i;
 
 	i = 0;
-	init_cmd(cmd);
+	*cmd = init_cmd();
 	while (line[i])
 	{
 		while (line[i] == ' ')
 			i++;
 		if (line[i] == '\"' || line[i] == '\'')
 		{
-			if (is_quotes_pair(line, &i))
+			if (parsing_quotes(line, &i, *cmd))
+			// if (is_quotes_pair(line, &i))
 			{
-				ft_putendl_fd("Error (single quote)", 1); /* 임시 message */
+				ft_putendl_fd("Error", 1); /* 임시 message */
 				return (1);
 			}
 			/* parsing string with quotes*/

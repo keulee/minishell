@@ -35,12 +35,13 @@ int	main(int ac, char **av, char **env)
 		/* 
 		** here : parsing process with str
 		*/
-		if (ft_parsing(line, cmd))
+		if (ft_parsing(line, &cmd))
 		{
 			ft_putendl_fd("Minishell: Syntax error", 1); /* 임시 message */
 			/* if there's memory allocations, need to free here */
 			continue ;
 		}
+		print_cmdline(cmd);
 		free(line);
 		line = NULL;
 	}

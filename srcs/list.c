@@ -1,34 +1,38 @@
 #include "../includes/minishell.h"
 
-void	init_cmd(t_cmd *cmd)
-{
+t_cmd	*init_cmd(void)
+{	
+	t_cmd *cmd;
+
 	cmd = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!cmd)
-		return ;
+		return (NULL);
 	cmd->size = 0;
 	cmd->cmd_node = NULL;
+	return (cmd);
 }
 
-void	insert_node(t_node **node, int type, char *str)
+void	insert_node(t_cmd *cmd, int type, char *str)
 {
 	t_node *new;
 	t_node *tmp;
 
 	new = (t_node *)malloc(sizeof(t_node));
 	if (!new)
-		ft_putendl_fd("Minishell: Malloc error", 1);
-	tmp = *node;
+		return ;
 	new->next = NULL;
 	new->str = str;
 	new->type = type;
+	tmp = cmd->cmd_node;
 	if (tmp == NULL)
-		*node = new;
+		cmd->cmd_node = new;
 	else
 	{
 		while (tmp->next != NULL)
 			tmp = tmp->next;
 		tmp->next = new;
 	}
+	cmd->size++;
 }
 
 int		get_listsize(t_node **node)
@@ -46,15 +50,18 @@ int		get_listsize(t_node **node)
 	return (size);
 }
 
-void	print_cmdline(t_node **node)
+void	print_cmdline(t_cmd *cmd)
 {
 	t_node *tmp;
 
-	tmp = *node;
-	while (tmp)
+	if (!cmd)
+		return ;
+	tmp = cmd->cmd_node;
+	while (cmd->size)
 	{
 		printf("type: %d\n", tmp->type);
 		printf("str: %s\n", tmp->str);
 		tmp = tmp->next;
+		cmd->size--;
 	}
 }

@@ -32,18 +32,14 @@
 # define TRUE 1
 # define FALSE 0
 
-/* 3 parsing groupes
-** 문자그룹 : 문자, 스페이스, 싱글따옴표, 더블따옴표, 백슬래시(\), 달러
-** 연산자그룹 : 파이프, 더블파이프, 세미콜론, 더블세미콜론 (더블파이프, 더블세미콜론 에러 처리 가능)
-** 리다이렉션 그룹 : >, >>, <
-*/
-
+/* cmd line node */
 typedef struct s_node {
 	int				type;
 	char 			*str;
 	struct s_node	*next;
 } t_node;
 
+/* cmd struct for counting size and stocking node */
 typedef struct s_cmd {
 	int				size;
 	struct s_node	*cmd_node;
@@ -55,6 +51,8 @@ typedef	struct s_info {
 
 /* one global variable */
 t_info	g_info;
+
+void	ascii_logo_lol(void);
 
 void	handler(int signum);
 

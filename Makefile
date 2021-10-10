@@ -4,7 +4,8 @@ SRCS = srcs/minishell.c \
 		srcs/signal.c \
 		srcs/copy_env.c \
 		srcs/parsing.c \
-		srcs/list.c
+		srcs/list.c \
+		srcs/ascii_logo.c
 
 HEADER = ./includes/minishell.h
 

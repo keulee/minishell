@@ -6,14 +6,6 @@ void	ft_exit(int exit_code)
 	exit(exit_code);
 }
 
-void	ascii_art_lol(void)
-{
-	ft_putendl_fd("\033[38;5;41m___  ___ __ __  __ __  __  __  __  ____ __    __", 1);
-	ft_putendl_fd("\033[38;5;41m||\\\\//|| || ||\\ || || (( \\ ||  || ||    ||    ||", 1);
-	ft_putendl_fd("\033[38;5;41m|| \\/ || || ||\\\\|| ||  \\\\  ||==|| ||==  ||    ||", 1);
-	ft_putendl_fd("\033[38;5;41m||    || || || \\|| || \\_)) ||  || ||___ ||__| ||__|\033[0m"" @hyungyoo @keulee", 1);
-}
-
 int	main(int ac, char **av, char **env)
 {
 	/* readline함수의 리턴값을 저장하기위해 임의로 포인터를 하나 선언한다 */
@@ -26,12 +18,8 @@ int	main(int ac, char **av, char **env)
 	line = NULL;
 	cmd = NULL;
 
-	/* t_cmd init with malloc */
-	/* copy env variable with malloc */
-	ft_initial(env);
-	/* signal to manage CTL+C, CTL+D
-	** need to manage CTL+/ also */
-	ascii_art_lol();
+	ft_initial(env); /* copy env variable with malloc */
+	ascii_logo_lol();
 	while(1)
 	{
 		signal(SIGINT, handler);

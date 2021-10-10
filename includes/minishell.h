@@ -63,7 +63,7 @@ void	ft_initial_g(void);
 void	ft_initial(char **env, int ac, char **av);
 
 int		ft_parsing(char *line, t_cmd **cmd);
-int		is_quotes_pair(char *line, int *index);
+int		is_quotes_pair(char *line, int *index, char pair);
 int		parsing_quotes(char *line, int *index, t_cmd **cmd);
 
 t_cmd	*init_cmd(void);

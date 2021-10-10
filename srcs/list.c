@@ -4,7 +4,7 @@ t_cmd	*init_cmd(void)
 {	
 	t_cmd *cmd;
 
-	cmd = (t_cmd *)malloc(sizeof(t_cmd));
+	cmd = (t_cmd *)malloc(sizeof(t_cmd)); /* dont forget : free ft needed */
 	if (!cmd)
 		return (NULL);
 	cmd->size = 0;
@@ -17,7 +17,7 @@ void	insert_node(t_cmd **cmd, int type, char *str)
 	t_node *new;
 	t_node *tmp;
 
-	new = (t_node *)malloc(sizeof(t_node));
+	new = (t_node *)malloc(sizeof(t_node)); /* dont forget : free ft needed */
 	if (!new)
 		return ;
 	new->next = NULL;

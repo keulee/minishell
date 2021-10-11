@@ -6,6 +6,8 @@ int	parsing_quotes(char *line, int *index, t_cmd **cmd)
 	char	*str;
 	char	pair;
 
+	(void)cmd;
+	(void)str;
 	pair = line[*index];
 	printf("pair : %c\n", pair);
 	tmp = *index;
@@ -13,10 +15,9 @@ int	parsing_quotes(char *line, int *index, t_cmd **cmd)
 	if (is_quotes_pair(line, index, pair))
 		return (EXIT_FAILURE);
 	printf("index : %d\n", *index);
-	str = ft_substr(line, tmp, *index - tmp + 1); /* dont forget : free needed */
+	str = ft_substr(line, tmp + 1, *index - tmp - 1); /* dont forget : free needed */
 	printf("str : %s\n", str);
 	insert_node(cmd, WORD, str);
-	(*index)++;
 	return (EXIT_SUCCESS);
 }
 
@@ -24,9 +25,9 @@ int ft_parsing(char *line, t_cmd **cmd)
 {
 	int i;
 
-	i = 0;
+	i = -1;
 	*cmd = init_cmd();
-	while (line[i])
+	while (line[++i])
 	{
 		while (line[i] == ' ')
 			i++;
@@ -47,8 +48,8 @@ int ft_parsing(char *line, t_cmd **cmd)
 		}
 		else
 		{
-			while (ft_is_letter(line[i]))
-				i++;
+			// while (ft_is_letter(line[i]))
+			// 	i++;
 			i++;
 		}
 	}

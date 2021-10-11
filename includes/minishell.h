@@ -73,6 +73,4 @@ void	print_cmdline(t_cmd **cmd); /* tmp */
 
 
 
-
-
 #endif

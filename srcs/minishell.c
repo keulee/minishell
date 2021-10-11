@@ -1,11 +1,5 @@
 #include "../includes/minishell.h"
 
-void	ft_exit(int exit_code)
-{
-	rl_clear_history();
-	exit(exit_code);
-}
-
 int	main(int ac, char **av, char **env)
 {
 	/* readline함수의 리턴값을 저장하기위해 임의로 포인터를 하나 선언한다 */
@@ -14,12 +8,14 @@ int	main(int ac, char **av, char **env)
 
 	/* Init before launch*/
 	ft_initial(env, ac, av); /* copy env variable with malloc */
+	// cmd = init_cmd();
 	ascii_logo_lol();
 	while(1)
 	{
 		signal(SIGINT, handler);
 		signal(SIGQUIT, handler);
 		line = readline("\033[38;5;41mminishell $> \033[0m");
+		cmd = init_cmd();
 		if (line == NULL || (ft_strcmp(line, "exit") == 0))
 		{
 			ft_putendl_fd("\033[38;5;31mminishell exit \033[0m", 1);
@@ -37,6 +33,7 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		}
 		print_cmdline(&cmd);
+		free_list(&cmd);
 		free(line);
 		line = NULL;
 	}

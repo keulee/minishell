@@ -69,7 +69,11 @@ t_cmd	*init_cmd(void);
 void	insert_node(t_cmd **cmd, int type, char *str);
 int		get_listsize(t_node **node);
 void	print_cmdline(t_cmd **cmd); /* tmp */
+void	free_list(t_cmd **cmd);
 
+int		operation_word(t_cmd **cmd, char *line, int *index);
 
+int		parsing_quotes(char *line, int *index, t_cmd **cmd);
+int		is_quotes_pair(char *line, int *index, char pair);
 
 #endif

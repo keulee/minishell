@@ -57,11 +57,27 @@ void	print_cmdline(t_cmd **cmd)
 	if (!cmd)
 		return ;
 	tmp = (*cmd)->cmd_node;
-	while ((*cmd)->size)
+	while (tmp)
 	{
 		printf("type: %d\n", tmp->type);
 		printf("str: %s\n", tmp->str);
 		tmp = tmp->next;
-		(*cmd)->size--;
 	}
 }
+
+void	free_list(t_cmd **cmd)
+{
+	t_node	*tmp;
+
+	while ((*cmd)->cmd_node)
+	{
+		tmp = (*cmd)->cmd_node->next;
+		free((*cmd)->cmd_node->str);
+		(*cmd)->cmd_node->str = NULL;
+		free((*cmd)->cmd_node);
+		(*cmd)->cmd_node = NULL;
+		(*cmd)->cmd_node = tmp;
+	}
+	free(*cmd);
+}
+

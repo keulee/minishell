@@ -5,7 +5,10 @@ SRCS = srcs/minishell.c \
 		srcs/copy_env.c \
 		srcs/parsing.c \
 		srcs/list.c \
-		srcs/ascii_logo.c 
+		srcs/ascii_logo.c \
+		srcs/parsing_quote.c \
+		srcs/parsing_operation_word.c \
+		srcs/ft_exit.c
 
 HEADER = ./includes/minishell.h
 

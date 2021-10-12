@@ -5,7 +5,6 @@ int ft_parsing(char *line, t_cmd **cmd)
 	int i;
 
 	i = -1;
-	// *cmd = init_cmd();
 	while (line[++i])
 	{
 		while (line[i] == ' ')
@@ -33,13 +32,27 @@ int ft_parsing(char *line, t_cmd **cmd)
 		}
 		else
 		{
-			
-			continue ;
 			/* parse the others*/
-			// while (ft_is_letter(line[i]))
-			// 	i++;
+			arguement_word(cmd, line, &i);
+			i--;
 		}
 	}
 	return (0);
 }
 
+void	arguement_word(t_cmd **cmd, char *line, int *index)
+{
+	int		tmp;
+	char	*str;
+
+	tmp = *index;
+	if (ft_is_letter(line[*index]))
+	{
+		while (line[*index] && ft_is_letter(line[*index]))
+			(*index)++;
+	}
+	if (line[*index] && (line[*index] != ' '))
+		(*index)++;
+	str = ft_substr(line, tmp, *index - tmp);
+	insert_node(cmd, WORD, str);
+}

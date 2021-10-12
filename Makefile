@@ -35,7 +35,7 @@ RM = rm -f
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) $(LIB) $(OBJS) -o $(NAME) 
+	$(CC) $(CFLAGS) $(OBJS) $(LIB) -o $(NAME) 
 
 $(LIBFT):
 	$(MAKE) -C libft

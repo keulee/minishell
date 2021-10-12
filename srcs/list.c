@@ -35,21 +35,6 @@ void	insert_node(t_cmd **cmd, int type, char *str)
 	(*cmd)->size++;
 }
 
-void	print_cmdline(t_cmd **cmd)
-{
-	t_node *tmp;
-
-	if (!cmd)
-		return ;
-	tmp = (*cmd)->cmd_node;
-	while (tmp)
-	{
-		printf("type: %d\n", tmp->type);
-		printf("str: %s\n", tmp->str);
-		tmp = tmp->next;
-	}
-}
-
 void	free_list(t_cmd **cmd)
 {
 	t_node	*tmp;
@@ -81,5 +66,20 @@ int		get_listsize(t_node **node)
 		size++;
 	}
 	return (size);
+}
+
+void	print_cmdline(t_cmd **cmd)
+{
+	t_node *tmp;
+
+	if (!cmd)
+		return ;
+	tmp = (*cmd)->cmd_node;
+	while (tmp)
+	{
+		printf("type: %d\n", tmp->type);
+		printf("str: %s\n", tmp->str);
+		tmp = tmp->next;
+	}
 }
 

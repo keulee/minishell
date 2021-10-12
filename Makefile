@@ -8,7 +8,8 @@ SRCS = srcs/minishell.c \
 		srcs/ascii_logo.c \
 		srcs/parsing_quote.c \
 		srcs/parsing_operation_word.c \
-		srcs/ft_exit.c
+		srcs/ft_exit.c \
+		srcs/parsing_arg_word.c
 
 HEADER = ./includes/minishell.h
 

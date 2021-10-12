@@ -72,7 +72,7 @@ void	print_cmdline(t_cmd **cmd); /* tmp */
 void	free_list(t_cmd **cmd);
 
 int		operation_word(t_cmd **cmd, char *line, int *index);
-void	arguement_word(t_cmd **cmd, char *line, int *index);
+void	argument_word(t_cmd **cmd, char *line, int *index);
 int		parsing_quotes(char *line, int *index, t_cmd **cmd);
 int		is_quotes_pair(char *line, int *index, char pair);
 

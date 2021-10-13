@@ -35,6 +35,21 @@ RM = rm -f
 
 all: $(NAME)
 
+	@printf "\033[38;5;41m"
+	@printf "                                                                         \r"
+	@printf "################################################\n"
+	@printf "#          :::      ::::::::                   #\n"
+	@printf "#        :+:      :+:    :+:       keulee      #\n"
+	@printf "#      +:+ +:+         +:+          and        #\n"
+	@printf "#    +#+  +:+       +#+           hyungyoo     #\n"
+	@printf "#  +#+#+#+#+#+   +#+                 as        #\n"
+	@printf "#       #+#    #+#                Minishell    #\n"
+	@printf "#      ###   ###########                       #\n"
+	@printf "################################################\n"
+	@printf " \033[0m"
+
+	@printf "➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n"
+
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIB) -o $(NAME) 
 

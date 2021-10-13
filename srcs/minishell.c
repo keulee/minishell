@@ -19,7 +19,7 @@ int	main(int ac, char **av, char **env)
 		if (line == NULL || (ft_strcmp(line, "exit") == 0))
 		{
 			ft_putendl_fd("\033[38;5;31mminishell exit \033[0m", 1);
-			free_tab2(g_info.env);
+			// free_tab2(g_info.env);
 			free_list(&cmd);
 			free(line);
 			line = NULL;

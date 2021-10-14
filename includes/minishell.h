@@ -17,7 +17,7 @@
 /*
 ** TYPE in s_pars
 */
-# define WORD 		0
+// # define WORD 		0
 # define SINQ 		1
 # define DOUQ 		2
 # define DOLR 		3

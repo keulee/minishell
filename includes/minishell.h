@@ -31,6 +31,7 @@
 # define BUILTIN_CMD 11
 # define ARG		12
 # define FILE		13
+# define LIMITER	14
 
 # define TRUE 1
 # define FALSE 0
@@ -80,5 +81,7 @@ void	argument_word(t_cmd **cmd, char *line, int *index);
 int		parsing_quotes(char *line, int *index, t_cmd **cmd);
 int		is_quotes_pair(char *line, int *index, char pair);
 
+void	set_detail_type(t_cmd **cmd);
+int		is_builtin(char *str);
 
 #endif

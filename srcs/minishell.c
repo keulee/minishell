@@ -1,15 +1,22 @@
 #include "../includes/minishell.h"
 
-void	set_detail_type(t_cmd **cmd)
-{
-	t_cmd *tmp;
+// void	ft_exec(t_cmd **cmd)
+// {
+// 	t_node *tmp;
 
-	tmp = (*cmd);
-	if (!ft_strcmp(tmp->cmd_start->str, "echo"))
-		tmp->cmd_start->type = BUILTIN_CMD;
-	else
-		tmp->cmd_start->type = CMD;
-}
+// 	tmp = (*cmd)->cmd_start;
+// 	if (!tmp)
+// 		return ;
+// 	while (tmp->next != NULL)
+// 	{
+// 		if (tmp->type == BUILTIN_CMD)
+// 			// bti 
+// 		else
+// 			// execv
+
+// 		tmp = tmp->next;
+// 	}
+// }
 
 
 int	main(int ac, char **av, char **env)
@@ -52,6 +59,7 @@ int	main(int ac, char **av, char **env)
 		}
 		/* set detail types - CMD, BUILTIN_CMD, ARG, FILE etc with parsing elements */
 		set_detail_type(&cmd);
+		// ft_exec(&cmd);
 		print_cmdline(&cmd);
 		free_list(&cmd);
 		free(line);

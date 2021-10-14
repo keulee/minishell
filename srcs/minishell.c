@@ -1,5 +1,17 @@
 #include "../includes/minishell.h"
 
+void	set_detail_type(t_cmd **cmd)
+{
+	t_cmd *tmp;
+
+	tmp = (*cmd);
+	if (!ft_strcmp(tmp->cmd_start->str, "echo"))
+		tmp->cmd_start->type = BUILTIN_CMD;
+	else
+		tmp->cmd_start->type = CMD;
+}
+
+
 int	main(int ac, char **av, char **env)
 {
 	/* readline함수의 리턴값을 저장하기위해 임의로 포인터를 하나 선언한다 */
@@ -38,6 +50,8 @@ int	main(int ac, char **av, char **env)
 			line = NULL;
 			continue ;
 		}
+		/* set detail types - CMD, BUILTIN_CMD, ARG, FILE etc with parsing elements */
+		set_detail_type(&cmd);
 		print_cmdline(&cmd);
 		free_list(&cmd);
 		free(line);

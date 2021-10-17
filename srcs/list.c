@@ -20,6 +20,7 @@ void	insert_node(t_cmd **cmd, int type, char *str)
 	new = (t_node *)malloc(sizeof(t_node)); /* dont forget : free ft needed */
 	if (!new)
 		return ;
+	new->prev = NULL;
 	new->next = NULL;
 	new->str = str;
 	new->type = type;
@@ -31,6 +32,7 @@ void	insert_node(t_cmd **cmd, int type, char *str)
 		while (tmp->next != NULL)
 			tmp = tmp->next;
 		tmp->next = new;
+		new->prev = tmp;
 	}
 	(*cmd)->size++;
 }

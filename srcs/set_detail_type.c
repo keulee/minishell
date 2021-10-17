@@ -60,3 +60,4 @@ void	set_detail_type(t_cmd **cmd)
 		}
 		tmp = tmp->next;
 	}
+}

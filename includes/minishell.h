@@ -40,6 +40,7 @@
 typedef struct s_node {
 	int				type;
 	char 			*str;
+	struct s_node	*prev;
 	struct s_node	*next;
 } t_node;
 

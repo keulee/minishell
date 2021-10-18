@@ -1,22 +1,29 @@
 #include "../includes/minishell.h"
 
-// void	ft_exec(t_cmd **cmd)
-// {
-// 	t_node *tmp;
+int ft_execmd(t_node *node)
+{
+	(void)node;
+	printf("cmd exec");
+	return (EXIT_SUCCESS);
+}
 
-// 	tmp = (*cmd)->cmd_start;
-// 	if (!tmp)
-// 		return ;
-// 	while (tmp->next != NULL)
-// 	{
-// 		if (tmp->type == BUILTIN_CMD)
-// 			// bti 
-// 		else
-// 			// execv
+void	ft_exec(t_cmd **cmd)
+{
+	t_node *tmp;
 
-// 		tmp = tmp->next;
-// 	}
-// }
+	tmp = (*cmd)->cmd_start;
+	if (!tmp)
+		return ;
+	while (tmp)
+	{
+		// if (tmp->type == BUILTIN_CMD)
+			// bti 
+		if (tmp->type == CMD)
+			// exec
+			ft_execmd(tmp);
+		tmp = tmp->next;
+	}
+}
 
 
 int	main(int ac, char **av, char **env)
@@ -56,7 +63,7 @@ int	main(int ac, char **av, char **env)
 		}
 		/* set detail types - CMD, BUILTIN_CMD, ARG, FILE etc with parsing elements */
 		set_detail_type(&cmd);
-		// ft_exec(&cmd);
+		ft_exec(&cmd);
 		print_cmdline(&cmd);
 		free_list(&cmd);
 		free(line);

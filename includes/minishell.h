@@ -51,7 +51,8 @@ typedef struct s_cmd {
 } t_cmd;
 
 typedef	struct s_info {
-	char **env;
+	char	**env;
+	int		fork_flag;
 } t_info;
 
 /* one global variable */

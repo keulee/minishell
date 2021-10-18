@@ -1,9 +1,49 @@
 #include "../includes/minishell.h"
 
+char	*get_path(t_node *node)
+{
+	char	**split_path;
+	int		i;
+	char	*tmp1;
+	char	*tmp2;
+
+	i = 0;
+	if (!node)
+		return (NULL);
+	if (!ft_strncmp(node->str, "/", 1))
+	{
+		if (access(node->str, F_OK | X_OK) == 0)
+			return (node->str);
+	}
+	split_path = ft_split(getenv("PATH"), ':');
+	while (split_path[i])
+	{
+		tmp1 = ft_strjoin(split_path[i], "/");
+		tmp2 = ft_strjoin(tmp1, node->str);
+		free(tmp1);
+		if (access(tmp2, F_OK | X_OK) == 0)
+		{
+			free_tab2(split_path);
+			return (tmp2);
+		}
+		free(tmp2);
+		i++;
+	}
+	free_tab2(split_path);
+	return (NULL);
+}
+
 int ft_execmd(t_node *node)
 {
-	(void)node;
-	printf("cmd exec");
+	/* path 얻는 함수 - malloc*/
+	char *path;
+	/* cmd + arg 얻는 함수 */
+	char **argv;
+
+	(void)argv;
+	path = get_path(node);
+	printf("path check : %s\n", path);
+	// printf("cmd exec");
 	return (EXIT_SUCCESS);
 }
 

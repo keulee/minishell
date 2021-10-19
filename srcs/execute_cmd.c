@@ -113,7 +113,7 @@ int ft_execmd(t_node *node)
         printf("Minishell: %s: command not found\n", argv[0]);
         free(path);
         free_tab2(argv);
-        // exit(127);
+        exit(127);
     }
     // if (exec == -1)
 

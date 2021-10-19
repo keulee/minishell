@@ -11,6 +11,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <stdbool.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 # include "../libft/libft.h"
 
@@ -53,6 +55,8 @@ typedef struct s_cmd {
 typedef	struct s_info {
 	char	**env;
 	int		fork_flag;
+	int		count_pipe;
+	int		exit_code;
 } t_info;
 
 /* one global variable */

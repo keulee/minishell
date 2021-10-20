@@ -100,7 +100,6 @@ int ft_execmd(t_node *node)
         return (-1) ;
     else if (pid == 0)
     {
-		g_info.flag_read = 1;
         flag = execve(path, argv, g_info.env);
         if (flag == -1)
         {

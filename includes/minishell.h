@@ -34,6 +34,7 @@
 # define ARG		12
 # define FILE		13
 # define LIMITER	14
+# define BLANK		15
 
 # define TRUE 1
 # define FALSE 0
@@ -62,6 +63,7 @@ typedef struct s_envp
 }				t_envp;
 
 typedef	struct s_info {
+	int		blank;
 	struct s_envp 	*envp;
 	char	**env;
 	int		fork_flag;

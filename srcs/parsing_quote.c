@@ -3,8 +3,12 @@
 int	parsing_quotes(char *line, int *index, t_cmd **cmd)
 {
 	int		tmp;
+	int		tmp2;
 	char	*str;
+	char	*str2;
+	char	*str3;
 	char	pair;
+	char	pair2;
 
 	pair = line[(*index)++];
 	tmp = *index;
@@ -12,14 +16,36 @@ int	parsing_quotes(char *line, int *index, t_cmd **cmd)
 		return (EXIT_FAILURE);
 	while (line[*index] && line[*index] != pair)
 		(*index)++;
-	// printf("index : %d\n", *index);
-	str = ft_substr(line, tmp, *index - tmp); /* dont forget : free needed */
-	// printf("str : %s\n", str);
-	if (pair == '\"')
-		insert_node(cmd, DOUQ, str);
-	else if (pair == '\'')
-		insert_node(cmd, SINQ, str);
-	// printf("*index at the end of the ft parsing quoute : %d\n", *index);
+	str = ft_substr(line, tmp, *index - tmp);
+	// printf("index1 : %d\n", *index);
+	if (line[*index + 1] == '\"' || line[*index + 1] == '\'')
+		pair2 = line[*index + 1];
+	if (line[*index + 1] && line[*index + 1] == pair2)
+	{
+		// printf("here\n");
+		*index += 2;
+		tmp2 = *index;
+		// printf("index2 : %d\n", *index);
+		while (line[*index] && line[*index] != pair2)
+			(*index)++;
+		str2 = ft_substr(line, tmp2, *index - tmp2);
+		// printf("str2 : %s\n", str2);
+		str3 = ft_strjoin(str, str2);		
+		if (pair == '\"')
+			insert_node(cmd, DOUQ, str3);
+		else if (pair == '\'')
+			insert_node(cmd, SINQ, str3);
+		// free(str);
+		// free(str2);
+	}
+	// printf("index3 : %d\n", *index);
+	else
+	{
+		if (pair == '\"')
+			insert_node(cmd, DOUQ, str);
+		else if (pair == '\'')
+			insert_node(cmd, SINQ, str);
+	}
 	return (EXIT_SUCCESS);
 }
 

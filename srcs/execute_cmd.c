@@ -88,25 +88,8 @@ int ft_execmd(t_node *node)
 	char    **argv;
     int     flag;
 
-	(void)flag;
-	// (void)argv;
-
 	path = get_path(node);
-	// printf("path check : %s\n", path);
-	// printf("node->str : %s\n", node->str);
-
-	// int i = 0;
 	argv = get_arg(node);
-    // if (!argv)
-        // printf("argv check : %s\n", argv[0]);
-    // int i = 0;
-	// while (argv[i])
-    // {
-	// 	printf("argv[%d] check : %s\n", i, argv[i]);
-    //     i++;
-    // }
-	// 	printf("argv[%d] check : %s\n", i, argv[i]);
-
     flag = execve(path, argv, g_info.env);
     if (flag == -1)
     {

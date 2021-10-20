@@ -13,8 +13,8 @@ void	execute_cmds(t_node *node)
 	// printf("pid : %d\n", pid);
 	if (pid == 0)
 	{
-		if (node->type == BUILTIN_CMD)
-			printf("BUILTIN EXEC\n");
+ 		if (node->type == BUILTIN_CMD)
+ 			ft_built_in(node);
 		if (node->type == CMD)
 		{
 	// 	// exec
@@ -66,22 +66,20 @@ void	ft_exec(t_node *node)
 	// g_info.fork_flag = 0;
 	// init_befor_exec(tmp);
 	init_befor_exec(node);
-	printf("how many pipe : %d\n", g_info.count_pipe);
+	// printf("how many pipe : %d\n", g_info.count_pipe);
 	while (node)
 	{
-		// if (tmp->type == BUILTIN_CMD)
-			// bti
-		printf("node->str : %s\n", node->str);
-		execute_cmds(node);
-		// if (tmp->type == CMD)
+ 		if (node->type == BUILTIN_CMD)
+ 			ft_built_in(node);
+		// execute_cmds(node);
+		if (node->type == CMD)
 		// 	// exec
-			// ft_execmd(tmp);
+			ft_execmd(node);
 		// tmp = tmp->next;
 		if (node->next && node->type != PIPE)
 				node = node->next;
 		node = node->next;
 	}
-	printf("fork : %d\n", g_info.fork_flag);
 	// if (g_info.fork_flag)
 	// {
 	// 	while (waitpid(-1, &status, 0) > 0)
@@ -91,5 +89,4 @@ void	ft_exec(t_node *node)
 	// 			g_info.exit_code = WEXITSTATUS(status);
 	// 	}
 	// }
-	printf("exit code : %d\n", g_info.exit_code);
 }

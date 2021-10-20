@@ -3,25 +3,34 @@
 void	execute_cmds(t_node *node)
 {
 	pid_t	pid;
-	t_node	*tmp;
+	// t_node	*tmp;
 
-	tmp = node;
+	// tmp = node;
 	pid = fork();
 	if (pid < 0)
 		return ;
 	g_info.fork_flag = 1;
-	printf("pid : %d\n", pid);
+	// printf("pid : %d\n", pid);
 	if (pid == 0)
-	{	
-		if (tmp->type == BUILTIN_CMD)
-			;
-		else if (tmp->type == CMD)
+	{
+		if (node->type == BUILTIN_CMD)
+			printf("BUILTIN EXEC\n");
+		if (node->type == CMD)
+		{
 	// 	// exec
-			ft_execmd(tmp);
+			ft_execmd(node);
+			return ;
+		}
+		// if (node->next && node->type != CMD)
+		// {
+		// 	if(node->next->type == PIPE)
+		// 		exit(EXIT_SUCCESS);
+		// 	node = node->next;
+		// }
+			
 	}
-	// else
-		// return ;
-	// return (EXIT_SUCCESS);
+	else
+		exit(EXIT_SUCCESS);
 }
 
 void	init_befor_exec(t_node *node)
@@ -43,36 +52,44 @@ void	init_befor_exec(t_node *node)
 	}
 }
 
-void	ft_exec(t_cmd **cmd)
+// void	ft_exec(t_cmd **cmd)
+void	ft_exec(t_node *node)
 {
-	t_node	*tmp;
-	int		status;
-	// int		exit_code;
+	// t_node	*tmp;
+	// int		status;
+		// int i = 0;
+	
+	// tmp = (*cmd)->cmd_start;
+	// if (!tmp)
+		// return ;
 
-	tmp = (*cmd)->cmd_start;
-	if (!tmp)
-		return ;
 	// g_info.fork_flag = 0;
-	init_befor_exec(tmp);
+	// init_befor_exec(tmp);
+	init_befor_exec(node);
 	printf("how many pipe : %d\n", g_info.count_pipe);
-	while (tmp)
+	while (node)
 	{
 		// if (tmp->type == BUILTIN_CMD)
 			// bti
-		execute_cmds(tmp);
+		printf("node->str : %s\n", node->str);
+		execute_cmds(node);
 		// if (tmp->type == CMD)
 		// 	// exec
-		// 	ft_execmd(tmp);
-		if (tmp->next)
-			tmp = tmp->next;
+			// ft_execmd(tmp);
+		// tmp = tmp->next;
+		if (node->next && node->type != PIPE)
+				node = node->next;
+		node = node->next;
 	}
-	if (g_info.fork_flag)
-	{
-		while (waitpid(-1, &status, 0) > 0)
-		{
-			printf("waiting\n");
-			if(WIFEXITED(status) == 0)
-				g_info.exit_code = WEXITSTATUS(status);
-		}
-	}
+	printf("fork : %d\n", g_info.fork_flag);
+	// if (g_info.fork_flag)
+	// {
+	// 	while (waitpid(-1, &status, 0) > 0)
+	// 	{
+	// 		printf("waiting\n");
+	// 		if(WIFEXITED(status) == 0)
+	// 			g_info.exit_code = WEXITSTATUS(status);
+	// 	}
+	// }
+	printf("exit code : %d\n", g_info.exit_code);
 }

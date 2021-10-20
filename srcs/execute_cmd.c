@@ -115,7 +115,7 @@ int ft_execmd(t_node *node)
         free_tab2(argv);
         exit(127);
     }
-    // if (exec == -1)
-
+    free(path);
+    free_tab2(argv);
 	return (EXIT_SUCCESS);
 }

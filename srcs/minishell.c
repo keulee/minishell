@@ -37,7 +37,8 @@ int	main(int ac, char **av, char **env)
 		}
 		/* set detail types - CMD, BUILTIN_CMD, ARG, FILE etc with parsing elements */
 		set_detail_type(&cmd);
-		ft_exec(&cmd);
+		// ft_exec(&cmd);
+		ft_exec(cmd->cmd_start);
 		print_cmdline(&cmd);
 		free_list(&cmd);
 		free(line);

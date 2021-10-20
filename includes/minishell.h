@@ -90,7 +90,8 @@ int		is_quotes_pair(char *line, int *index, char pair);
 void	set_detail_type(t_cmd **cmd);
 int		is_builtin(char *str);
 
-void	ft_exec(t_cmd **cmd);
+// void	ft_exec(t_cmd **cmd);
+void	ft_exec(t_node *cmd);
 
 int		ft_execmd(t_node *node);
 char	**get_arg(t_node *node);

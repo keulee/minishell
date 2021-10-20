@@ -16,7 +16,7 @@ void	ft_pwd(t_node *node)
 {
 	char	*pwd;
 
-	if (node->next && node->next->type == ARG)
+	if (node->next && node->next->type == 12)
 	{
 		ft_putstr("pwd : too many arguments\n");
 		g_info.exit_code = 1;

@@ -87,18 +87,40 @@ int ft_execmd(t_node *node)
 	/* cmd + arg 얻는 함수 - malloc*/
 	char    **argv;
     int     flag;
+    pid_t   pid;
+    int     status;
 
-	path = get_path(node);
+    /* fork here*/ 
+    pid = fork();
+    g_info.fork_flag = 1;
+    path = get_path(node);
 	argv = get_arg(node);
-    flag = execve(path, argv, g_info.env);
-    if (flag == -1)
+
+    if (pid < 0)
+        return (-1) ;
+    else if (pid == 0)
     {
-        printf("Minishell: %s: command not found\n", argv[0]);
-        free(path);
-        free_tab2(argv);
-        exit(127);
+		g_info.flag_read = 1;
+        flag = execve(path, argv, g_info.env);
+        if (flag == -1)
+        {
+            printf("Minishell: %s: command not found\n", argv[0]);
+            free(path);
+            free_tab2(argv);
+            exit(127);
+        }
     }
-    free(path);
-    free_tab2(argv);
+    else
+    { /*pid > 0*/
+        wait(&status);
+        // printf("done\n");
+    }
+    // else if (pid > 0)
+    // {
+        // free(path);
+        // free_tab2(argv);
+		// g_info.flag_read = 0;
+        // return (1);
+    // }
 	return (EXIT_SUCCESS);
 }

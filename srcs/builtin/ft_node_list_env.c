@@ -12,6 +12,22 @@
 
 #include "../../includes/minishell.h"
 
+char	*ft_getenv(t_envp *envp, char *key)
+{
+	t_envp	*tmp;
+
+	tmp = envp->prev;
+	while (tmp != envp)
+	{
+		if (!ft_strcmp(envp->envp_key, key))
+			return (envp->envp_value);
+		envp = envp->next;
+	}
+	if (!ft_strcmp(envp->envp_key, key))
+		return (envp->envp_value);
+	return (NULL);
+}
+
 int	ft_size_key(char *str)
 {
 	int	i;

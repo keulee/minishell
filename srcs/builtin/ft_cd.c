@@ -20,8 +20,8 @@ void	ft_cd(t_node *node)
 	pwd = getenv("PWD");
 
 	printf("%s == pwd\n", pwd);
-	char *new = ft_strjoin(pwd, "/Minishell");
-	pwd = getenv(new);
+	char *new = "/Users/hyungyoo/42_Cursus/Circle_04";
 	int	i = chdir(new);
+	pwd = ft_getenv(g_info.envp, "haha");
 	printf("%d, %s == pwd\n",i , pwd);
 }

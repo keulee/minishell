@@ -24,6 +24,7 @@ void    copy_env(char **env)
 void	ft_initial_g(void)
 {
 	g_info.env = NULL;
+	g_info.flag_read = 0;
 }
 
 void	ft_initial(char **env, int ac, char **av)

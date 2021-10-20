@@ -16,7 +16,7 @@ int	main(int ac, char **av, char **env)
 		signal(SIGQUIT, handler);
 		line = readline("\033[38;5;41mminishell $> \033[0m");
 		cmd = init_cmd();
-		if (line == NULL || (ft_strcmp(line, "exit") == 0))
+		if (line == NULL)
 		{
 			ft_putendl_fd("\033[38;5;31mminishell exit \033[0m", 1);
 			// free_tab2(g_info.env);

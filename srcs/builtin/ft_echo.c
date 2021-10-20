@@ -25,25 +25,39 @@ int	ft_check_option(char *str)
 	return (1);
 }
 
-void	ft_print_echo(t_node *node)
+void	ft_echo_type_2(t_node *node)
 {
-	/*
-	 * 모든노드 확인
-	 * echo 다음에 나올 변수들
-	 * 1. $ 가 나온다면 1. $? 일경우, 
-	 *					2. $환경변수
-	 * 2. "" 타입이 2 인 경우 , 환경변수
-	 *
-	 * 3. 출력에 성공했을경우 ' ' 아닐경우 무시
-	 */
-	while (node && node->next && node->next->type == 12)
+	if (node->next->type == ARG && !ft_strcmp(node->next->str, "?"))
 	{
-		ft_putstr(node->str);
-		ft_putstr(" ");
+		printf("%d", g_info.exit_code);
 		node = node->next;
 	}
-	if (node)
-		ft_putstr(node->str);
+	else
+		ft_getenv(g_info.envp, node->str + 1);
+	node = node->next;
+}
+
+void	ft_print_echo(t_node *node)
+{
+	int	flag_space;
+
+	flag_space = 1;
+	while (node && (node->type == ARG || node->type == DOLR)) 
+	{
+		if (!node->next)
+			flag_space = 0;
+		if (node->type == DOLR)
+		//	ft_echo_type_2(cmd);
+			printf("here for $\n");
+		else
+			ft_putstr(node->str);
+		if (flag_space)
+			ft_putstr(" ");
+		if (node->next)
+			node = node->next;
+		else
+			return ;
+	}
 }
 
 void	ft_echo(t_node *node)
@@ -55,8 +69,6 @@ void	ft_echo(t_node *node)
 		return ;
 	if (!(node->next))
 	   return ;
-	if (!ft_strcmp(node->next->str, "$") && !ft_strcmp(node->next->next->str, "?"))
-		printf("%d",(g_info.exit_code));
 	node = node->next;
 	if (ft_check_option(node->str))
 	{

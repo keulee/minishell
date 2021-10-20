@@ -68,6 +68,8 @@ typedef	struct s_info {
 	int		count_pipe;
 	int		exit_code;
 	char			*last_env_str;
+
+	int	flag_read;
 } t_info;
 
 /* one global variable */
@@ -117,6 +119,7 @@ void	ft_export(t_node *node);
 void	ft_unset(t_node *node);
 void	ft_echo(t_node *node);
 void	ft_cd(t_node *node);
+void	ft_exit_builtin(t_node *node);
 
 /* node for env */
 void	ft_node_list_env(t_envp **envp_list, char **env);
@@ -127,5 +130,6 @@ char	*ft_key(char *env);
 int		ft_size_key(char *str);
 int		ft_check_egal(char *str);
 char	*ft_ajouter_value(char *str);
+char	*ft_getenv(t_envp *envp, char *key);
 
 #endif

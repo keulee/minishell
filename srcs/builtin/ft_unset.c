@@ -48,13 +48,30 @@ void	ft_free_one_node(t_envp *envp, char *arg)
 	}
 }
 
+void	ft_unset_exec(t_node *node)
+{
+	node = node->next;
+	while (node && node->type == 12)
+	{
+		printf("%s == arg\n", node->str);
+		if (ft_chercher_key(g_info.envp, node->str))
+		{
+			printf("same cmd\n");
+			ft_free_one_node(g_info.envp, node->str);
+		}
+		g_info.exit_code = 0;
+		if (node->next)
+			node = node->next;
+		else
+			return ;
+	}
+}
+
 void	ft_unset(t_node *node)
 {
-	char	*arg;
-
 	if (!node)
 		return ;
-	if (!(node->next))
+	if (!node->next)
 	{
 		ft_putstr("unset : not enough arguments\n");
 		g_info.exit_code = 1;
@@ -66,9 +83,5 @@ void	ft_unset(t_node *node)
 		g_info.exit_code = 1;
 		return ;
 	}
-	arg = node->next->str;
-	if (!ft_chercher_key(g_info.envp, arg))
-		return ;
-	ft_free_one_node(g_info.envp, arg);
-	g_info.exit_code = 0;
+	ft_unset_exec(node);
 }

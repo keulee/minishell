@@ -31,5 +31,7 @@ void	ft_built_in(t_node	*node)
 		ft_unset(node);
 	else if (!ft_strcmp(node->str, "env"))
 		ft_env(node);
+	else if (!ft_strcmp(node->str, "exit"))
+		ft_exit_builtin(node);
 }
 //passe all arg

@@ -14,6 +14,8 @@ int	is_builtin(char *str)
 		return (1);
 	else if (!ft_strcmp(str, "env"))
 		return (1);
+	else if (!ft_strcmp(str, "exit"))
+		return (1);
 	return (0);
 }
 

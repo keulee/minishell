@@ -41,19 +41,47 @@ char	*ft_ajouter_value(char *str)
 	return (ret);
 }
 
+void	ft_update_env(t_envp *envp, char *str, char *key)
+{
+	while (envp)
+	{
+		if (!ft_strcmp((envp)->envp_key, key))
+		{
+			free((envp)->envp_value);
+			(envp)->envp_value = ft_ajouter_value(str);
+			free((envp)->envp_str);
+			(envp)->envp_str = ft_strdup(str);
+			return ;
+		}
+		envp = (envp)->next;
+	}
+}
+
 void	ft_export(t_node *node)
 {
-	char	*str;
+	char	*key_tmp;
 	t_envp	*new;
 
 	if (!node)
 		return ;
-	if (!(node->next))
-		return ;
-	str = node->next->str;
-	if (!ft_check_egal(str))
-		return ;
-	new = ft_new_node_env(str);
-	new->envp_value = ft_ajouter_value(str);
-	ft_ajouter_node(&(g_info.envp), new);
+	node = node->next;
+	while (node && node->type == ARG)
+	{
+		if (ft_check_egal(node->str))
+		{
+			key_tmp = ft_key(node->str);
+			if (ft_getenv(g_info.envp, key_tmp))
+				ft_update_env(g_info.envp, node->str, key_tmp);
+			else
+			{
+				new = ft_new_node_env(node->str);
+				ft_ajouter_node(&(g_info.envp), new);
+			}
+			free(key_tmp);
+		}
+		if (node->next)
+			node = node->next;
+		else
+			return ;
+	}
 }

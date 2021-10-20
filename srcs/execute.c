@@ -2,35 +2,11 @@
 
 void	execute_cmds(t_node *node)
 {
-	pid_t	pid;
-	// t_node	*tmp;
 
-	// tmp = node;
-	pid = fork();
-	if (pid < 0)
-		return ;
-	g_info.fork_flag = 1;
-	// printf("pid : %d\n", pid);
-	if (pid == 0)
-	{
- 		if (node->type == BUILTIN_CMD)
- 			ft_built_in(node);
-		if (node->type == CMD)
-		{
-	// 	// exec
-			ft_execmd(node);
-			return ;
-		}
-		// if (node->next && node->type != CMD)
-		// {
-		// 	if(node->next->type == PIPE)
-		// 		exit(EXIT_SUCCESS);
-		// 	node = node->next;
-		// }
-			
-	}
-	else
-		exit(EXIT_SUCCESS);
+	if (node->type == BUILTIN_CMD)
+		ft_built_in(node);
+	if (node->type == CMD)
+		ft_execmd(node);
 }
 
 void	init_befor_exec(t_node *node)
@@ -40,7 +16,6 @@ void	init_befor_exec(t_node *node)
 	tmp = node;
 	g_info.fork_flag = 0;
 	g_info.count_pipe = 0;
-	g_info.exit_code = 0;
 	while (tmp)
 	{
 		if (tmp->type == PIPE)
@@ -52,30 +27,19 @@ void	init_befor_exec(t_node *node)
 	}
 }
 
-// void	ft_exec(t_cmd **cmd)
 void	ft_exec(t_node *node)
 {
-	// t_node	*tmp;
-	// int		status;
-		// int i = 0;
-	
-	// tmp = (*cmd)->cmd_start;
-	// if (!tmp)
-		// return ;
 
-	// g_info.fork_flag = 0;
-	// init_befor_exec(tmp);
 	init_befor_exec(node);
-	// printf("how many pipe : %d\n", g_info.count_pipe);
+
 	while (node)
 	{
- 		if (node->type == BUILTIN_CMD)
- 			ft_built_in(node);
-		// execute_cmds(node);
-		if (node->type == CMD)
-		// 	// exec
-			ft_execmd(node);
-		// tmp = tmp->next;
+
+		//set_pipe
+		// redirect_in
+		//  redirect_out
+		//	pipe_flag == 1;
+		execute_cmds(node);
 		if (node->next && node->type != PIPE)
 				node = node->next;
 		node = node->next;

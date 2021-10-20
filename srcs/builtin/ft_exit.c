@@ -1,25 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_env.c                                           :+:      :+:    :+:   */
+/*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/19 00:10:53 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/10/20 15:21:58 by keulee           ###   ########.fr       */
+/*   Created: 2021/10/20 15:00:19 by hyungyoo          #+#    #+#             */
+/*   Updated: 2021/10/20 15:18:07 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_env(t_node *node)
+void	ft_exit_builtin(t_node *node)
 {
-	if (node->next && node->next->type == ARG)
-	{
-		ft_putstr("env: too many arguments\n");
-		g_info.exit_code = 1;
+	if (!node)
 		return ;
+	if (!ft_strcmp(node->str, "exit"))
+	{
+		ft_putendl_fd("\033[38;5;31mminishell exit \033[0m", 1);
+		ft_exit(1);
 	}
-	ft_print_env(g_info.envp);
-	g_info.exit_code = 0;
 }

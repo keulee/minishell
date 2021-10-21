@@ -2,9 +2,8 @@
 
 void	execute_cmds(t_node *node)
 {
-
 	if (node->type == BUILTIN_CMD)
-		ft_built_in(node);
+		ft_built_in(&node);
 	if (node->type == CMD)
 		ft_execmd(node);
 }
@@ -29,9 +28,7 @@ void	init_befor_exec(t_node *node)
 
 void	ft_exec(t_node *node)
 {
-
 	init_befor_exec(node);
-
 	while (node)
 	{
 

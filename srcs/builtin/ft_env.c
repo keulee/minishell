@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 00:10:53 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/10/20 15:21:58 by keulee           ###   ########.fr       */
+/*   Updated: 2021/10/19 00:41:24 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_env(t_node *node)
+void	ft_env(t_node **cmd)
 {
-	if (node->next && node->next->type == ARG)
+	if ((*cmd)->next && (*cmd)->next->type == 12)
 	{
 		ft_putstr("env: too many arguments\n");
 		g_info.exit_code = 1;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*   ft_eho.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 02:26:25 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/10/20 15:21:45 by keulee           ###   ########.fr       */
+/*   Updated: 2021/10/20 19:50:50 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,58 +25,79 @@ int	ft_check_option(char *str)
 	return (1);
 }
 
-void	ft_echo_type_2(t_node *node)
+void	ft_echo_type_3(t_node **cmd)
 {
-	if (node->next->type == ARG && !ft_strcmp(node->next->str, "?"))
+	if ((*cmd)->next)
+		(*cmd) = (*cmd)->next;
+	if ((*cmd)->type == 12)
 	{
-		printf("%d", g_info.exit_code);
-		node = node->next;
+		if (!ft_strcmp((*cmd)->str, "?"))
+			ft_putnbr_fd(g_info.exit_code, 1);
+		else
+		{
+			if (ft_getenv(g_info.envp, (*cmd)->str))
+				ft_putstr(ft_getenv(g_info.envp, (*cmd)->str));
+		}
 	}
-	else
-		ft_getenv(g_info.envp, node->str + 1);
-	node = node->next;
 }
 
-void	ft_print_echo(t_node *node)
+void	ft_echo_type_2(t_node **cmd)
+{
+	if (((*cmd)->str)[0] == '$')
+	{
+		if (!ft_strcmp((*cmd)->str + 1, "?"))
+			ft_putnbr_fd(g_info.exit_code, 1);
+		else
+		{
+			if (ft_getenv(g_info.envp, (*cmd)->str + 1))
+				ft_putstr(ft_getenv(g_info.envp, (*cmd)->str + 1));
+		}
+	}
+	else
+		ft_putstr((*cmd)->str);
+}
+
+void	ft_print_echo(t_node **cmd)
 {
 	int	flag_space;
 
 	flag_space = 1;
-	while (node && (node->type == ARG || node->type == DOLR)) 
+	while (*cmd)
 	{
-		if (!node->next)
+		if (!(*cmd)->next)
 			flag_space = 0;
-		if (node->type == DOLR)
-		//	ft_echo_type_2(cmd);
-			printf("here for $\n");
+		if ((*cmd)->type == 3)
+			ft_echo_type_3(cmd);
+		else if ((*cmd)->type == 2)
+			ft_echo_type_2(cmd);
 		else
-			ft_putstr(node->str);
+			ft_putstr((*cmd)->str);
 		if (flag_space)
 			ft_putstr(" ");
-		if (node->next)
-			node = node->next;
+		if ((*cmd)->next)
+			(*cmd) = (*cmd)->next;
 		else
 			return ;
 	}
 }
 
-void	ft_echo(t_node *node)
+void	ft_echo(t_node **cmd)
 {
 	int	flag_option;
 
 	flag_option = 0;
-	if (!node)
+	if (!cmd || !*cmd)
 		return ;
-	if (!(node->next))
-	   return ;
-	node = node->next;
-	if (ft_check_option(node->str))
+	if (!((*cmd)->next))
+		return ;
+	(*cmd) = (*cmd)->next;
+	if (ft_check_option((*cmd)->str))
 	{
 		flag_option = 1;
-		if (node->next)
-			node = node->next;
+		if ((*cmd)->next)
+			(*cmd) = (*cmd)->next;
 	}
-	ft_print_echo(node);
+	ft_print_echo(cmd);
 	if (!flag_option)
 		ft_putstr("\n");
 	g_info.exit_code = 0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 02:10:13 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/10/20 15:23:25 by keulee           ###   ########.fr       */
+/*   Updated: 2021/10/20 16:11:10 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,40 +48,40 @@ void	ft_free_one_node(t_envp *envp, char *arg)
 	}
 }
 
-void	ft_unset_exec(t_node *node)
+void	ft_unset_exec(t_node **cmd)
 {
-	node = node->next;
-	while (node && node->type == 12)
+	(*cmd) = (*cmd)->next;
+	while ((*cmd) && (*cmd)->type == 12)
 	{
-		printf("%s == arg\n", node->str);
-		if (ft_chercher_key(g_info.envp, node->str))
+		printf("%s == arg\n", (*cmd)->str);
+		if (ft_chercher_key(g_info.envp, (*cmd)->str))
 		{
 			printf("same cmd\n");
-			ft_free_one_node(g_info.envp, node->str);
+			ft_free_one_node(g_info.envp, (*cmd)->str);
 		}
 		g_info.exit_code = 0;
-		if (node->next)
-			node = node->next;
+		if ((*cmd)->next)
+			(*cmd) = (*cmd)->next;
 		else
 			return ;
 	}
 }
 
-void	ft_unset(t_node *node)
+void	ft_unset(t_node **cmd)
 {
-	if (!node)
+	if (!cmd || !(*cmd))
 		return ;
-	if (!node->next)
+	if (!((*cmd)->next))
 	{
 		ft_putstr("unset : not enough arguments\n");
 		g_info.exit_code = 1;
 		return ;
 	}
-	if (node->next->type != 12)
+	if ((*cmd)->next->type != 12)
 	{
 		ft_putstr("unset : not enough arguments\n");
 		g_info.exit_code = 1;
 		return ;
 	}
-	ft_unset_exec(node);
+	ft_unset_exec(cmd);
 }

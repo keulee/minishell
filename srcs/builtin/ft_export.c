@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 19:35:32 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/10/20 15:22:24 by keulee           ###   ########.fr       */
+/*   Updated: 2021/10/20 16:10:24 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,30 +57,30 @@ void	ft_update_env(t_envp *envp, char *str, char *key)
 	}
 }
 
-void	ft_export(t_node *node)
+void	ft_export(t_node **cmd)
 {
 	char	*key_tmp;
 	t_envp	*new;
 
-	if (!node)
+	if (!cmd || !(*cmd))
 		return ;
-	node = node->next;
-	while (node && node->type == ARG)
+	(*cmd) = (*cmd)->next;
+	while (*cmd && (*cmd)->type == 12)
 	{
-		if (ft_check_egal(node->str))
+		if (ft_check_egal((*cmd)->str))
 		{
-			key_tmp = ft_key(node->str);
+			key_tmp = ft_key((*cmd)->str);
 			if (ft_getenv(g_info.envp, key_tmp))
-				ft_update_env(g_info.envp, node->str, key_tmp);
+				ft_update_env(g_info.envp, (*cmd)->str, key_tmp);
 			else
 			{
-				new = ft_new_node_env(node->str);
+				new = ft_new_node_env((*cmd)->str);
 				ft_ajouter_node(&(g_info.envp), new);
 			}
 			free(key_tmp);
 		}
-		if (node->next)
-			node = node->next;
+		if ((*cmd)->next)
+			(*cmd) = (*cmd)->next;
 		else
 			return ;
 	}

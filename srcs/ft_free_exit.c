@@ -25,3 +25,11 @@ void	ft_exit(int exit_code)
 	rl_clear_history();
 	exit(exit_code);
 }
+
+void	ft_exit_minishell(int exit_code, t_cmd **cmd)
+{
+	ft_free_env(g_info.envp);
+	free_list(cmd);
+	rl_clear_history();
+	exit(exit_code);
+}

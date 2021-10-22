@@ -34,7 +34,6 @@
 # define ARG		12
 # define FILE		13
 # define LIMITER	14
-# define BLANK		15
 
 # define TRUE 1
 # define FALSE 0
@@ -43,6 +42,7 @@
 typedef struct s_node {
 	int				type;
 	char 			*str;
+	int				flag_nospace;
 	struct s_node	*prev;
 	struct s_node	*next;
 } t_node;
@@ -81,6 +81,7 @@ void	ascii_logo_lol(void);
 
 void	handler(int signum);
 
+void	ft_exit_minishell(int exit_code, t_cmd **cmd);
 void	ft_exit(int exit_code);
 
 void    copy_env(char **env);

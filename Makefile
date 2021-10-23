@@ -21,7 +21,8 @@ SRCS = srcs/minishell.c \
 		srcs/builtin/ft_unset.c \
 		srcs/builtin/ft_echo.c \
 		srcs/builtin/ft_cd.c \
-		srcs/builtin/ft_exit.c
+		srcs/builtin/ft_exit.c \
+		srcs/builtin/ft_cd_util.c
 
 HEADER = ./includes/minishell.h
 
@@ -65,14 +66,14 @@ all: $(NAME)
 	@printf "➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n"
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIB) -o $(NAME) 
+	$(CC) $(CFLAGS) $(OBJS) $(LI) -o $(NAME) 
 
 $(LIBFT):
 	$(MAKE) -C libft
 	mv libft/$(LIBFT) .
 
 %.o : %.c $(HEADER)
-	$(CC) $(CFLAGS) -c $< -o $@ $(INC)
+	$(CC) $(CFLAGS) -c $< -o $@ $(IN)
 
 clean:
 	$(MAKE) -C libft clean

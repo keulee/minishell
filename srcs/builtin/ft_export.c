@@ -6,7 +6,7 @@
 /*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 19:35:32 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/10/23 18:12:34 by hyungyoo         ###   ########.fr       */
+/*   Updated: 2021/10/24 17:00:43 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,10 @@ void	ft_export(t_node **cmd)
 	if (!cmd || !(*cmd))
 		return ;
 	if (!(*cmd)->next)
+	{
+		ft_env(cmd);
 		return ;
+	}
 	(*cmd) = (*cmd)->next;
 	while (*cmd && (*cmd)->type == 12)
 	{

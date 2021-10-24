@@ -39,7 +39,10 @@ void	ft_exec(t_node *node)
 		execute_cmds(node);
 		if (node->next && node->type != PIPE)
 				node = node->next;
-		node = node->next;
+		if (node->next)
+			node = node->next;
+		else
+			break ;
 	}
 	// if (g_info.fork_flag)
 	// {

@@ -85,128 +85,128 @@ char    **get_arg(t_node *node)
 	return (path_arg);
 }
 
-char    *update_cmdline(char *first, char *second)
-{
-    char *tmp1;
+// char    *update_cmdline(char *first, char *second)
+// {
+//     char *tmp1;
 
-	tmp1 = ft_strjoin(first, second);
-	if (*first && first)
-	{
-		free(first);
-		first = NULL;
-	}
-	return (tmp1);
-}
+// 	tmp1 = ft_strjoin(first, second);
+// 	if (*first && first)
+// 	{
+// 		free(first);
+// 		first = NULL;
+// 	}
+// 	return (tmp1);
+// }
 
-int     is_quote_arg(t_node *node)
-{
-    if (node->type == ARG || node->type == SINQ || node->type == DOUQ)
-        return (0);
-    return (1);
-}
+// int     is_quote_arg(t_node *node)
+// {
+//     if (node->type == ARG || node->type == SINQ || node->type == DOUQ)
+//         return (0);
+//     return (1);
+// }
 
-void	parsing_the_rest(t_cmd **cmd, t_node *node)
-{
-	if (node->type == CMD)
-		insert_node(cmd, CMD, node->str);
-	else if (node->type == SINQ)
-		insert_node(cmd, SINQ, node->str);
-	else if (node->type == DOUQ)
-		insert_node(cmd, DOUQ, node->str);
-	else if (node->type == LEFT)
-		insert_node(cmd, LEFT, node->str);
-	else if (node->type == DLEFT)
-		insert_node(cmd, DLEFT, node->str);
-	else if (node->type == RIGHT)
-		insert_node(cmd, RIGHT, node->str);
-	else if (node->type == DRIGHT)
-		insert_node(cmd, DRIGHT, node->str);
-	else if (node->type == DOLR)
-		insert_node(cmd, DOLR, node->str);
-	else
-		insert_node(cmd, ARG, node->str);
-}
+// void	parsing_the_rest(t_cmd **cmd, t_node *node)
+// {
+// 	if (node->type == CMD)
+// 		insert_node(cmd, CMD, node->str);
+// 	else if (node->type == SINQ)
+// 		insert_node(cmd, SINQ, node->str);
+// 	else if (node->type == DOUQ)
+// 		insert_node(cmd, DOUQ, node->str);
+// 	else if (node->type == LEFT)
+// 		insert_node(cmd, LEFT, node->str);
+// 	else if (node->type == DLEFT)
+// 		insert_node(cmd, DLEFT, node->str);
+// 	else if (node->type == RIGHT)
+// 		insert_node(cmd, RIGHT, node->str);
+// 	else if (node->type == DRIGHT)
+// 		insert_node(cmd, DRIGHT, node->str);
+// 	else if (node->type == DOLR)
+// 		insert_node(cmd, DOLR, node->str);
+// 	else
+// 		insert_node(cmd, ARG, node->str);
+// }
 
-void    set_cmdline(t_node **node, t_cmd **cmdline)
-{
-    char    *cmd_str;
-    char    *arg_str;
-    t_node  *tmp;
+// void    set_cmdline(t_node **node, t_cmd **cmdline)
+// {
+//     char    *cmd_str;
+//     char    *arg_str;
+//     t_node  *tmp;
 
-    cmd_str = NULL;
-    arg_str = NULL;
-    if (!(*node))
-        return ;
-    tmp = *node;
-    while (tmp && tmp->type != PIPE)
-    {
-        if (tmp->type == CMD && tmp->flag_nospace == 1)
-        {
-            while (tmp->next && tmp->flag_nospace != 0 && tmp->type != PIPE)
-            {
-                if (!cmd_str)
-                    cmd_str = ft_strdup(tmp->str);
-                else
-                    cmd_str = update_cmdline(cmd_str, tmp->str);
-                if (tmp->next)
-                    tmp = tmp->next;
-            }
-            cmd_str = update_cmdline(cmd_str, tmp->str);
-            insert_node(cmdline, CMD, cmd_str);
-        }
-        else if (!is_quote_arg(tmp) && tmp->flag_nospace == 1)
-        {
-            while (tmp->next && tmp->flag_nospace != 0 && tmp->type != PIPE)
-            {
-                if (!arg_str)
-                    arg_str = ft_strdup(tmp->str);
-                else
-                    arg_str = update_cmdline(arg_str, tmp->str);
-                if (tmp->next)
-                    tmp = tmp->next;
-            }
-            arg_str = update_cmdline(arg_str, tmp->str);
-            insert_node(cmdline, ARG, arg_str);
-        }
-        else
-            parsing_the_rest(cmdline, tmp);
-        if (tmp->next)
-            tmp = tmp->next;
-        else
-            break ;
-    }
-}
+//     cmd_str = NULL;
+//     arg_str = NULL;
+//     if (!(*node))
+//         return ;
+//     tmp = *node;
+//     while (tmp && tmp->type != PIPE)
+//     {
+//         if (tmp->type == CMD && tmp->flag_nospace == 1)
+//         {
+//             while (tmp->next && tmp->flag_nospace != 0 && tmp->type != PIPE)
+//             {
+//                 if (!cmd_str)
+//                     cmd_str = ft_strdup(tmp->str);
+//                 else
+//                     cmd_str = update_cmdline(cmd_str, tmp->str);
+//                 if (tmp->next)
+//                     tmp = tmp->next;
+//             }
+//             cmd_str = update_cmdline(cmd_str, tmp->str);
+//             insert_node(cmdline, CMD, cmd_str);
+//         }
+//         else if (!is_quote_arg(tmp) && tmp->flag_nospace == 1)
+//         {
+//             while (tmp->next && tmp->flag_nospace != 0 && tmp->type != PIPE)
+//             {
+//                 if (!arg_str)
+//                     arg_str = ft_strdup(tmp->str);
+//                 else
+//                     arg_str = update_cmdline(arg_str, tmp->str);
+//                 if (tmp->next)
+//                     tmp = tmp->next;
+//             }
+//             arg_str = update_cmdline(arg_str, tmp->str);
+//             insert_node(cmdline, ARG, arg_str);
+//         }
+//         else
+//             parsing_the_rest(cmdline, tmp);
+//         if (tmp->next)
+//             tmp = tmp->next;
+//         else
+//             break ;
+//     }
+// }
 
-int    check_nospace_flag(t_node *node, t_cmd *cmdline)
-{
-    t_node  *tmp;
-    int     nospace;
-    int     op_word;
+// int    check_nospace_flag(t_node *node, t_cmd *cmdline)
+// {
+//     t_node  *tmp;
+//     int     nospace;
+//     int     op_word;
 
-    nospace = 0;
-    op_word = 0;
-    if (!node)
-        return (1);
-    tmp = node;
-    while (tmp->next && tmp->type != PIPE)
-    {
-        if (tmp->flag_nospace == 1)
-            nospace = 1;
-        if (!is_operation_word(tmp))
-            op_word = 1;
-        if (tmp->next)
-            tmp = tmp->next;
-        else
-            break ;
-    }
-    tmp = node;
-    if (nospace && !op_word)
-    {
-        set_cmdline(&tmp, &cmdline);
-        return (0);
-    }
-    return (1);
-}
+//     nospace = 0;
+//     op_word = 0;
+//     if (!node)
+//         return (1);
+//     tmp = node;
+//     while (tmp->next && tmp->type != PIPE)
+//     {
+//         if (tmp->flag_nospace == 1)
+//             nospace = 1;
+//         if (!is_operation_word(tmp))
+//             op_word = 1;
+//         if (tmp->next)
+//             tmp = tmp->next;
+//         else
+//             break ;
+//     }
+//     tmp = node;
+//     if (nospace && !op_word)
+//     {
+//         set_cmdline(&tmp, &cmdline);
+//         return (0);
+//     }
+//     return (1);
+// }
 
 int ft_execmd(t_node *node)
 {
@@ -236,13 +236,13 @@ int ft_execmd(t_node *node)
         path = get_path(node);
 	    argv = get_arg(node);
     // }
-    printf("path : %s\n", path);
-    int i = 0;
-    while (argv[i])
-    {
-        printf("argv[%d] : %s\n", i, argv[i]);
-        i++;
-    }
+    // printf("path : %s\n", path);
+    // int i = 0;
+    // while (argv[i])
+    // {
+    //     printf("argv[%d] : %s\n", i, argv[i]);
+    //     i++;
+    // }
 
 
     pid = fork();

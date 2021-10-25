@@ -94,6 +94,7 @@ int		is_quotes_pair(char *line, int *index, char pair);
 int		parsing_quotes(char *line, int *index, t_cmd **cmd);
 
 t_cmd	*init_cmd(void);
+t_node	*new_node(char *str, int type);
 void	insert_node(t_cmd **cmd, int type, char *str);
 int		get_listsize(t_node **node);
 void	print_cmdline(t_cmd **cmd); /* tmp */

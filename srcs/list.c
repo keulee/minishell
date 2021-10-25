@@ -12,6 +12,21 @@ t_cmd	*init_cmd(void)
 	return (cmd);
 }
 
+t_node	*new_node(char *str, int type)
+{
+	t_node *new;
+	
+	new = (t_node *)malloc(sizeof(t_node)); /* dont forget : free ft needed */
+	if (!new)
+		return (NULL);
+	new->prev = NULL;
+	new->next = NULL;
+	new->str = str;
+	new->type = type;
+	new->flag_nospace = 0;
+	return (new);
+}
+
 void	insert_node(t_cmd **cmd, int type, char *str)
 {
 	t_node *new;
@@ -101,6 +116,6 @@ void	print_cmdline(t_cmd **cmd)
 		tmp = tmp->next;
 	}
 	printf("\n");
-	printf("----------DONE---------\n");
+	printf("----------DONE---------\n\033[0m");
 }
 

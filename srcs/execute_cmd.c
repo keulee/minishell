@@ -131,45 +131,47 @@ void    set_cmdline(t_node **node, t_cmd **cmdline)
 {
     char    *cmd_str;
     char    *arg_str;
+    t_node  *tmp;
 
     cmd_str = NULL;
     arg_str = NULL;
     if (!(*node))
         return ;
-    while ((*node) && (*node)->type != PIPE)
+    tmp = *node;
+    while (tmp && tmp->type != PIPE)
     {
-        if ((*node)->type == CMD && (*node)->flag_nospace == 1)
+        if (tmp->type == CMD && tmp->flag_nospace == 1)
         {
-            while ((*node)->next && (*node)->flag_nospace != 0 && (*node)->type != PIPE)
+            while (tmp->next && tmp->flag_nospace != 0 && tmp->type != PIPE)
             {
                 if (!cmd_str)
-                    cmd_str = ft_strdup((*node)->str);
+                    cmd_str = ft_strdup(tmp->str);
                 else
-                    cmd_str = update_cmdline(cmd_str, (*node)->str);
-                if ((*node)->next)
-                    (*node) = (*node)->next;
+                    cmd_str = update_cmdline(cmd_str, tmp->str);
+                if (tmp->next)
+                    tmp = tmp->next;
             }
-            cmd_str = update_cmdline(cmd_str, (*node)->str);
+            cmd_str = update_cmdline(cmd_str, tmp->str);
             insert_node(cmdline, CMD, cmd_str);
         }
-        else if (!is_quote_arg((*node)) && (*node)->flag_nospace == 1)
+        else if (!is_quote_arg(tmp) && tmp->flag_nospace == 1)
         {
-            while ((*node)->next && (*node)->flag_nospace != 0 && (*node)->type != PIPE)
+            while (tmp->next && tmp->flag_nospace != 0 && tmp->type != PIPE)
             {
                 if (!arg_str)
-                    arg_str = ft_strdup((*node)->str);
+                    arg_str = ft_strdup(tmp->str);
                 else
-                    arg_str = update_cmdline(arg_str, (*node)->str);
-                if ((*node)->next)
-                    (*node) = (*node)->next;
+                    arg_str = update_cmdline(arg_str, tmp->str);
+                if (tmp->next)
+                    tmp = tmp->next;
             }
-            arg_str = update_cmdline(arg_str, (*node)->str);
+            arg_str = update_cmdline(arg_str, tmp->str);
             insert_node(cmdline, ARG, arg_str);
         }
         else
-            parsing_the_rest(cmdline, (*node));
-        if ((*node)->next)
-            (*node) = (*node)->next;
+            parsing_the_rest(cmdline, tmp);
+        if (tmp->next)
+            tmp = tmp->next;
         else
             break ;
     }
@@ -217,52 +219,42 @@ int ft_execmd(t_node *node)
     // t_node *tmp;
     /* 띄워쓰기에 따라 커맨드라인 다시 찾기 - malloc */
     // char    *cmdline;
-    t_cmd   *cmdline;
+    // t_cmd   *cmdline;
     
     /* fork here*/ 
     g_info.fork_flag = 1;
-    cmdline = init_cmd();
-    if (!check_nospace_flag(node, cmdline))
-    {
-        // print_cmdline(&cmdline);
-        /*path,arg 다시 파싱*/
-        path = get_path(cmdline->cmd_start);
-        argv = get_arg(cmdline->cmd_start);
-        free_list(&cmdline);
-    }
-    else
-    {
+    // cmdline = init_cmd();
+    // if (!check_nospace_flag(node, cmdline))
+    // {
+    //     // print_cmdline(&cmdline);
+    //     /*path,arg 다시 파싱*/
+    //     path = get_path(cmdline->cmd_start);
+    //     argv = get_arg(cmdline->cmd_start);
+    // }
+    // else
+    // {
         path = get_path(node);
 	    argv = get_arg(node);
-    }
+    // }
     printf("path : %s\n", path);
     int i = 0;
     while (argv[i])
     {
         printf("argv[%d] : %s\n", i, argv[i]);
         i++;
-    }    
+    }
+
+
     pid = fork();
     if (pid < 0)
         return (-1);
     else if (pid == 0)
     {
-        if(!path)
+        if (execve(path, argv, g_info.env) == -1)
         {
             printf("Minishell: %s: command not found\n", argv[0]);
             free(path);
             free_tab2(argv);
-            exit(127);
-        }
-        else if (execve(path, argv, g_info.env) == -1)
-        {
-            i = 1;
-            while (argv[i])
-                printf("Minishell: %s: %s: No such file or directory\n", argv[0], argv[i++]);
-            // printf("Minishell: %s: command not found\n", argv[0]);
-            free(path);
-            free_tab2(argv);
-            g_info.exit_code = 1;
             exit(1);
         }
     }

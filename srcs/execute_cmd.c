@@ -126,7 +126,7 @@ char    **get_arg(t_node *node)
 // 	else
 // 		insert_node(cmd, ARG, node->str);
 // }
-
+ 
 // void    set_cmdline(t_node **node, t_cmd **cmdline)
 // {
 //     char    *cmd_str;

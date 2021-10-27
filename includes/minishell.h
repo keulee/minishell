@@ -94,7 +94,6 @@ int		is_quotes_pair(char *line, int *index, char pair);
 int		parsing_quotes(char *line, int *index, t_cmd **cmd);
 
 t_cmd	*init_cmd(void);
-t_node	*new_node(char *str, int type);
 void	insert_node(t_cmd **cmd, int type, char *str);
 int		get_listsize(t_node **node);
 void	print_cmdline(t_cmd **cmd); /* tmp */
@@ -115,7 +114,7 @@ void	ft_exec(t_node *cmd);
 
 int		ft_execmd(t_node *node);
 char	**get_arg(t_node *node);
-char	*get_path(t_node *node);
+char	*get_path(char *str);
 
 /* built_in */
 void	ft_built_in(t_node **cmd);
@@ -147,5 +146,6 @@ char	*ft_ajouter_value(char *str);
 char	*ft_getenv(t_envp *envp, char *key);
 void	ft_free_env(t_envp *envp);
 void	ft_update_env(t_envp *envp, char *str, char *key);
+char	**ft_array_double_env(void);
 
 #endif

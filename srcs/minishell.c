@@ -19,9 +19,10 @@ int	main(int ac, char **av, char **env)
 		if (line == NULL)
 		{
 			ft_putendl_fd("\033[38;5;31mminishell exit \033[0m", 1);
-			ft_exit_minishell(1, &cmd);
+			//free_list(&cmd);
 			free(line);
 			line = NULL;
+			ft_exit_minishell(1, &cmd);
 		}
 		add_history(line); /* add_history에 저장된 문자열은 up & down 방향키를 이용해 확인할수있다 */
 		if (ft_parsing(line, &cmd))
@@ -41,7 +42,6 @@ int	main(int ac, char **av, char **env)
 		free(line);
 		line = NULL;
 	}
-	// free_tab2(g_info.env);
 	return(0);
 }
 

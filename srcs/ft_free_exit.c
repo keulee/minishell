@@ -16,6 +16,7 @@ void	ft_free_env(t_envp *envp)
 		free(envp);
 		envp = tmp;
 	}
+	free(envp);
 	free(g_info.last_env_str);
 }
 

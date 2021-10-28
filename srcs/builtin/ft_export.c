@@ -6,11 +6,13 @@
 /*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 19:35:32 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/10/27 10:56:17 by hyungyoo         ###   ########.fr       */
+/*   Updated: 2021/10/28 07:16:49 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	ft_error_message_export(char *str);
 
 int	ft_check_egal(char *str)
 {
@@ -158,24 +160,88 @@ void	ft_export_env(void)
 	ft_sort_env(env_sort);
 	while (env_sort[i])
 	{
-		ft_putstr("declare -x ");
-		ft_putstr(env_sort[i]);
-		ft_putstr("\n");
+		if (!(!ft_strncmp(env_sort[i], "PWD", 3) && g_info.flag_pwd == 1))
+		{
+			ft_putstr("declare -x ");
+			ft_putstr(env_sort[i]);
+			ft_putstr("\n");
+		}
 		i++;
 	}
 	free_tab2(env_sort);
+}
+
+void	ft_error_message_export(char *str)
+{
+	ft_putstr("minishell: export: ");
+	ft_putstr("'");
+	ft_putstr(str);
+	ft_putstr("': not a valid identifier\n");
+}
+
+int	ft_check_num(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (!(str[i] == '=' || ft_is_digit(str[i])))
+			return (1);
+		i++;
+	}
+	ft_error_message_export(str);
+	return (0);
+}
+
+int	ft_check_str(char *str)
+{
+	if (!ft_strncmp(str, "=", 1))
+	{
+		ft_error_message_export(str);
+		return (0);
+	}
+	return (1);
+}
+
+int	ft_check_all(t_node *cmd)
+{
+	t_node	*tmp;
+
+	tmp = cmd->prev;
+	cmd = cmd->next;
+	while (cmd != tmp)
+	{
+		if (cmd->type == PIPE)
+			break ;
+		else if (!ft_check_num(cmd->str) || !ft_check_str(cmd->str))
+			return (0);
+		cmd = cmd->next;
+	}
+	if (cmd && cmd->type != PIPE)
+		printf("%s\n", cmd->str);
+	return (1);
+}
+
+int	ft_check_export(t_node **cmd)
+{
+	if (!cmd || !(*cmd) || !(*cmd)->next)
+	{
+		if (!(*cmd)->next)
+			ft_export_env();
+		return (0);
+	}
+	if (!ft_check_all((*cmd)))
+		return (0);
+	return (1);
 }
 
 void	ft_export(t_node **cmd)
 {
 	char	*key_tmp;
 
-	if (!cmd || !(*cmd) || !(*cmd)->next)
-	{
-		if (!(*cmd)->next)
-			ft_export_env();
+	if (!ft_check_export(cmd))
 		return ;
-	}
 	(*cmd) = (*cmd)->next;
 	while (*cmd && (*cmd)->type == 12)
 	{

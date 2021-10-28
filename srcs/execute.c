@@ -8,6 +8,7 @@ void	execute_cmds(t_node *node)
 		ft_execmd(node);
 }
 
+/*
 void	init_befor_exec(t_node *node)
 {
 	t_node *tmp;
@@ -25,40 +26,21 @@ void	init_befor_exec(t_node *node)
 			break;
 	}
 }
+*/
 
 void	ft_exec(t_node *node)
 {
-	int	i = 1;
-
-	// if (!node)
-	// 	return ;
-	init_befor_exec(node);
+	if (!node)
+	 	return ;
+	//init_befor_exec(node);
 	while (node)
 	{
-
-		//set_pipe
-		// redirect_in
-		//  redirect_out
-		//	pipe_flag == 1;
 		execute_cmds(node);
 		if (node->next && node->type != PIPE)
 				node = node->next;
-		////////////// protection ///////////////
 		if (node->next)
 			node = node->next;
 		else
 			break ;
-		////////////// protection ///////////////
-		if (node)
-		i++;  ///이것은 무엇인가요??///
 	}
-	// if (g_info.fork_flag)
-	// {
-	// 	while (waitpid(-1, &status, 0) > 0)
-	// 	{
-	// 		printf("waiting\n");
-	// 		if(WIFEXITED(status) == 0)
-	// 			g_info.exit_code = WEXITSTATUS(status);
-	// 	}
-	// }
 }

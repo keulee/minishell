@@ -6,7 +6,7 @@
 /*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 20:54:30 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/10/27 22:48:16 by hyungyoo         ###   ########.fr       */
+/*   Updated: 2021/10/28 01:18:07 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,7 @@ void	ft_exec_home(void)
 		ft_update_env(g_info.envp, path_env, "PWD");
 		free(path_env);
 		g_info.exit_code = 0;
+		g_info.flag_pwd = 0;
 	}
 	free(path);
 }
@@ -163,6 +164,7 @@ void	ft_exec_path(char *new_path)
 		ft_update_env(g_info.envp, path_env, "PWD");
 		free(path_env);
 		g_info.exit_code = 0;
+		g_info.flag_pwd = 0;
 	}
 	free(path);
 }
@@ -180,6 +182,8 @@ void	ft_cd(t_node **cmd)
 			ft_exec_home();
 		else
 			ft_exec_path(new_path);
+		free(new_path);
 	}
-	free(new_path);
+	else
+		ft_exec_home();
 }

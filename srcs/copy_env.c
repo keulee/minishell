@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 16:04:24 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/10/27 23:09:58 by keulee           ###   ########.fr       */
+/*   Updated: 2021/10/28 20:28:52 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	ft_initial_g(void)
 {
 	g_info.envp = NULL;
 	g_info.pid_child = 0;
+	g_info.flag_pwd = 0;
 	g_info.last_env_str = NULL;
 }
 

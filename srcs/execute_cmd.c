@@ -32,7 +32,6 @@ int	count_arg(t_node *node)
 	int	size;
 
 	size = 0;
-	//while (node)
 	while (node && node->type != PIPE)
 	{
 		if (node->flag_nospace == 0)

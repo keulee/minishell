@@ -146,6 +146,47 @@ int	ft_error_message_no_path(char **argv, char **env)
 		return (1);
 }
 
+void	no_such_file_or_dir_message(char **argv, char *str)
+{
+	ft_putstr("Minishell: ");
+	ft_putstr(argv[0]);
+	ft_putstr(": ");
+	ft_putstr(str);
+	ft_putstr(": ");
+	ft_putendl_fd("No such file or directory", 2);
+}
+
+int		file_check(char **argv, char **env)
+{
+	int i;
+	int flag;
+	
+	i = 1;
+	flag = 0;
+	if (!argv[1])
+		return (EXIT_SUCCESS);
+	if (argv[i])
+	{
+		while (argv[i])
+		{
+			if (open(argv[i], O_RDONLY) < 0)
+			{
+				no_such_file_or_dir_message(argv, argv[i]);
+				flag++;
+			}
+			i++;
+		}
+		if (flag)
+		{
+	        g_info.exit_code = 127;
+			free_tab2(argv);
+			free_tab2(env);
+			return (0);
+		}
+	}
+	return (EXIT_SUCCESS);
+}
+
 void	ft_execmd_child(t_node *node)
 {
 	char	*path;
@@ -154,6 +195,7 @@ void	ft_execmd_child(t_node *node)
 	
 	env = ft_array_double_env();
 	argv = get_arg(node);
+    file_check(argv, env);
 	path = get_path(argv[0]);
 	execve(path, argv, env);
 }

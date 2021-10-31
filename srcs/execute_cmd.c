@@ -195,7 +195,7 @@ void	ft_execmd_child(t_node *node)
 	
 	env = ft_array_double_env();
 	argv = get_arg(node);
-    file_check(argv, env);
+    // file_check(argv, env);
 	path = get_path(argv[0]);
 	execve(path, argv, env);
 }

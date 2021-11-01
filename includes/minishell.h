@@ -13,6 +13,7 @@
 # include <stdbool.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h> 
 
 # include "../libft/libft.h"
 
@@ -34,7 +35,7 @@
 # define ARG		12
 # define FILE		13
 # define LIMITER	14
-# define BLANK		15
+// # define BLANK		15
 
 # define TRUE 1
 # define FALSE 0
@@ -44,6 +45,7 @@ typedef struct s_node {
 	int				type;
 	char 			*str;
 	int				flag_nospace;
+	int				fd[2];
 	struct s_node	*prev;
 	struct s_node	*next;
 } t_node;
@@ -69,6 +71,9 @@ typedef	struct s_info {
 	int				exit_code;
 	int				flag_pwd;
 	char			*last_env_str;
+
+	int				pipe;
+	int				fork;
 } t_info;
 
 /* one global variable */
@@ -105,12 +110,14 @@ void	parsing_the_rest(t_cmd **cmd, t_node *node);
 void	set_detail_type(t_cmd **cmd);
 int		is_builtin(char *str);
 
+
 // void	ft_exec(t_cmd **cmd);
 void	ft_exec(t_node *cmd);
 
 int		ft_execmd(t_node *node);
 char	**get_arg(t_node *node);
 char	*get_path(char *str);
+void	ft_execmd_child(t_node *node);
 
 /* built_in */
 void	ft_built_in(t_node **cmd);

@@ -72,8 +72,7 @@ typedef	struct s_info {
 	int				flag_pwd;
 	char			*last_env_str;
 
-	int				pipe;
-	int				fork;
+	int				flag_pipe;
 } t_info;
 
 /* one global variable */

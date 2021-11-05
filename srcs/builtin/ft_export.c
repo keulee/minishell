@@ -6,7 +6,7 @@
 /*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 19:35:32 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/10/28 07:16:49 by hyungyoo         ###   ########.fr       */
+/*   Updated: 2021/11/03 01:53:03 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,10 +173,11 @@ void	ft_export_env(void)
 
 void	ft_error_message_export(char *str)
 {
-	ft_putstr("minishell: export: ");
-	ft_putstr("'");
-	ft_putstr(str);
-	ft_putstr("': not a valid identifier\n");
+	ft_putstr_fd("minishell: export: ", 2);
+	ft_putstr_fd("'", 2);
+	ft_putstr_fd(str, 2);
+	ft_putstr_fd("': not a valid identifier\n", 2);
+	g_info.exit_code = 1;
 }
 
 int	ft_check_num(char *str)
@@ -184,19 +185,21 @@ int	ft_check_num(char *str)
 	int	i;
 
 	i = 0;
-	while (str[i])
+	while (str[i] && (str[i] != '='))
 	{
-		if (!(str[i] == '=' || ft_is_digit(str[i])))
-			return (1);
+		if (ft_is_digit(str[i]))
+		{
+			ft_error_message_export(str);
+			return (0);
+		}
 		i++;
 	}
-	ft_error_message_export(str);
-	return (0);
+	return (1);
 }
 
 int	ft_check_str(char *str)
 {
-	if (!ft_strncmp(str, "=", 1))
+	if (str[0] == '=')
 	{
 		ft_error_message_export(str);
 		return (0);
@@ -218,8 +221,6 @@ int	ft_check_all(t_node *cmd)
 			return (0);
 		cmd = cmd->next;
 	}
-	if (cmd && cmd->type != PIPE)
-		printf("%s\n", cmd->str);
 	return (1);
 }
 
@@ -241,7 +242,11 @@ void	ft_export(t_node **cmd)
 	char	*key_tmp;
 
 	if (!ft_check_export(cmd))
+	{
+		g_info.exit_code = 1;
 		return ;
+	}
+	g_info.exit_code = 0;
 	(*cmd) = (*cmd)->next;
 	while (*cmd && (*cmd)->type == 12)
 	{

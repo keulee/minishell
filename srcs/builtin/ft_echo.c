@@ -6,7 +6,7 @@
 /*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 02:26:25 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/10/28 01:41:56 by hyungyoo         ###   ########.fr       */
+/*   Updated: 2021/11/03 19:38:25 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,27 @@ int	ft_check_option(char *str)
 	return (1);
 }
 
+void	ft_put_last_env(void)
+{
+	ft_putstr((g_info.last_env_str + 2));
+	ft_putstr("\n");
+}
+
 void	ft_echo_type_dolr(t_node **cmd)
 {
-	if ((*cmd)->next)
+	if ((*cmd)->flag_nospace == 0)
+	{
+		ft_putstr("$");
+		return ;
+	}
+	else if ((*cmd)->next && (*cmd)->flag_nospace == 1)
 		(*cmd) = (*cmd)->next;
 	if ((*cmd)->type == 12)
 	{
 		if (!ft_strcmp((*cmd)->str, "?"))
 			ft_putnbr_fd(g_info.exit_code, 1);
+		else if (!ft_strcmp((*cmd)->str, "_"))
+			ft_put_last_env();
 		else
 		{
 			if (ft_getenv_echo(g_info.envp, (*cmd)->str))
@@ -47,6 +60,8 @@ void	ft_echo_type_2(t_node **cmd)
 	{
 		if (!ft_strcmp((*cmd)->str + 1, "?"))
 			ft_putnbr_fd(g_info.exit_code, 1);
+		else if (!ft_strcmp((*cmd)->str + 1, "_"))
+			ft_put_last_env();
 		else
 		{
 			if (ft_getenv_echo(g_info.envp, (*cmd)->str + 1))
@@ -197,17 +212,9 @@ void	ft_type2_sans_espace(t_node **cmd)
 	}
 }
 
-int	ft_check_type(int type)
-{
-	if (!(type == PIPE || type == RIGHT
-			|| type == DRIGHT || type == LEFT || type == DLEFT))
-		return (1);
-	return (0);
-}
-
 void	ft_print_echo(t_node **cmd)
 {
-	while (*cmd && ft_check_type((*cmd)->type))
+	while (*cmd && ((*cmd)->type != PIPE))
 	{
 		if ((*cmd)->type == DOLR)
 			ft_echo_type_dolr(cmd);
@@ -218,11 +225,12 @@ void	ft_print_echo(t_node **cmd)
 			else
 				ft_echo_type_2(cmd);
 		}
-		else
+		else if ((*cmd)->type == ARG)
 			ft_putstr((*cmd)->str);
-		if ((*cmd)->next)
+		if ((*cmd)->type == ARG && (*cmd)->next)
 			ft_putstr(" ");
-		if ((*cmd)->flag_nospace == 1)
+		if ((*cmd)->type == ARG && (*cmd)->prev->type == ARG
+			&& (*cmd)->flag_nospace == 1)
 			ft_putstr("\b");
 		if ((*cmd)->next)
 			(*cmd) = (*cmd)->next;

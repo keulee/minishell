@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signal.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/22 15:57:46 by hyungyoo          #+#    #+#             */
+/*   Updated: 2021/11/04 23:38:10 by keulee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 void	hanlder_child_pid(int signum)
@@ -12,6 +24,7 @@ void	hanlder_child_pid(int signum)
 		g_info.exit_code = 131;
 		ft_putstr("Quit: 3\n");
 	}
+	g_info.pid_child = 0;
 }
 
 void	handler(int signum)

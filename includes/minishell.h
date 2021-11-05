@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/04 00:59:39 by keulee            #+#    #+#             */
+/*   Updated: 2021/11/04 23:50:49 by keulee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -10,10 +22,8 @@
 # include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include <stdbool.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <sys/stat.h> 
+# include <sys/types.h>
+# include <sys/wait.h>
 
 # include "../libft/libft.h"
 
@@ -41,39 +51,51 @@
 # define FALSE 0
 
 /* cmd line node */
-typedef struct s_node {
+typedef struct s_node
+{
 	int				type;
-	char 			*str;
+	char			*str;
 	int				flag_nospace;
 	int				fd[2];
 	struct s_node	*prev;
 	struct s_node	*next;
-} t_node;
+}				t_node;
 
 /* cmd struct for counting size and stocking node */
-typedef struct s_cmd {
+typedef struct s_cmd
+{
 	int				size;
 	struct s_node	*cmd_start;
-} t_cmd;
+}				t_cmd;
 
 typedef struct s_envp
 {
-	char	*envp_str;
-	char	*envp_key;
-	char	*envp_value;
+	char			*envp_str;
+	char			*envp_key;
+	char			*envp_value;
 	struct s_envp	*next;
 	struct s_envp	*prev;
 }				t_envp;
 
-typedef	struct s_info {
-	struct s_envp 	*envp;
+typedef struct s_info
+{
+	struct s_envp	*envp;
 	pid_t			pid_child;
 	int				exit_code;
 	int				flag_pwd;
 	char			*last_env_str;
 
-	int				flag_pipe;
-} t_info;
+	int				pipe_flag;
+}				t_info;
+
+typedef struct s_fd
+{
+	int	fd_in;
+	int	fd_out;
+	int	fd_std_in;
+	int	fd_std_out;
+	int	fd_heredoc_pipe[2];
+}				t_fd;
 
 /* one global variable */
 t_info	g_info;
@@ -84,8 +106,9 @@ void	handler(int signum);
 
 void	ft_exit_minishell(int exit_code, t_cmd **cmd);
 void	ft_exit(int exit_code);
+void	get_type_dir(t_node *node);
 
-void    copy_env(char **env);
+void	copy_env(char **env);
 void	ft_initial_g(void);
 void	ft_initial(char **env, int ac, char **av);
 
@@ -98,6 +121,7 @@ void	insert_node(t_cmd **cmd, int type, char *str);
 int		get_listsize(t_node **node);
 void	print_cmdline(t_cmd **cmd); /* tmp */
 void	free_list(t_cmd **cmd);
+void	insert_nospace_flag(t_cmd **cmd);
 
 int		operation_word(t_cmd **cmd, char *line, int *index);
 void	argument_word(t_cmd **cmd, char *line, int *index);
@@ -109,17 +133,15 @@ void	parsing_the_rest(t_cmd **cmd, t_node *node);
 void	set_detail_type(t_cmd **cmd);
 int		is_builtin(char *str);
 
+void	ft_exec(t_cmd *cmd);
 
-// void	ft_exec(t_cmd **cmd);
-void	ft_exec(t_node *cmd);
-
-int		ft_execmd(t_node *node);
+void	ft_execmd(t_node *node, t_cmd *cmd_start);
 char	**get_arg(t_node *node);
 char	*get_path(char *str);
-void	ft_execmd_child(t_node *node);
 
 /* built_in */
-void	ft_built_in(t_node **cmd);
+void	ft_built_in(t_node **cmd, t_cmd *cmd_start);
+void	ft_built_in_pipe(t_node **cmd, t_cmd *cmd_start);
 void	ft_pwd(t_node **cmd);
 void	ft_print_env(t_envp *envp);
 void	ft_env(t_node **cmd);
@@ -127,7 +149,7 @@ void	ft_export(t_node **cmd);
 void	ft_unset(t_node **cmd);
 void	ft_echo(t_node **cmd);
 void	ft_cd(t_node **cmd);
-void	ft_exit_builtin(t_node **cmd);
+void	ft_exit_builtin(t_node **cmd, t_cmd *cmd_start);
 
 /* built_in cd */
 char	*ft_strjoin_cd(char *s1, char *s2);
@@ -150,5 +172,9 @@ char	*ft_getenv_echo(t_envp *envp, char *key);
 void	ft_free_env(t_envp *envp);
 void	ft_update_env(t_envp *envp, char *str, char *key);
 char	**ft_array_double_env(void);
+void	ft_update_last_env(char *path);
+int		ft_check_redir_str(char *str);
+int		ft_check_redir_type(t_node *node);
+int		ft_redir_passe_node(t_node **node);
 
 #endif

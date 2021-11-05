@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   libft.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/04 00:15:39 by keulee            #+#    #+#             */
+/*   Updated: 2021/11/04 23:48:57 by keulee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef LIBFT_H
 # define LIBFT_H
 
@@ -5,6 +17,8 @@
 # include <unistd.h>
 # include <string.h>
 # include <fcntl.h>
+
+# define BUFFER_SIZE 1
 
 void	ft_putchar(const char c);
 void	ft_putstr(const char *str);
@@ -36,5 +50,6 @@ void	free_tab2(char **str);
 int		ft_is_letter(char c);
 void	ft_putnbr_fd(int n, int fd);
 int		ft_is_digit(char c);
+int		get_next_line(int fd, char **line);
 
 #endif

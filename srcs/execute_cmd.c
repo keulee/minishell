@@ -34,8 +34,16 @@ int	count_arg(t_node *node)
 	size = 0;
 	while (node && node->type != PIPE)
 	{
-		if (node->flag_nospace == 0)
-			size++;
+		if (node->type == ARG || node->type == CMD)
+		{
+			if (node->flag_nospace == 0)
+				size++;
+			else if (node->flag_nospace == 1)
+			{
+				if (node->next && node->next->type != ARG)
+					size++;
+			}
+		}
 		if (node->next)
 			node = node->next;
 		else
@@ -106,44 +114,45 @@ char	**get_arg(t_node *node)
 		return (NULL);
 	while (node && i < num_arg)
 	{
-		if (node->flag_nospace == 1)
-			path_arg[i] = ft_arg(&node);
-		else if (node->flag_nospace == 0)
-			path_arg[i] = ft_strdup(node->str);
+		if (node->type == ARG || node->type == CMD)
+		{
+			if (node->flag_nospace == 1 && node->next && node->next->type == ARG)
+				path_arg[i] = ft_arg(&node);
+			else if (node->flag_nospace == 0 || (node->flag_nospace == 1 && node->next && node->next->type != ARG))
+				path_arg[i] = ft_strdup(node->str);
+			i++;
+		}
 		if (node->next)
 			node = node->next;
-		i++;
 	}
 	path_arg[i] = NULL;
 	return (path_arg);
 }
 
-void	ft_error_message(char *path, char **argv, char **env)
+void	ft_error_message(char *path, char **argv, char **env, t_cmd *cmd_start)
 {
-	ft_putstr("Minishell: ");
-	ft_putstr(path);
-	ft_putstr(": command not found\n");
+	ft_putstr_fd("Minishell: ", 2);
+	ft_putstr_fd(path, 2);
+	ft_putstr_fd(": command not found\n", 2);
 	free(path);
 	free_tab2(argv);
 	free_tab2(env);
-	g_info.exit_code = 1;
+	ft_exit_minishell(127, &(cmd_start));
 }
 
-int	ft_error_message_no_path(char **argv, char **env)
+void	ft_error_message_no_path(char **argv, char **env, t_cmd *cmd_start)
 {
 	if (!ft_strncmp(argv[0], "/", 1))
-		return (1);
+		return ;
 	else if (!ft_getenv(g_info.envp, "PATH"))
 	{
-		ft_putstr("Minishell: ");
-		ft_putstr(argv[0]);
-		ft_putstr(": command not found\n");
+		ft_putstr_fd("Minishell: ", 2);
+		ft_putstr_fd(argv[0], 2);
+		ft_putstr_fd(": command not found\n", 2);
 		free_tab2(argv);
 		free_tab2(env);
-		return (0);
+		ft_exit_minishell(127, &(cmd_start));
 	}
-	else
-		return (1);
 }
 
 void	ft_execmd_child(t_node *node)
@@ -151,56 +160,36 @@ void	ft_execmd_child(t_node *node)
 	char	*path;
 	char	**argv;
 	char	**env;
-	
+
 	env = ft_array_double_env();
 	argv = get_arg(node);
 	path = get_path(argv[0]);
 	execve(path, argv, env);
 }
 
-int	ft_check_path_exec(t_node *node)
+void	ft_check_path_exec(t_node *node, t_cmd *cmd_start)
 {
 	char	*path;
 	char	**argv;
 	char	**env;
 	int		flag_access;
-	
-	if (!node)
-		return (0);
+
+	path = NULL;
 	env = ft_array_double_env();
 	argv = get_arg(node);
-	if (!ft_error_message_no_path(argv, env))
-		return (0);
+	ft_error_message_no_path(argv, env, cmd_start);
 	if (argv[0])
 		path = get_path(argv[0]);
 	flag_access = access(path, F_OK | X_OK);
 	if (flag_access == -1)
-	{
-		ft_error_message(path, argv, env);
-		return (0);
-	}
+		ft_error_message(path, argv, env, cmd_start);
 	free_tab2(argv);
 	free_tab2(env);
 	free(path);
-	return (1);
 }
 
-int	ft_execmd(t_node *node)
+void	ft_execmd(t_node *node, t_cmd *cmd_start)
 {
-	int		status;
-
-
-	if (!ft_check_path_exec(node))
-		return (EXIT_SUCCESS);
-	g_info.pid_child = fork();
-	if (g_info.pid_child == 0)
-		ft_execmd_child(node);
-	else if (g_info.pid_child > 0)
-	{
-		waitpid(g_info.pid_child, &status, 0);
-		g_info.pid_child = 0;
-	}
-	else if (g_info.pid_child < 0)
-		return (-1);
-	return (EXIT_SUCCESS);
+	ft_check_path_exec(node, cmd_start);
+	ft_execmd_child(node);
 }

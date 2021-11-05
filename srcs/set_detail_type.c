@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   set_detail_type.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/04 03:36:35 by keulee            #+#    #+#             */
+/*   Updated: 2021/11/04 23:37:47 by keulee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 int	is_builtin(char *str)
@@ -19,25 +31,43 @@ int	is_builtin(char *str)
 	return (0);
 }
 
-int		is_operation_word(t_node *node)
+int	is_operation_word(t_node *node)
 {
 	if (node->type == LEFT || node->type == RIGHT || node->type == DRIGHT)
 		return (0);
 	return (1);
 }
 
-void	set_detail_type(t_cmd **cmd)
+void	first_cmd_type(t_cmd **cmd)
 {
-    t_node	*tmp;
+	t_node	*tmp;
 
-    if (!*cmd || !(*cmd)->cmd_start)
-        return ;
 	tmp = (*cmd)->cmd_start;
 	if (is_builtin(tmp->str))
 		tmp->type = BUILTIN_CMD;
 	else
 		tmp->type = CMD;
-	tmp = tmp->next;
+}
+
+void	set_cmd_next_pipe(t_node *tmp)
+{
+	if (tmp->next && tmp->next->type == ARG)
+	{
+		if (is_builtin(tmp->next->str))
+			tmp->next->type = BUILTIN_CMD;
+		else
+			tmp->next->type = CMD;
+	}
+}
+
+void	set_detail_type(t_cmd **cmd)
+{
+	t_node	*tmp;
+
+	if (!*cmd || !(*cmd)->cmd_start)
+		return ;
+	first_cmd_type(cmd);
+	tmp = (*cmd)->cmd_start->next;
 	while (tmp)
 	{
 		if (!is_operation_word(tmp))
@@ -51,15 +81,7 @@ void	set_detail_type(t_cmd **cmd)
 				tmp->next->type = LIMITER;
 		}
 		if (tmp->type == PIPE)
-		{
-			if (tmp->next && tmp->next->type == ARG)
-			{
-				if (is_builtin(tmp->next->str))
-					tmp->next->type = BUILTIN_CMD;
-				else
-					tmp->next->type = CMD;
-			}
-		}
+			set_cmd_next_pipe(tmp);
 		tmp = tmp->next;
 	}
 }

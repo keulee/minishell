@@ -6,7 +6,7 @@
 /*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 15:00:19 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/11/03 19:41:17 by hyungyoo         ###   ########.fr       */
+/*   Updated: 2021/11/06 20:14:00 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,43 +34,82 @@ int	ft_check_num_exit(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (!ft_is_digit(str[i]))
+		if (i == 0 && str[i] == '-' && i++)
+			continue ;
+		else if (!ft_is_digit(str[i]))
 			return (0);
 		i++;
 	}
 	return (1);
 }
 
-/*
- *	1. exit 두개이상인자이면, too many arguments 인지
- *	2. 숫자가 아닌 다른 이자가 들어와도 괜찮은지
- */
+int	ft_check_pipe_before_exit(t_cmd *cmd)
+{
+	t_node	*start;
+	int		i;
+
+	i = 0;
+	start = cmd->cmd_start;
+	while (start && i++ < cmd->size)
+	{
+		if (start->type == PIPE)
+			return (1);
+		start = start->next;
+	}
+	return (0);
+}
+
+int	ft_set_exit_code(char *str)
+{
+	int	exit_code;
+
+	exit_code = ft_atoi(str);
+	if (exit_code >= 0)
+		exit_code = exit_code % 256;
+	else if (exit_code < 0)
+	{
+		while (exit_code < 0)
+			exit_code += 256;
+	}
+	return (exit_code);
+}
+
+void	ft_exit_with_message(t_cmd *cmd_start)
+{
+	ft_putendl_fd("\033[38;5;31mminishell exit \033[0m", 2);
+	ft_exit_minishell(g_info.exit_code, &(cmd_start));
+}
+
+void	ft_error_message_string_arg(t_node *node, t_cmd *cmd)
+{
+	ft_putstr_fd("minishell: exit: ", 2);
+	ft_putstr_fd((node)->str, 2);
+	ft_putstr_fd(": numeric argument required\n", 2);
+	g_info.exit_code = 255;
+	ft_exit_with_message(cmd);
+}
+
 void	ft_exit_builtin(t_node **cmd, t_cmd *cmd_start)
 {
-	int	exit_code ;
-
-	exit_code = 0;
-	if ((*cmd)->next)
+	g_info.exit_code = 0;
+	if (ft_check_pipe_before_exit(cmd_start))
+		return ;
+	if (!((*cmd)->next))
+		ft_exit_with_message(cmd_start);
+	while ((*cmd) && (*cmd)->type != ARG)
+		(*cmd) = (*cmd)->next;
+	if (!ft_check_num_exit((*cmd)->str))
+		ft_error_message_string_arg((*cmd), cmd_start);
+	else if (ft_check_num_exit((*cmd)->str))
 	{
-		while ((*cmd) && (*cmd)->type != ARG)
-			(*cmd) = (*cmd)->next;
-		if (ft_check_num_exit((*cmd)->str))
+		if ((*cmd)->next)
 		{
-			exit_code = ft_atoi((*cmd)->str);
-			if (exit_code < 0)
-				exit_code *= -1;
-			if (exit_code > 255)
-				exit_code = exit_code % 255;
-		}
-		else
-		{
-			ft_putstr_fd("minishell: exit: ", 2);
-			ft_putstr_fd((*cmd)->str, 2);
-			ft_putstr_fd(": numeric argument required\n", 2);
-			g_info.exit_code = 255;
+			ft_putendl_fd("\033[38;5;31mminishell exit \033[0m", 2);
+			ft_putstr_fd("minishell : exit: too many arguments\n", 2);
+			g_info.exit_code = 1;
 			return ;
 		}
+		g_info.exit_code = ft_set_exit_code((*cmd)->str);
+		ft_exit_with_message(cmd_start);
 	}
-	ft_putendl_fd("\033[38;5;31mminishell exit \033[0m", 2);
-	ft_exit_minishell(exit_code, &(cmd_start));
 }

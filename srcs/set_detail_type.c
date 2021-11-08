@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 03:36:35 by keulee            #+#    #+#             */
-/*   Updated: 2021/11/08 16:49:01 by keulee           ###   ########.fr       */
+/*   Updated: 2021/11/08 17:09:35 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void	first_cmd_type(t_cmd **cmd)
 	tmp = (*cmd)->cmd_start;
 	if (is_builtin(tmp->str))
 		tmp->type = BUILTIN_CMD;
+	if (tmp->type == DOUQ || tmp->type == SINQ || tmp->type == DOLR)
+		return ;
 	else
 		tmp->type = CMD;
 }

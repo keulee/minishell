@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 00:59:39 by keulee            #+#    #+#             */
-/*   Updated: 2021/11/08 16:47:18 by keulee           ###   ########.fr       */
+/*   Updated: 2021/11/08 17:02:42 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,5 +176,9 @@ void	ft_update_last_env(char *path);
 int		ft_check_redir_str(char *str);
 int		ft_check_redir_type(t_node *node);
 int		ft_redir_passe_node(t_node **node);
+
+/* expension */
+
+void	ft_expension(t_cmd **cmd);
 
 #endif

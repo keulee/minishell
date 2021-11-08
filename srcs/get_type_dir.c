@@ -15,12 +15,7 @@ void	ft_change_type(t_node **node)
 	if ((*node)->next)
 	{
 		(*node) = (*node)->next;
-		/////////////////////////////////////////앞 노드 타입이 << (DLEFT)이면 뒤에는 파일 대신 LIMITER
-		// if ((*node)->prev->type == DLEFT)
-			// (*node)->type = LIMITER;
-		///////////////////////////////////////////////////////////////////////////////////////
-		// else
-			(*node)->type = FILE;
+		(*node)->type = FILE;
 	}
 }
 

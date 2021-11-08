@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/04 00:59:39 by keulee            #+#    #+#             */
-/*   Updated: 2021/11/04 23:50:49 by keulee           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -22,6 +10,7 @@
 # include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <stdbool.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 
@@ -45,7 +34,7 @@
 # define ARG		12
 # define FILE		13
 # define LIMITER	14
-// # define BLANK		15
+# define BLANK		15
 
 # define TRUE 1
 # define FALSE 0
@@ -56,7 +45,6 @@ typedef struct s_node
 	int				type;
 	char			*str;
 	int				flag_nospace;
-	int				fd[2];
 	struct s_node	*prev;
 	struct s_node	*next;
 }				t_node;
@@ -84,8 +72,6 @@ typedef struct s_info
 	int				exit_code;
 	int				flag_pwd;
 	char			*last_env_str;
-
-	int				pipe_flag;
 }				t_info;
 
 typedef struct s_fd
@@ -95,6 +81,7 @@ typedef struct s_fd
 	int	fd_std_in;
 	int	fd_std_out;
 	int	fd_heredoc_pipe[2];
+	int	fd_pipe[2];
 }				t_fd;
 
 /* one global variable */
@@ -121,7 +108,6 @@ void	insert_node(t_cmd **cmd, int type, char *str);
 int		get_listsize(t_node **node);
 void	print_cmdline(t_cmd **cmd); /* tmp */
 void	free_list(t_cmd **cmd);
-void	insert_nospace_flag(t_cmd **cmd);
 
 int		operation_word(t_cmd **cmd, char *line, int *index);
 void	argument_word(t_cmd **cmd, char *line, int *index);
@@ -150,6 +136,7 @@ void	ft_unset(t_node **cmd);
 void	ft_echo(t_node **cmd);
 void	ft_cd(t_node **cmd);
 void	ft_exit_builtin(t_node **cmd, t_cmd *cmd_start);
+int		ft_not_type(t_node *node);
 
 /* built_in cd */
 char	*ft_strjoin_cd(char *s1, char *s2);

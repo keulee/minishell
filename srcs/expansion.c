@@ -8,6 +8,13 @@ char	*replace_expansion(char *exp, char *rest, int *flag)
 
 	if (ft_getenv(g_info.envp, exp))
 		tmp = ft_strjoin(ft_getenv(g_info.envp, exp), rest);
+	else if (ft_digit(exp[0]))
+	{
+		tmp2 = ft_substr(exp, 1, ft_strlen(exp));
+		tmp = ft_strjoin(tmp2, rest);
+		free(tmp2);
+		*flag = 1;
+	}
 	else
 	{
 		tmp2 = ft_strdup("");
@@ -27,8 +34,7 @@ char	*replace_str(char *str, int *index, int *flag)
 	int		i;
 
 	i = *index;
-	// printf("i is ? %d\n", i);
-	while (str[i] && ft_is_letter(str[i]))
+	while (str[i] && (ft_is_letter(str[i]) || ft_digit(str[i])))
 		i++;
 	exp = ft_substr(str, *index, i - *index);
 	rest = ft_substr(str, i, ft_strlen(str));
@@ -79,6 +85,8 @@ char	*replace_env(char *exp)
 
 	if (ft_getenv(g_info.envp, exp))
 		tmp = ft_strdup(ft_getenv(g_info.envp, exp));
+	else if (ft_digit(exp[0]))
+		tmp = ft_substr(exp, 1, ft_strlen(exp));
 	else
 		tmp = ft_strdup("");
 	return (tmp);
@@ -91,7 +99,7 @@ char	*replace_argstr(char *str)
 	int		i;
 
 	i = 0;
-	while (str[i] && ft_is_letter(str[i]))
+	while (str[i] && (ft_is_letter(str[i]) || ft_digit(str[i])))
 		i++;
 	exp = ft_substr(str, 0, i);
 	tmp = replace_env(exp);
@@ -122,6 +130,40 @@ void	ft_delnode(t_node **node)
 	}
 }
 
+void	del_dollor_node(t_node **node)
+{
+	t_node *tmp;
+
+	(void)tmp;
+	if (!(*node))
+		return ;
+	if ((*node)->next)
+	{
+		tmp = (*node)->next;
+		(*node)->prev->next = tmp;
+		(*node)->next->prev = (*node)->prev;
+		free((*node)->str);
+		free(*node);
+		*node = NULL;
+	}
+	else if (!(*node)->prev && !((*node)->next))// "" 이 경우의 수 
+	{
+	// 	free((*node)->str);
+	// 	free(*node);
+	// 	*node = NULL;
+	// 	// printf("here\n");
+		return ;
+	}
+	else
+	{
+		(*node)->prev->next = NULL;
+		(*node)->prev->flag_nospace = 0;
+		free((*node)->str);
+		free(*node);
+		*node = NULL;
+	}
+}
+
 void	replace_expansion_as_arg(char **str, t_node **node)
 {
 	char	*tmp;
@@ -142,7 +184,12 @@ void	replace_expansion_as_arg(char **str, t_node **node)
 	}
 	if ((*node)->next && (*node)->next->flag_nospace != 1)
 		(*node)->flag_nospace = 0;
-	ft_delnode(&(*node)); //$PATH에서 PATH부분 노드를 가지고 들어감
+	ft_delnode(&(*node)); //$PATH에서 $부분 노드를 가지고 들어가서 PATH 노드를 없앰
+	if (!ft_strcmp((*str), ""))
+	// {
+		del_dollor_node(&(*node)); // cat "" 에서 "" 가지고 들어가서 "" 노드를 없앰
+		// printf("ici\n");
+	// }
 }
 
 void	ft_expension(t_cmd **cmd)
@@ -157,12 +204,14 @@ void	ft_expension(t_cmd **cmd)
 			break ;
 		/* when "$PWD" is in quote */
 		if ((ft_strchr((node->str), '$') && node->type == DOUQ && node->type != SINQ))
-		{
-			printf("quotes case\n");
+		// {
+		// 	printf("quotes case\n");
 			replace_expansion_in_dquote(&node->str);
-		}
+		// }
 		else if (node->type == DOLR && node->next && node->next->type == ARG)
 			replace_expansion_as_arg(&node->str, &(node));
+		if (!node)
+			break ;
 		if (node->next)
 			node = node->next;
 		else

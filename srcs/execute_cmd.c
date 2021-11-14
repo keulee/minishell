@@ -116,9 +116,11 @@ char	**get_arg(t_node *node)
 	{
 		if ((ft_not_type(node)))
 		{
-			if (node->flag_nospace == 1 && node->next && ft_not_type(node->next))
+			if (node->flag_nospace == 1 && node->next
+				&& ft_not_type(node->next))
 				path_arg[i] = ft_arg(&node);
-			else if (node->flag_nospace == 0 || (node->flag_nospace == 1 && node->next && !ft_not_type(node->next)))
+			else if (node->flag_nospace == 0 || (node->flag_nospace == 1
+					&& node->next && !ft_not_type(node->next)))
 				path_arg[i] = ft_strdup(node->str);
 			i++;
 		}
@@ -138,6 +140,30 @@ void	ft_error_message(char *path, char **argv, char **env, t_cmd *cmd_start)
 	free_tab2(argv);
 	free_tab2(env);
 	ft_exit_minishell(127, &(cmd_start));
+}
+
+void	ft_error_message_path(char *path, char **argv,
+	char **env, t_cmd *cmd_start)
+{
+	ft_putstr_fd("Minishell: ", 2);
+	ft_putstr_fd(path, 2);
+	ft_putstr_fd(": No such file or directory\n", 2);
+	free(path);
+	free_tab2(argv);
+	free_tab2(env);
+	ft_exit_minishell(127, &(cmd_start));
+}
+
+void	ft_error_message_pwd(char *path, char **argv,
+	char **env, t_cmd *cmd_start)
+{
+	ft_putstr_fd("Minishell: ", 2);
+	ft_putstr_fd(path, 2);
+	ft_putstr_fd(": is a directory\n", 2);
+	free(path);
+	free_tab2(argv);
+	free_tab2(env);
+	ft_exit_minishell(126, &(cmd_start));
 }
 
 void	ft_error_message_no_path(char **argv, char **env, t_cmd *cmd_start)
@@ -181,15 +207,28 @@ void	ft_check_path_exec(t_node *node, t_cmd *cmd_start)
 	if (argv[0])
 		path = get_path(argv[0]);
 	flag_access = access(path, F_OK | X_OK);
-	if (flag_access == -1)
+	if (!ft_strcmp(ft_getenv(g_info.envp, "PWD"), path))
+		ft_error_message_pwd(path, argv, env, cmd_start);
+	else if (!ft_strcmp(ft_getenv(g_info.envp, "PATH"), path))
+		ft_error_message_path(path, argv, env, cmd_start);
+	else if (flag_access == -1)
 		ft_error_message(path, argv, env, cmd_start);
 	free_tab2(argv);
 	free_tab2(env);
 	free(path);
 }
 
+void	ft_error_message_execmd(t_cmd *cmd_start)
+{
+	ft_putstr_fd("Minishell: ", 2);
+	ft_putstr_fd(": command not found\n", 2);
+	ft_exit_minishell(127, &(cmd_start));
+}
+
 void	ft_execmd(t_node *node, t_cmd *cmd_start)
 {
+	if (!ft_strcmp(node->str, ""))
+		ft_error_message_execmd(cmd_start);
 	ft_check_path_exec(node, cmd_start);
 	ft_execmd_child(node);
 }

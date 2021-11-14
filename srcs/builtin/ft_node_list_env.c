@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_node_list_env.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 15:46:59 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/11/07 16:31:30 by hyungyoo         ###   ########.fr       */
+/*   Updated: 2021/11/13 23:34:58 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	ft_check_redir_str(char *str)
 {
+	if (!str)
+		return (0);
 	if (!ft_strcmp(str, "<") || !ft_strcmp(str, "<<")
 		|| !ft_strcmp(str, ">") || !ft_strcmp(str, ">>"))
 		return (1);

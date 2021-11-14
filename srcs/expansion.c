@@ -1,220 +1,226 @@
 #include "../includes/minishell.h"
 
-///////////////함수에서 leak이 날 것만 같은데... 확인 좀 해줄 수 있겠니.../////////
-char	*replace_expansion(char *exp, char *rest, int *flag)
+void	ft_del_list_one_node(t_cmd *cmd, t_node *node)
 {
-	char	*tmp;
-	char	*tmp2;
-
-	if (ft_getenv(g_info.envp, exp))
-		tmp = ft_strjoin(ft_getenv(g_info.envp, exp), rest);
-	else if (ft_digit(exp[0]))
-	{
-		tmp2 = ft_substr(exp, 1, ft_strlen(exp));
-		tmp = ft_strjoin(tmp2, rest);
-		free(tmp2);
-		*flag = 1;
-	}
-	else
-	{
-		tmp2 = ft_strdup("");
-		tmp = ft_strjoin(tmp2, rest);
-		free(tmp2);
-		*flag = 1;
-	}
-	return (tmp);
+	cmd->cmd_start = NULL;
+	free(node->str);
+	free(node);
 }
-//////////////////////////////////////////////////////////////////////
 
-char	*replace_str(char *str, int *index, int *flag)
+void	ft_del_list_last_node(t_cmd *cmd, t_node *node)
 {
-	char	*exp;
-	char	*rest;
+	(void)cmd;
+	node->prev->next = NULL;
+	free(node->str);
+	free(node);
+}
+
+void	ft_del_list(t_cmd *cmd, t_node *node)
+{
+	int	size_node;
+
+	size_node = cmd->size;
+	if (size_node == 1)
+		ft_del_list_one_node(cmd, node);
+	else if (!(node->next) || size_node == 2)
+		ft_del_list_last_node(cmd, node);
+	else if (node->next)
+	{
+		node->prev->next = node->next;
+		node->next->prev = node->prev;
+		free(node->str);
+		free(node);
+	}
+}
+
+void	ft_reset_value_exit_code(t_cmd *cmd, t_node **node)
+{
 	char	*tmp;
+	t_node	*next_node;
+
+	tmp = NULL;
+	if (!node || !(*node) || !((*node)->next))
+		return ;
+	next_node = (*node)->next;
+	tmp = (*node)->str;
+	if (!ft_strcmp((next_node)->str, "?"))
+		(*node)->str = ft_itoa(g_info.exit_code);
+	else if (!ft_strcmp((next_node)->str, "$"))
+		(*node)->str = ft_strdup("53017");
+	(*node)->type = ARG;
+	(*node)->flag_nospace = next_node->flag_nospace;
+	free(tmp);
+	ft_del_list(cmd, next_node);
+}
+
+void	ft_reset_value(t_cmd *cmd, t_node **node)
+{
+	char	*tmp;
+	t_node	*next_node;
+
+	tmp = NULL;
+	if (!node || !(*node) || !((*node)->next))
+		return ;
+	next_node = (*node)->next;
+	tmp = (*node)->str;
+	(*node)->str = ft_strdup(ft_getenv(g_info.envp, next_node->str));
+	(*node)->type = ARG;
+	(*node)->flag_nospace = next_node->flag_nospace;
+	free(tmp);
+	ft_del_list(cmd, next_node);
+}
+
+void	malloc_new_str(char **new_str, char c)
+{
+	int	i;
+
+	i = 0;
+	(*new_str) = (char *)malloc(sizeof(char) * 2);
+	if (!*new_str)
+		return ;
+	(*new_str)[i++] = c;
+	(*new_str)[i] = '\0';
+}
+
+void	ft_ajouter_char(char **new_str, char c)
+{
+	int		size;
+	char	*tmp;
+	char	*ret;
 	int		i;
 
-	i = *index;
-	while (str[i] && (ft_is_letter(str[i]) || ft_digit(str[i])))
+	i = 0;
+	if (!*new_str)
+	{
+		malloc_new_str(new_str, c);
+		return ;
+	}
+	size = ft_strlen(*new_str) + 1;
+	ret = (char *)malloc(sizeof(char) * size + 1);
+	if (!ret)
+		return ;
+	while ((*new_str)[i])
+	{
+		ret[i] = (*new_str)[i];
 		i++;
-	exp = ft_substr(str, *index, i - *index);
-	rest = ft_substr(str, i, ft_strlen(str));
-	tmp = replace_expansion(exp, rest, flag);
-	free(exp);
-	free(rest);
-	*index = i;
-	return (tmp);
+	}
+	ret[i++] = c;
+	ret[i] = '\0';
+	tmp = *new_str;
+	*new_str = ret;
+	free(tmp);
 }
 
-void	replace_expansion_in_dquote(char **str)
+char	*tmp_key_expansion(char *str, int *i, int j)
 {
-	char	*tmp;
-	char	*string;
-	int		i;
-	int		flag;
+	int		size;
+	int		k;
+	char	*tmp_key;
 
-	i = 0;
-	flag = 0;
-	while ((*str)[i])
+	size = *i - j;
+	tmp_key = NULL;
+	tmp_key = (char *)malloc(sizeof(char) * size + 1);
+	if (!tmp_key)
+		return (NULL);
+	k = 0;
+	while (k < size)
+		tmp_key[k++] = str[j++];
+	tmp_key[k] = '\0';
+	return (tmp_key);
+}
+
+void	ft_ajouter_dolr(char **new_str, char *str, int *i)
+{
+	int		j;
+	char	*tmp_key;
+
+	(*i)++;
+	j = *i;
+	while (str[*i])
 	{
-			// printf("here\n");
-		if ((*str)[i] == '$' && (*str)[i + 1] == '\0')
-		{
-			// printf("here\n");
-			*str = ft_strcpy(*str, "$");
-		}
-		else if ((*str)[i] == '$')
-		{
-			string = ft_substr(*str, 0, i);
-			i++;
-			tmp = replace_str(*str, &i, &flag);
-			free(*str);
-			*str = ft_strjoin(string, tmp);
-			free(string);
-			free(tmp);
-		}
-		if (flag)
+		if (str[*i] == ' ' || str[*i] == '|' || str[*i] == 39 || str[*i] == '$')
 			break ;
-		else
-			i++;
+		(*i)++;
 	}
-}
-
-char	*replace_env(char *exp)
-{
-	char *tmp;
-
-	if (ft_getenv(g_info.envp, exp))
-		tmp = ft_strdup(ft_getenv(g_info.envp, exp));
-	else if (ft_digit(exp[0]))
-		tmp = ft_substr(exp, 1, ft_strlen(exp));
+	tmp_key = tmp_key_expansion(str, i, j);
+	if (ft_getenv(g_info.envp, tmp_key))
+		*new_str = ft_strjoin_free(*new_str, ft_getenv(g_info.envp, tmp_key));
 	else
-		tmp = ft_strdup("");
-	return (tmp);
+		*new_str = ft_strjoin_free(*new_str, "");
+	free(tmp_key);
 }
 
-char	*replace_argstr(char *str)
+void	ft_ajouter_exit_code(char **new_str, int *i)
 {
-	char	*exp;
+	char	*num;
+
+	num = NULL;
+	num = ft_itoa(g_info.exit_code);
+	*new_str = ft_strjoin_free(*new_str, num);
+	free(num);
+	(*i) = (*i) + 2;
+}
+
+void	ft_ajouter_dolr_code(char **new_str, int *i)
+{
+	char	*num;
+
+	num = NULL;
+	num = ft_strdup("53017");
+	*new_str = ft_strjoin_free(*new_str, num);
+	free(num);
+	(*i) = (*i) + 2;
+}
+
+void	ft_reset_value_douq(t_cmd *cmd, t_node **node)
+{
+	char	*new_str;
 	char	*tmp;
 	int		i;
 
+	(void)cmd;
 	i = 0;
-	while (str[i] && (ft_is_letter(str[i]) || ft_digit(str[i])))
-		i++;
-	exp = ft_substr(str, 0, i);
-	tmp = replace_env(exp);
-	free(exp);
-	return (tmp);
-}
-
-void	ft_delnode(t_node **node)
-{
-	t_node *tmp;
-
-	if (!(*node))
-		return ;
-	if ((*node)->next->next)
+	new_str = NULL;
+	tmp = (*node)->str;
+	while (((*node)->str)[i])
 	{
-		tmp = (*node)->next;
-		(*node)->next = tmp->next;
-		tmp->next->prev = (*node);
-		free(tmp->str);
-		free(tmp);
-	}
-	else
-	{
-		tmp = (*node)->next;
-		(*node)->next = NULL;
-		free(tmp->str);
-		free(tmp);
-	}
-}
-
-void	del_dollor_node(t_node **node)
-{
-	t_node *tmp;
-
-	(void)tmp;
-	if (!(*node))
-		return ;
-	if ((*node)->next)
-	{
-		tmp = (*node)->next;
-		(*node)->prev->next = tmp;
-		(*node)->next->prev = (*node)->prev;
-		free((*node)->str);
-		free(*node);
-		*node = NULL;
-	}
-	else if (!(*node)->prev && !((*node)->next))// "" 이 경우의 수 
-	{
-	// 	free((*node)->str);
-	// 	free(*node);
-	// 	*node = NULL;
-	// 	// printf("here\n");
-		return ;
-	}
-	else
-	{
-		(*node)->prev->next = NULL;
-		(*node)->prev->flag_nospace = 0;
-		free((*node)->str);
-		free(*node);
-		*node = NULL;
-	}
-}
-
-void	replace_expansion_as_arg(char **str, t_node **node)
-{
-	char	*tmp;
-	int		i;
-
-	i = 0;
-	while ((*str)[i])
-	{
-		if ((*str)[i] == '$')
-		{
-			tmp = replace_argstr((*node)->next->str);
-			*str = ft_strdup(tmp);
-		}
-		if (!ft_strcmp((*str), ""))
-			break ;
+		if (((*node)->str)[i] == '$' && ((*node)->str)[i + 1]
+			&& ((*node)->str)[i + 1] && ((*node)->str)[i + 1] != '?'
+			&& ((*node)->str)[i + 1] != '$' && ((*node)->str)[i + 1] != ' ')
+			ft_ajouter_dolr(&new_str, (*node)->str, &(i));
+		else if (((*node)->str)[i] == '$' && ((*node)->str)[i + 1]
+			&& ((*node)->str)[i + 1] == '?')
+			ft_ajouter_exit_code(&new_str, &(i));
+		else if (((*node)->str)[i] == '$' && ((*node)->str)[i + 1]
+			&& ((*node)->str)[i + 1] == '$')
+			ft_ajouter_dolr_code(&new_str, &(i));
 		else
-			i++;
+			ft_ajouter_char(&new_str, (((*node)->str)[i++]));
 	}
-	if ((*node)->next && (*node)->next->flag_nospace != 1)
-		(*node)->flag_nospace = 0;
-	ft_delnode(&(*node)); //$PATH에서 $부분 노드를 가지고 들어가서 PATH 노드를 없앰
-	if (!ft_strcmp((*str), ""))
-	// {
-		del_dollor_node(&(*node)); // cat "" 에서 "" 가지고 들어가서 "" 노드를 없앰
-		// printf("ici\n");
-	// }
+	(*node)->str = new_str;
+	free(tmp);
 }
 
 void	ft_expension(t_cmd **cmd)
 {
-	t_node *node;
+	t_node	*node;
 
-	node = ((*cmd)->cmd_start);
+	node = (*cmd)->cmd_start;
 	while (node)
 	{
-		/* ignore when cmd is echo */
-		if ((node->type == BUILTIN_CMD && !ft_strcmp(node->str, "echo")))
-			break ;
-		/* when "$PWD" is in quote */
-		if ((ft_strchr((node->str), '$') && node->type == DOUQ && node->type != SINQ))
-		// {
-		// 	printf("quotes case\n");
-			replace_expansion_in_dquote(&node->str);
-		// }
-		else if (node->type == DOLR && node->next && node->next->type == ARG)
-			replace_expansion_as_arg(&node->str, &(node));
-		if (!node)
-			break ;
+		if (node->type == DOLR && node->flag_nospace == 1 && node->next
+			&& (ft_strcmp(node->next->str, "?")
+				&& ft_strcmp(node->next->str, "$")))
+			ft_reset_value(*cmd, &node);
+		else if (node->type == DOLR && node->flag_nospace == 1 && node->next
+			&& (!ft_strcmp(node->next->str, "?")
+				|| !ft_strcmp(node->next->str, "$")))
+			ft_reset_value_exit_code(*cmd, &node);
+		else if (node->type == DOUQ)
+			ft_reset_value_douq(*cmd, &node);
 		if (node->next)
 			node = node->next;
 		else
-			break;
-	}	
+			return ;
+	}
 }

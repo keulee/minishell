@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 00:59:39 by keulee            #+#    #+#             */
-/*   Updated: 2021/11/09 04:28:30 by keulee           ###   ########.fr       */
+/*   Updated: 2021/11/16 23:58:16 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@
 /*
 ** TYPE in s_pars
 */
-// # define WORD 		0
 # define SINQ 		1
 # define DOUQ 		2
 # define DOLR 		3
@@ -45,7 +44,6 @@
 # define ARG		12
 # define FILE		13
 # define LIMITER	14
-// # define BLANK		15
 
 # define TRUE 1
 # define FALSE 0

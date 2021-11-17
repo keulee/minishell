@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 00:59:39 by keulee            #+#    #+#             */
-/*   Updated: 2021/11/16 23:58:16 by keulee           ###   ########.fr       */
+/*   Updated: 2021/11/17 21:08:59 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 /*
 ** TYPE in s_pars
 */
+// # define WORD 		0
 # define SINQ 		1
 # define DOUQ 		2
 # define DOLR 		3
@@ -44,6 +45,7 @@
 # define ARG		12
 # define FILE		13
 # define LIMITER	14
+// # define BLANK		15
 
 # define TRUE 1
 # define FALSE 0
@@ -85,6 +87,18 @@ typedef struct s_info
 	int				pipe_flag;
 }				t_info;
 
+typedef struct s_fd_pipe
+{
+	int	fd_in;
+	int	fd_out;
+	int	fd_std_in;
+	int	fd_std_out;
+    int fd_std_in_pipe;
+    int fd_std_out_pipe;
+	int	fd_heredoc_pipe[2];
+    int pipe_fd[2];
+}               t_fd_pipe;
+
 typedef struct s_fd
 {
 	int	fd_in;
@@ -97,13 +111,22 @@ typedef struct s_fd
 /* one global variable */
 t_info	g_info;
 
+/* pipe */
+void    ft_exec_pipe(t_node *node, t_cmd *cmd);
+int     count_pipe(t_node *node);
+void	ft_error_message_left(char *str);
+void	execute_cmds(t_node **node, t_cmd *cmd);
+void	ft_set_fd(t_fd *fd);
+void	ft_close_fd(t_fd *fd);
+void	ft_move_to_last(t_node **node);
+
 void	ascii_logo_lol(void);
 
 void	handler(int signum);
 
 void	ft_exit_minishell(int exit_code, t_cmd **cmd);
 void	ft_exit(int exit_code);
-void	get_type_dir(t_node *node);
+void	get_type_dir(t_node *node, t_cmd *cmd);
 
 void	copy_env(char **env);
 void	ft_initial_g(void);
@@ -136,6 +159,17 @@ void	ft_execmd(t_node *node, t_cmd *cmd_start);
 char	**get_arg(t_node *node);
 char	*get_path(char *str);
 char	*ft_strjoin_free(char *s1, char *s2);
+
+/* execute */
+void	ft_error_message_left(char *str);
+int     ft_left_fd(t_node **node, t_fd *fd);
+void	heredoc_child(t_fd *fd, t_cmd *cmd, t_node **node);
+int	    ft_dleft_fd(t_node **node, t_fd *fd, t_cmd *cmd);
+int	    ft_right_fd(t_node **node, t_fd *fd);
+int	    ft_dright_fd(t_node **node, t_fd *fd);
+int	    ft_fd_checker(t_node *node, t_fd *fd, t_cmd *cmd);
+void	ft_set_fd(t_fd *fd);
+void	ft_close_fd(t_fd *fd);
 
 /* built_in */
 void	ft_built_in(t_node **cmd, t_cmd *cmd_start);
@@ -175,6 +209,7 @@ void	ft_update_last_env(char *path);
 int		ft_check_redir_str(char *str);
 int		ft_check_redir_type(t_node *node);
 int		ft_redir_passe_node(t_node **node);
+char	*ft_strjoin_free(char *s1, char *s2);
 
 /* expension */
 

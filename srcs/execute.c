@@ -22,7 +22,7 @@ void	ft_error_message_left(char *str)
 {
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(str, 2);
-	ft_putstr_fd(": No such file or directory", 2);
+	ft_putstr_fd(": No such file or directory\n", 2);
 	g_info.exit_code = 1;
 }
 
@@ -257,78 +257,6 @@ int	ft_check_pipe_error(t_node *node)
 	return (1);
 }
 
-void	exec_child(t_node *node, t_node *next_cmd, t_cmd *cmd)
-{
-	if (g_info.pipe_flag)
-	{
-		dup2(next_cmd->fd[1], STDOUT_FILENO);
-		close(next_cmd->fd[1]);
-	}
-	if (node->fd[0] != 0)
-	{
-		dup2(node->fd[0], STDIN_FILENO);
-		close(node->fd[0]);
-	}
-	execute_cmds(&node, cmd);
-	ft_exit_minishell(g_info.exit_code, &cmd);
-}
-
-void	execute_cmds_pipe(t_node **node, t_cmd *cmd)
-{
-	int		status;
-	t_node	*next_cmd;
-
-	next_cmd = (*node)->next;
-	while (next_cmd)
-	{
-		if (next_cmd->type == PIPE)
-		{
-			next_cmd = next_cmd->next;
-			break ;
-		}
-		if (next_cmd->next)
-			next_cmd = next_cmd->next;
-		else
-			break ;
-	}
-	if (g_info.pipe_flag)
-		pipe(next_cmd->fd);
-	g_info.pid_child = fork();
-	if (g_info.pid_child == 0)
-		exec_child(*node, next_cmd, cmd);
-	else if (g_info.pid_child > 0)
-	{
-		waitpid(g_info.pid_child, &status, 0);
-		g_info.pid_child = 0;
-		g_info.exit_code = WEXITSTATUS(status);
-	}
-	else if (g_info.pid_child < 0)
-		return ;
-	if (g_info.pipe_flag)
-		close(next_cmd->fd[1]);
-	if ((*node)->fd[0] != 0)
-		close((*node)->fd[0]);
-}
-
-void	ft_exec_pipe(t_node *node, t_cmd *cmd)
-{
-	if (!node)
-		return ;
-	g_info.pipe_flag = count_pipe(node);
-	while (node)
-	{
-		execute_cmds_pipe(&node, cmd);
-		while (node->next && node->type != PIPE)
-			node = node->next;
-		if (g_info.pipe_flag)
-			g_info.pipe_flag--;
-		if (node->next)
-			node = node->next;
-		else
-			break ;
-	}
-}
-
 void	ft_exec(t_cmd *cmd)
 {
 	t_node	*node;
@@ -336,7 +264,7 @@ void	ft_exec(t_cmd *cmd)
 	node = cmd->cmd_start;
 	if (!node)
 		return ;
-	get_type_dir(node);
+	get_type_dir(node, cmd);
 	if (!ft_check_pipe_error(node))
 		ft_error_message_exec();
 	else if (!count_pipe(node))

@@ -1,93 +1,16 @@
-#include "../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute_pipe.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/18 12:45:50 by hyungyoo          #+#    #+#             */
+/*   Updated: 2021/11/18 20:55:42 by hyungyoo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int	check_cmd(t_node *node)
-{
-	while (node && node->type != PIPE)
-	{
-		if (node->type == CMD || node->type == BUILTIN_CMD)
-			return (1);
-		if (node->next)
-			node = node->next;
-		else
-			break ;
-	}
-	return (0);
-}
-
-int	ft_left_fd_pipe(t_node **node, t_fd_pipe *fd, int flag)
-{
-	if (!(*node)->next || ((*node)->next && (*node)->next->type == PIPE))
-	{
-		ft_putstr_fd("minishell: syntax error ", 2);
-		ft_putstr_fd("near unexpected token 'newline'\n", 2);
-		return (0);
-	}
-	(*node) = (*node)->next;
-	if (!flag)
-		return (0);
-	fd->fd_in = open((*node)->str, O_RDONLY, 0644);
-	if (fd->fd_in == -1)
-	{
-		ft_error_message_left((*node)->str);
-		return (0);
-	}
-	dup2(fd->fd_in, 0);
-	return (1);
-}
-
-void	heredoc_parent_pipe(t_fd_pipe *fd, int status)
-{
-	close(fd->fd_heredoc_pipe[1]);
-	dup2(fd->fd_heredoc_pipe[0], 0);
-	waitpid(g_info.pid_child, &status, 0);
-	g_info.pid_child = 0;
-	g_info.exit_code = WEXITSTATUS(status);
-}
-
-void	heredoc_child_pipe(t_fd_pipe *fd, t_cmd *cmd, t_node **node)
-{
-	char	*line;
-
-	close(fd->fd_heredoc_pipe[0]);
-	dup2(fd->fd_heredoc_pipe[1], 1);
-	ft_putstr_fd("> ", 2);
-	while (get_next_line(0, &line) > 0)
-	{
-		if (!ft_strcmp(line, (*node)->str))
-		{
-			free(line);
-			break ;
-		}
-		else
-			ft_putstr_fd("> ", 2);
-		ft_putstr_fd(line, 1);
-		ft_putstr_fd("\n", 1);
-		free(line);
-	}
-	ft_exit_minishell(0, &cmd);
-}
-
-int	ft_dleft_fd_pipe(t_node **node, t_fd_pipe *fd, t_cmd *cmd, int flag)
-{
-	int	status;
-
-	status = 0;
-	pipe(fd->fd_heredoc_pipe);
-	g_info.pid_child = fork();
-	if (!(*node)->next || ((*node)->next && (*node)->next->type == PIPE))
-	{
-		ft_putstr_fd("minishell: parse error near '\n'\n", 2);
-		return (0);
-	}
-	(*node) = (*node)->next;
-	if (!flag)
-		return (0);
-	if (g_info.pid_child > 0)
-		heredoc_parent_pipe(fd, status);
-	else if (g_info.pid_child == 0)
-		heredoc_child_pipe(fd, cmd, node);
-	return (1);
-}
+#include "../../../includes/minishell.h"
 
 int	ft_right_fd_pipe(t_node **node, t_fd_pipe *fd, int flag)
 {
@@ -156,15 +79,12 @@ int	ft_fd_checker_pipe(t_node *node, t_fd_pipe *fd, t_cmd *cmd, int flag)
 	return (ret);
 }
 
-/*
- * 여기 다시보기
- */
 void	ft_set_fd_pipe(t_fd_pipe *fd)
 {
 	fd->fd_std_in_pipe = dup(fd->pipe_fd[0]);
 	fd->fd_std_out_pipe = dup(fd->pipe_fd[1]);
 	fd->fd_std_in = dup(0);
-	fd->fd_std_in = dup(1);
+	fd->fd_std_out = dup(1);
 	fd->fd_in = -1;
 	fd->fd_out = -1;
 }
@@ -190,6 +110,7 @@ void	execute_cmds_pipe(t_node **node, t_cmd *cmd, t_fd_pipe *fd)
 	ft_set_fd_pipe(fd);
 	if (ft_fd_checker_pipe(*node, fd, cmd, check_cmd(*node)))
 	{
+		ft_close_fd_pipe(fd);
 		tmp = (*node)->prev;
 		while ((*node) != tmp)
 		{
@@ -205,7 +126,86 @@ void	execute_cmds_pipe(t_node **node, t_cmd *cmd, t_fd_pipe *fd)
 		else if ((*node)->type == CMD)
 			ft_execmd(*node, cmd);
 	}
-	ft_close_fd_pipe(fd);
+}
+
+int	check_next_pipe_node(t_node **node)
+{
+	while (*node)
+	{
+		if ((*node)->type == PIPE)
+		{
+			if ((*node)->next)
+				(*node) = (*node)->next;
+			return (TRUE);
+		}
+		if ((*node)->next)
+			(*node) = (*node)->next;
+		else
+			break ;
+	}
+	return (FALSE);
+}
+
+int	check_dleft(t_node *node)
+{
+	int	flag_redir;
+
+	flag_redir = 0;
+	while (node)
+	{
+		if (node->type == LEFT)
+			flag_redir = LEFT;
+		else if (node->type == DLEFT)
+			flag_redir = DLEFT;
+		if (node->next)
+			node = node->next;
+		else
+			break ;
+	}
+	return (flag_redir);
+}
+
+int	check_dleft_next_cmd(t_node *node)
+{
+	int	flag_redir;
+
+	flag_redir = 0;
+	if (!check_next_pipe_node(&node))
+		return (0);
+	while (node)
+	{
+		if (node->type == LEFT)
+			flag_redir = LEFT;
+		else if (node->type == DLEFT)
+			flag_redir = DLEFT;
+		if (node->next)
+			node = node->next;
+		else
+			break ;
+	}
+	return (flag_redir);
+}
+
+int	check_dleft_file(t_node *node)
+{
+	int	flag_file;
+
+	flag_file = TRUE;
+	while (node)
+	{
+		if (node->type == DLEFT)
+		{
+			if (node->next && node->next->type == FILE)
+				flag_file = TRUE;
+			else
+				flag_file = FALSE;
+		}
+		if (node->next)
+			node = node->next;
+		else 
+			break ;
+	}
+	return (flag_file);
 }
 
 void	execute_pipe(t_node **node, t_cmd *cmd)
@@ -227,7 +227,8 @@ void	execute_pipe(t_node **node, t_cmd *cmd)
 	{
 		waitpid(g_info.pid_child, &status, 0);
 		close(fd.pipe_fd[1]);
-		dup2(fd.pipe_fd[0], 0);
+		if (!(check_dleft_next_cmd(*node) == DLEFT && check_dleft_file(*node) == TRUE))
+			dup2(fd.pipe_fd[0], 0);
 		close(fd.pipe_fd[0]);
 		g_info.pid_child = 0;
 		g_info.exit_code = WEXITSTATUS(status);
@@ -258,7 +259,7 @@ void	ft_exec_pipe(t_node *node, t_cmd *cmd)
 		if (node->next)
 			node = node->next;
 		else
-			break ; /////////리턴이었음 그래도상관없을듯
+			break ;
 	}
 	execute_cmds(&node, cmd);
 	ft_close_fd(&fd);

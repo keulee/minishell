@@ -3,29 +3,48 @@ NAME = minishell
 SRCS = srcs/minishell.c \
 		srcs/signal.c \
 		srcs/copy_env.c \
-		srcs/parsing.c \
 		srcs/list.c \
 		srcs/ascii_logo.c \
-		srcs/parsing_quote.c \
-		srcs/parsing_operation_word.c \
+		srcs/parsing/parsing_quote.c \
+		srcs/parsing/parsing.c \
+		srcs/parsing/parsing_operation_word.c \
+		srcs/parsing/get_type_dir.c \
+		srcs/parsing/parsing_arg_word.c \
+		srcs/parsing/set_detail_type.c \
 		srcs/ft_free_exit.c \
-		srcs/parsing_arg_word.c \
-		srcs/set_detail_type.c \
-		srcs/execute.c \
-		srcs/execute_pipe.c \
-		srcs/execute_cmd.c \
-		srcs/get_type_dir.c \
+		srcs/execute/execute/execute.c \
+		srcs/execute/execute/execute2.c \
+		srcs/execute/execute/execute3.c \
+		srcs/execute/execute/execute4.c \
+		srcs/execute/execute_pipe/execute_pipe.c \
+		srcs/execute/execute_pipe/execute_pipe2.c \
+		srcs/execute/execute_cmd/execute_cmd.c \
+		srcs/execute/execute_cmd/execute_cmd2.c \
+		srcs/execute/execute_cmd/execute_cmd3.c \
 		srcs/builtin/ft_built_in.c \
 		srcs/builtin/ft_pwd.c \
-		srcs/builtin/ft_node_list_env.c \
+		srcs/builtin/list_env/ft_node_list_env.c \
+		srcs/builtin/list_env/ft_node_list_env2.c \
+		srcs/builtin/list_env/ft_node_list_env3.c \
 		srcs/builtin/ft_env.c \
-		srcs/builtin/ft_export.c \
+		srcs/builtin/export/ft_export.c \
+		srcs/builtin/export/ft_export2.c \
+		srcs/builtin/export/ft_export3.c \
+		srcs/builtin/export/ft_export4.c \
 		srcs/builtin/ft_unset.c \
-		srcs/builtin/ft_echo.c \
-		srcs/builtin/ft_cd.c \
+		srcs/builtin/echo/ft_echo.c \
+		srcs/builtin/echo/ft_echo2.c \
+		srcs/builtin/echo/ft_echo3.c \
+		srcs/builtin/echo/ft_echo4.c \
+		srcs/builtin/cd/ft_cd.c \
+		srcs/builtin/cd/ft_cd2.c \
+		srcs/builtin/cd/ft_cd3.c \
 		srcs/builtin/ft_cd_util.c \
-		srcs/builtin/ft_exit.c \
-		srcs/expansion.c
+		srcs/builtin/exit/ft_exit.c \
+		srcs/builtin/exit/ft_exit2.c \
+		srcs/expansion/expansion.c \
+		srcs/expansion/expansion2.c \
+		srcs/expansion/expansion3.c \
 
 HEADER = ./includes/minishell.h
 
@@ -33,19 +52,15 @@ OBJS = $(SRCS:.c=.o)
 
 SRCS_DIR = ./srcs
 
-LI = -L. -lft -lreadline -L /Users/$(USER)/homebrew/opt/readline/lib
-LIB = -L. -lft -lreadline -L /usr/local/opt/readline/lib
-#~/.brew/opt/readline/lib  // ecole42 complie
-#/usr/local/opt/readline/lib //keulee home complie
+LIB = -L. -lft -lreadline -L /Users/$(USER)/homebrew/opt/readline/lib
+LI = -L. -lft -lreadline -L /usr/local/opt/readline/lib
 
-IN = -I/Users/$(USER)/homebrew/opt/readline/include
-INC = -I /usr/local/opt/readline/include
-#~/.brew/opt/readline/include // ecole42 complie
-#/usr/local/opt/readline/include //keulee home complie
+INC = -I/Users/$(USER)/homebrew/opt/readline/include
+IN = -I /usr/local/opt/readline/include
 
 CC = clang
 
-CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g3 #-fsanitize=address
 
 LIBFT = libft.a
 
@@ -69,14 +84,14 @@ all: $(NAME)
 	@printf "➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n"
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIB) -o $(NAME) 
+	$(CC) $(CFLAGS) $(OBJS) $(LI) -o $(NAME) 
 
 $(LIBFT):
 	$(MAKE) -C libft
 	mv libft/$(LIBFT) .
 
 %.o : %.c $(HEADER)
-	$(CC) $(CFLAGS) -c $< -o $@ $(INC)
+	$(CC) $(CFLAGS) -c $< -o $@ $(IN)
 
 clean:
 	$(MAKE) -C libft clean

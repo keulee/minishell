@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_arg_word.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: keulee <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 00:57:03 by keulee            #+#    #+#             */
-/*   Updated: 2021/11/08 16:48:34 by keulee           ###   ########.fr       */
+/*   Updated: 2021/11/18 13:10:35 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 void	argument_word(t_cmd **cmd, char *line, int *index)
 {

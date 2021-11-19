@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 00:59:39 by keulee            #+#    #+#             */
-/*   Updated: 2021/11/18 23:21:17 by keulee           ###   ########.fr       */
+/*   Updated: 2021/11/19 22:42:13 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,7 @@ int				count_pipe(t_node *node);
 void			ft_error_message_exec(void);
 int				ft_check_pipe_error(t_node *node);
 void			ft_exec(t_cmd *cmd);
+int				check_redir(t_node *node);
 
 /* execute_cmd.c */
 char			*get_path(char *str);
@@ -266,6 +267,7 @@ void			ft_ajouter_exit_code(char **new_str, int *i);
 void			ft_ajouter_dolr_code(char **new_str, int *i);
 void			ft_reset_value_douq(t_cmd *cmd, t_node **node);
 void			ft_expension(t_cmd **cmd);
+int				check_exit_char(char c);
 
 /*
  * built in

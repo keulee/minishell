@@ -7,3 +7,5 @@ minishell.dSYM/
 .DS_Store
 groupemini/
 keu_copy/
+*.swp
+.vscode

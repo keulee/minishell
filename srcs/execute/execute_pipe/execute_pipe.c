@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipe.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 12:45:50 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/11/18 21:15:05 by hyungyoo         ###   ########.fr       */
+/*   Updated: 2021/11/19 22:38:41 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,11 @@ int	ft_left_fd_pipe(t_node **node, t_fd_pipe *fd, int flag)
 	{
 		ft_putstr_fd("minishell: syntax error ", 2);
 		ft_putstr_fd("near unexpected token 'newline'\n", 2);
+		return (0);
+	}	
+	else if (check_redir(*node))
+	{
+		ft_putstr_fd("minisehll: syntax error near unexpected token `<'\n", 2);
 		return (0);
 	}
 	(*node) = (*node)->next;
@@ -119,6 +124,11 @@ int	ft_dleft_fd_pipe(t_node **node, t_fd_pipe *fd, t_cmd *cmd, int flag)
 	if (!(*node)->next || ((*node)->next && (*node)->next->type == PIPE))
 	{
 		ft_putstr_fd("minishell: parse error near\n", 2);
+		return (0);
+	}
+	else if (check_redir(*node))
+	{
+		ft_putstr_fd("minisehll: syntax error near unexpected token `<<'\n", 2);
 		return (0);
 	}
 	(*node) = (*node)->next;

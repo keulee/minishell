@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 00:43:09 by keulee            #+#    #+#             */
-/*   Updated: 2021/11/19 22:37:15 by keulee           ###   ########.fr       */
+/*   Updated: 2021/11/20 15:49:11 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,34 @@ static int	count_word(char *line)
 	return (count);
 }
 
+void	set_export_unset_flag(char *line)
+{
+	int i;
+	int	index;
+
+	i = 0;
+	index = 0;
+	if (ft_strstr(line, "export"))
+	{
+		index = ft_strstr(&line[i], "export") + 1;
+		if (line[index])
+		{
+			if (line[index + 1] == '\"' && line[index + 2] == '\"')
+				g_info.export_flag = 1;
+		}
+	}
+	index = 0;
+	if (ft_strstr(&line[i], "unset"))
+	{
+		index = ft_strstr(&line[i], "unset") + 1;
+		if (line[index])
+		{
+			if (line[index + 1] == '\"' && line[index + 2] == '\"')
+				g_info.unset_flag = 1;
+		}
+	}
+}
+
 char	*remove_quote(char *line)
 {
 	char	*str;
@@ -82,6 +110,8 @@ char	*remove_quote(char *line)
 	str = malloc(sizeof(char) * (count + 1));
 	i = 0;
 	j = 0;
+	if (ft_strstr(line, "export") || ft_strstr(line, "unset"))
+		set_export_unset_flag(line);
 	while (line[i])
 	{
 		if (line[i] == '\"' && line[i + 1] == '\"')
@@ -104,9 +134,12 @@ int	ft_parsing(char *line, t_cmd **cmd)
 {
 	int		i;
 	char	*str;
+	int		flag;
 
-	i = -1;
+	g_info.unset_flag = 0;
+	g_info.export_flag = 0;
 	str = remove_quote(line);
+	i = -1;
 	while (str[++i])
 	{
 		while (str[i] == ' ')
@@ -116,6 +149,8 @@ int	ft_parsing(char *line, t_cmd **cmd)
 		if (str[i + 1] != ' ' && str[i + 1] != '\0')
 			insert_nospace_flag(cmd);
 	}
+	printf("export flag = %d\n", g_info.export_flag);
+	printf("unset flag = %d\n", g_info.unset_flag);
 	free(str);
 	return (0);
 }

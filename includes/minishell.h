@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 00:59:39 by keulee            #+#    #+#             */
-/*   Updated: 2021/11/19 22:42:13 by keulee           ###   ########.fr       */
+/*   Updated: 2021/11/20 00:10:37 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@
 /*
 ** TYPE in s_pars
 */
-// # define WORD 		0
 # define SINQ 		1
 # define DOUQ 		2
 # define DOLR 		3
@@ -84,6 +83,8 @@ typedef struct s_info
 	int				flag_pwd;
 	char			*last_env_str;
 	int				pipe_flag;
+	int				export_flag;
+	int				unset_flag;
 }				t_info;
 
 typedef struct s_fd_pipe

@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 00:59:39 by keulee            #+#    #+#             */
-/*   Updated: 2021/11/20 00:10:37 by keulee           ###   ########.fr       */
+/*   Updated: 2021/11/20 22:44:19 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_node
 	char			*str;
 	int				flag_nospace;
 	int				fd[2];
+	int				flag_emptystr;
 	struct s_node	*prev;
 	struct s_node	*next;
 }				t_node;
@@ -83,8 +84,6 @@ typedef struct s_info
 	int				flag_pwd;
 	char			*last_env_str;
 	int				pipe_flag;
-	int				export_flag;
-	int				unset_flag;
 }				t_info;
 
 typedef struct s_fd_pipe
@@ -132,7 +131,8 @@ int				main(int ac, char **av, char **env);
 /* parsing.c */
 int				parsing_process(char *str, t_cmd **cmd, int *i);
 void			insert_nospace_flag(t_cmd **cmd);
-char			*remove_quote(char *line);
+// char			*remove_quote(char *line);
+char			*remove_quote(char *line, int *flag);
 int				ft_parsing(char *line, t_cmd **cmd);
 
 /* parsing_quote.c*/

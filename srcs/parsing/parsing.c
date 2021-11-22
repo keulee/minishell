@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 00:43:09 by keulee            #+#    #+#             */
-/*   Updated: 2021/11/20 23:09:52 by keulee           ###   ########.fr       */
+/*   Updated: 2021/11/21 15:30:27 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,15 @@ void	insert_nospace_flag(t_cmd **cmd)
 	if (!*cmd)
 		return ;
 	node = (*cmd)->cmd_start;
-	while (node->next != NULL)
-		node = node->next;
-	node->flag_nospace = 1;
+	while (node)
+	{
+		if (node->next)
+			node = node->next;
+		else
+			break ;
+	}
+	if (node)
+		node->flag_nospace = 1;
 }
 
 static int	count_word(char *line)
@@ -199,7 +205,7 @@ int	ft_parsing(char *line, t_cmd **cmd)
 			i++;
 		if (parsing_process(str, cmd, &i) == 1)
 			return (1);
-		if (str[i + 1] != ' ' && str[i + 1] != '\0')
+		if (str[i + 1] && str[i + 1] != ' ' && str[i + 1] != '\0')
 			insert_nospace_flag(cmd);
 	}
 	init_emptystr_flag(cmd);

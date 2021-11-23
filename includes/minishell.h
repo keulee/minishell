@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 00:59:39 by keulee            #+#    #+#             */
-/*   Updated: 2021/11/20 22:44:19 by keulee           ###   ########.fr       */
+/*   Updated: 2021/11/23 01:47:11 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,7 +312,7 @@ void			ft_export_env(void);
 void			ft_error_message_export(char *str);
 int				ft_check_num(char *str);
 int				ft_check_str(char *str);
-int				ft_check_all(char **str);
+void			ft_check_all(char **str);
 char			*ft_all_arg(t_node **cmd);
 void			ft_export_set_node(char **str);
 int				ft_check_arg(t_node *node);

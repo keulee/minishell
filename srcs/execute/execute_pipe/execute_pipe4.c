@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_pipe2.c                                    :+:      :+:    :+:   */
+/*   execute_pipe4.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 12:45:50 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/11/25 18:44:48 by hyungyoo         ###   ########.fr       */
+/*   Updated: 2021/11/25 23:25:59 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ int	check_heredoc_fd(t_node **node)
 
 void	execute_pipe(t_node **node, t_cmd *cmd)
 {
-	int			status;
 	t_fd_pipe	fd;
 
 	pipe(fd.pipe_fd);
@@ -51,13 +50,11 @@ void	execute_pipe(t_node **node, t_cmd *cmd)
 	}
 	else if (g_info.pid_child > 0)
 	{
-		waitpid(g_info.pid_child, &status, 0);
 		close(fd.pipe_fd[1]);
 		if (check_heredoc_fd(node))
 			dup2(fd.pipe_fd[0], 0);
 		close(fd.pipe_fd[0]);
 		g_info.pid_child = 0;
-		g_info.exit_code = WEXITSTATUS(status);
 		ft_move_to_last(node);
 		ft_update_last_env((*node)->str);
 	}
@@ -69,6 +66,7 @@ void	ft_exec_pipe(t_node *node, t_cmd *cmd)
 	int		i;
 	int		pipe_count;
 	t_fd	fd;
+	int		status;
 
 	i = 0;
 	ft_set_fd(&fd);
@@ -87,6 +85,17 @@ void	ft_exec_pipe(t_node *node, t_cmd *cmd)
 		else
 			break ;
 	}
-	execute_cmds(&node, cmd);
-	ft_close_fd(&fd);
+	g_info.pid_child = fork();
+	if (g_info.pid_child == 0)
+	{
+		execute_cmds(&node, cmd);
+		ft_exit_minishell(g_info.exit_code, &cmd);
+	}
+	else
+	{
+		g_info.exit_code = WEXITSTATUS(status);
+		waitpid(0, &status, 0);
+		ft_close_fd(&fd);
+	}
+	waitpid(0, &status, 0);
 }

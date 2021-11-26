@@ -6,11 +6,18 @@
 /*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 12:59:28 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/11/20 20:47:10 by hyungyoo         ###   ########.fr       */
+/*   Updated: 2021/11/25 18:48:45 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+int	check_exit_char(char c)
+{
+	if (c == ' ' || c == '|' || c == 39 || c == '$' || c == '=' || c == '!')
+		return (1);
+	return (0);
+}
 
 void	ft_ajouter_dolr_code(char **new_str, int *i)
 {
@@ -22,12 +29,7 @@ void	ft_ajouter_dolr_code(char **new_str, int *i)
 	free(num);
 	(*i) = (*i) + 2;
 }
-/*
-if (((*node)->str)[i] == '$' && ((*node)->str)[i + 1]
-			&& ((*node)->str)[i + 1] && ((*node)->str)[i + 1] != '?'
-			&& ((*node)->str)[i + 1] != '$' && ((*node)->str)[i + 1] != ' ')
-			ft_ajouter_dolr(&new_str, (*node)->str, &(i));
-*/
+
 void	ft_reset_value_douq(t_cmd *cmd, t_node **node)
 {
 	char	*new_str;
@@ -67,7 +69,10 @@ void	ft_expension(t_cmd **cmd)
 		if (node->type == DOLR && node->flag_nospace == 1 && node->next
 			&& node->next->type == ARG && (ft_strcmp(node->next->str, "?")
 				&& ft_strcmp(node->next->str, "$")))
+		{
 			ft_reset_value(*cmd, &node);
+			ft_reset_value_douq(*cmd, &node);
+		}
 		else if (node->type == DOLR && node->flag_nospace == 1 && node->next
 			&& (!ft_strcmp(node->next->str, "?")
 				|| !ft_strcmp(node->next->str, "$")))
@@ -77,6 +82,6 @@ void	ft_expension(t_cmd **cmd)
 		if (node->next)
 			node = node->next;
 		else
-			return ;
+			break ;
 	}
 }

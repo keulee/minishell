@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 18:08:22 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/11/23 01:50:15 by keulee           ###   ########.fr       */
+/*   Updated: 2021/11/25 23:20:16 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@ void	execute_parsing(t_cmd *cmd, char *line)
 	line = NULL;
 }
 
+/* print_cmdline(&(cmd)); */
 void	execute_minishell(t_cmd *cmd, char *line)
 {
 	set_detail_type(&(cmd));
+	ft_expension_num_quote(cmd);
 	ft_expension(&cmd);
 	ft_exec(cmd);
-	print_cmdline(&(cmd));
-	free_list(&(cmd));
 	free(line);
 	line = NULL;
 }
@@ -61,6 +61,7 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		}
 		execute_minishell(cmd, line);
+		free_list(&cmd);
 	}
 	return (0);
 }

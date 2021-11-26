@@ -6,7 +6,7 @@
 /*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 19:35:32 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/11/20 19:21:28 by hyungyoo         ###   ########.fr       */
+/*   Updated: 2021/11/25 17:56:28 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_check_egal(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (i != 0 && str[i] == '=' && str[i - 1] == ' ')
+		if (str[i] == ' ' && str[i + 1] == '=')
 			return (0);
 		i++;
 	}
@@ -42,21 +42,55 @@ int	ft_check_str(char *str)
 	return (1);
 }
 
-void	ft_check_all(char **str)
+/*
+ *&& !ft_strstr(key_tmp, ft_getenv(g_info.envp, "USER")))
+ */
+int	ft_check_value(char *str)
+{
+	t_envp	*envp;
+	t_envp	*tmp;
+	char	*key_tmp;
+
+	envp = g_info.envp;
+	tmp = envp->prev;
+	key_tmp = ft_key(str);
+	while (envp != tmp)
+	{
+		if (ft_strstr(key_tmp, envp->envp_value))
+		{
+			free(key_tmp);
+			return (1);
+		}
+		envp = envp->next;
+	}
+	if (ft_strstr(key_tmp, envp->envp_value))
+	{
+		free(key_tmp);
+		return (1);
+	}
+	free(key_tmp);
+	return (0);
+}
+
+int	ft_check_all(char **str)
 {
 	int	i;
+	int	size;
 
+	size = ft_tab_size(str);
 	i = 0;
 	while (str[i])
 	{
 		if (!ft_check_str(str[i]) || !ft_strcmp(str[i], "=")
-			|| !ft_check_egal(str[i]))
+			|| !ft_check_egal(str[i]) || ft_check_value(str[i]))
 		{
 			ft_error_message_export(str[i]);
 			g_info.exit_code = 1;
+			size--;
 		}
 		i++;
 	}
+	return (size);
 }
 
 void	ft_export_set_node(char **str)

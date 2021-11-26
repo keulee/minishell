@@ -6,7 +6,7 @@
 /*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 12:59:28 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/11/18 13:00:19 by hyungyoo         ###   ########.fr       */
+/*   Updated: 2021/11/23 16:32:02 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	ft_reset_value(t_cmd *cmd, t_node **node)
 		return ;
 	next_node = (*node)->next;
 	tmp = (*node)->str;
-	(*node)->str = ft_strdup(ft_getenv(g_info.envp, next_node->str));
+	(*node)->str = ft_strjoin("$", (next_node->str));
 	(*node)->type = ARG;
 	(*node)->flag_nospace = next_node->flag_nospace;
 	free(tmp);

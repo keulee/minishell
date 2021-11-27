@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 03:39:15 by keulee            #+#    #+#             */
-/*   Updated: 2021/11/25 23:20:03 by keulee           ###   ########.fr       */
+/*   Updated: 2021/11/27 16:16:26 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	get_listsize(t_node **node)
 	}
 	return (size);
 }
-/*
+
 void	print_cmdline(t_cmd **cmd)
 {
 	t_node	*tmp;
@@ -100,21 +100,21 @@ void	print_cmdline(t_cmd **cmd)
 		if (tmp->type >= CMD)
 		{
 			if (i >= 10)
-				printf("  %d  |   %d  | %s(%d, %d) \n", i++,
+				printf("  %d  |   %d  | %s(%d, %d) \n", i++, \
 				tmp->type, tmp->str, tmp->flag_nospace, tmp->flag_emptystr);
 			else
-				printf("  %d   |   %d  | %s(%d, %d) \n",
-				i++, tmp->type, tmp->str, tmp->flag_nospace, tmp->flag_emptystr);
+				printf("  %d   |   %d  | %s(%d, %d) \n", \
+				i++, tmp->type, tmp->str, tmp->flag_nospace, \
+				tmp->flag_emptystr);
 		}
 		else if (i >= 10)
-			printf("  %d  |   %d   | %s(%d, %d) \n", i++,
+			printf("  %d  |   %d   | %s(%d, %d) \n", i++, \
 			tmp->type, tmp->str, tmp->flag_nospace, tmp->flag_emptystr);
 		else
-			printf("  %d   |   %d   | %s(%d, %d) \n", i++,
+			printf("  %d   |   %d   | %s(%d, %d) \n", i++, \
 			tmp->type, tmp->str, tmp->flag_nospace, tmp->flag_emptystr);
 		tmp = tmp->next;
 	}
 	printf("\n");
 	printf("----------DONE---------\n");
 }
-*/

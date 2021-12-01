@@ -6,7 +6,7 @@
 /*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 12:41:43 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/11/30 23:41:50 by hyungyoo         ###   ########.fr       */
+/*   Updated: 2021/11/29 16:03:50 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,13 +81,11 @@ void	heredoc_child(t_fd *fd, t_cmd *cmd, t_node **node)
 	close(fd->fd_heredoc_pipe[0]);
 	dup2(fd->fd_heredoc_pipe[1], 1);
 	ft_putstr_fd("heredoc> ", 2);
-	line = NULL;
 	while (get_next_line(0, &line) > 0)
 	{
 		if (!ft_strcmp(line, (*node)->str))
 		{
 			free(line);
-			line = NULL;
 			break ;
 		}
 		else
@@ -95,7 +93,6 @@ void	heredoc_child(t_fd *fd, t_cmd *cmd, t_node **node)
 		ft_putstr_fd(line, 1);
 		ft_putstr_fd("\n", 1);
 		free(line);
-		line = NULL;
 	}
 	ft_exit_minishell(0, &cmd);
 }

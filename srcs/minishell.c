@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 18:08:22 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/12/01 16:32:28 by keulee           ###   ########.fr       */
+/*   Updated: 2021/12/01 17:11:51 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ int	main(int ac, char **av, char **env)
 	char	*line;
 	t_cmd	*cmd;
 
+	if (ac != 1)
+		return (0);
 	ft_initial(env, ac, av);
 	ascii_logo_lol();
 	while (1)

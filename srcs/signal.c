@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 15:57:46 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/12/01 16:32:38 by keulee           ###   ########.fr       */
+/*   Updated: 2021/12/01 17:11:58 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,19 +31,18 @@ void	handler(int signum)
 {
 	if (g_info.pid_child != 0)
 		hanlder_child_pid(signum);
-	else if (signum == SIGINT || signum == SIGQUIT)
+	else if (signum == SIGQUIT)
 	{
 		ft_putstr("\r");
 		rl_on_new_line();
 		rl_redisplay();
 		ft_putstr("  \b\b");
-		if (signum == SIGINT)
-		{
-			ft_putstr("\n");
-			rl_on_new_line();
-			rl_replace_line("", 0);
-			rl_redisplay();
-		}
+	}
+	else if (signum == SIGINT)
+	{
+		ft_putstr("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
 	}
 	return ;
 }

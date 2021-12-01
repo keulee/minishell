@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 00:43:09 by keulee            #+#    #+#             */
-/*   Updated: 2021/12/01 22:41:21 by keulee           ###   ########.fr       */
+/*   Updated: 2021/12/01 23:05:41 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,14 +76,6 @@ int	count_word(char *line)
 	}
 	return (count);
 }
-
-// int	is_emptystr(char *line)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (line)
-// }
 
 int	find_cmd_with_emptystr(char *line, char *cmd)
 {

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   parsing2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 00:43:09 by keulee            #+#    #+#             */
-/*   Updated: 2021/11/25 18:56:58 by hyungyoo         ###   ########.fr       */
+/*   Updated: 2021/12/01 16:56:52 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,11 @@ int	ft_parsing(char *line, t_cmd **cmd)
 	int		flag;
 
 	flag = 0;
+	if (!ft_strcmp(line, "\"\"") || !ft_strcmp(line, "\'\'"))
+	{
+		insert_node(cmd, ARG, ft_strdup(""));
+		return (0);
+	}
 	str = remove_quote(line, &flag);
 	i = -1;
 	while (str[++i])

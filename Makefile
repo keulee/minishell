@@ -25,6 +25,7 @@ SRCS = srcs/minishell.c \
 		srcs/execute/execute_cmd/execute_cmd.c \
 		srcs/execute/execute_cmd/execute_cmd2.c \
 		srcs/execute/execute_cmd/execute_cmd3.c \
+		srcs/execute/execute_cmd/execute_cmd4.c \
 		srcs/builtin/ft_built_in.c \
 		srcs/builtin/ft_pwd.c \
 		srcs/builtin/list_env/ft_node_list_env.c \
@@ -44,7 +45,8 @@ SRCS = srcs/minishell.c \
 		srcs/builtin/cd/ft_cd.c \
 		srcs/builtin/cd/ft_cd2.c \
 		srcs/builtin/cd/ft_cd3.c \
-		srcs/builtin/cd/ft_cd_util.c \
+		srcs/builtin/cd/ft_cd4.c \
+		srcs/builtin/cd/ft_cd5.c \
 		srcs/builtin/exit/ft_exit.c \
 		srcs/builtin/exit/ft_exit2.c \
 		srcs/expansion/expansion.c \
@@ -95,7 +97,7 @@ all: $(NAME)
 	@printf "➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n"
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIB) -o $(NAME) 
+	$(CC) $(CFLAGS) -lncurses $(OBJS) $(LIB) -o $(NAME)
 
 $(LIBFT):
 	$(MAKE) -C libft

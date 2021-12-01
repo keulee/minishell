@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 03:39:15 by keulee            #+#    #+#             */
-/*   Updated: 2021/11/28 23:08:08 by keulee           ###   ########.fr       */
+/*   Updated: 2021/12/01 16:32:20 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,18 +100,17 @@ void	print_cmdline(t_cmd **cmd)
 		if (tmp->type >= CMD)
 		{
 			if (i >= 10)
-				printf("  %d  |   %d  | %s(%d, %d) \n", i++, \
+				printf("  %d  |   %d  | %s(%d, %d) \n", i++,
 				tmp->type, tmp->str, tmp->flag_nospace, tmp->flag_emptystr);
 			else
-				printf("  %d   |   %d  | %s(%d, %d) \n", \
-				i++, tmp->type, tmp->str, tmp->flag_nospace, \
-				tmp->flag_emptystr);
+				printf("  %d   |   %d  | %s(%d, %d) \n",
+				i++, tmp->type, tmp->str, tmp->flag_nospace, tmp->flag_emptystr);
 		}
 		else if (i >= 10)
-			printf("  %d  |   %d   | %s(%d, %d) \n", i++, \
+			printf("  %d  |   %d   | %s(%d, %d) \n", i++,
 			tmp->type, tmp->str, tmp->flag_nospace, tmp->flag_emptystr);
 		else
-			printf("  %d   |   %d   | %s(%d, %d) \n", i++, \
+			printf("  %d   |   %d   | %s(%d, %d) \n", i++,
 			tmp->type, tmp->str, tmp->flag_nospace, tmp->flag_emptystr);
 		tmp = tmp->next;
 	}

@@ -6,11 +6,13 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 18:08:22 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/11/28 23:07:41 by keulee           ###   ########.fr       */
+/*   Updated: 2021/12/01 16:32:28 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+t_info	g_info;
 
 void	execute_eof(t_cmd *cmd, char *line)
 {
@@ -35,7 +37,7 @@ void	execute_minishell(t_cmd *cmd, char *line)
 	ft_expension_num_quote(cmd);
 	ft_expension(&cmd);
 	ft_exec(cmd);
-	//print_cmdline(&(cmd));
+	print_cmdline(&(cmd));
 	free(line);
 	line = NULL;
 }
@@ -46,6 +48,7 @@ int	main(int ac, char **av, char **env)
 	t_cmd	*cmd;
 
 	ft_initial(env, ac, av);
+	ascii_logo_lol();
 	while (1)
 	{
 		signal(SIGINT, handler);

@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 00:59:39 by keulee            #+#    #+#             */
-/*   Updated: 2021/11/26 20:44:34 by hyungyoo         ###   ########.fr       */
+/*   Updated: 2021/12/01 16:31:35 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ typedef struct s_fd
 }				t_fd;
 
 /* one global variable */
-t_info	g_info;
+extern t_info	g_info;
 
 /*
  * logo
@@ -235,10 +235,12 @@ int				ft_error_message(char *path, char **argv, char **env);
 int				ft_error_message_no_path(char **argv, char **env);
 void			ft_execmd_child(t_node *node);
 int				ft_check_path_exec(t_node *node);
-
 void			ft_error_message_execmd(t_cmd *cmd_start);
 void			ft_execmd(t_node *node, t_cmd *cmd_start);
 int				check_dleft_error(t_node **node);
+void			ft_add_cmd_path(char **path, char *split_str);
+char			*ft_get_relative_path(char *str);
+char			*ft_reset_cmd_path(char *str);
 
 /* execute_pipe.c */
 int				check_cmd(t_node *node);
@@ -371,14 +373,15 @@ void			ft_update_path_oldpath(char *path_env, char *old_pwd);
 void			ft_exec_home(void);
 void			ft_exec_path(char *new_path);
 int				ft_num_arg_cd(t_node *cmd);
-void			ft_cd(t_node **cmd);
-
-/* ft_cd_util.c */
 char			*ft_strjoin_cd(char *s1, char *s2);
 int				ft_strlen_avant_slash(char *path);
 void			ft_avant_path(char **path);
 void			ft_ajouter_path(char **path, char *add_path);
 void			ft_cd_exec(char **path, char *new_path);
+void			ft_cd(t_node **cmd);
+void			ft_exec_root_path(char *old_path);
+void			check_root_path(char **path, char *new_path);
+int				ft_is_slash(char *str);
 
 /* ft_echo.c */
 int				ft_check_option(char *str);

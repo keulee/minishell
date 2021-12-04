@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 18:08:22 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/12/01 17:11:51 by keulee           ###   ########.fr       */
+/*   Updated: 2021/12/04 16:27:24 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	execute_minishell(t_cmd *cmd, char *line)
 	ft_expension_num_quote(cmd);
 	ft_expension(&cmd);
 	ft_exec(cmd);
-	print_cmdline(&(cmd));
 	free(line);
 	line = NULL;
 }

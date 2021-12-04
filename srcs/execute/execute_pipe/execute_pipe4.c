@@ -6,7 +6,7 @@
 /*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 12:45:50 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/12/01 01:17:19 by hyungyoo         ###   ########.fr       */
+/*   Updated: 2021/12/02 18:25:37 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,60 +34,41 @@ int	check_heredoc_fd(t_node **node)
 	return (0);
 }
 
-void	execute_pipe(t_node **node, t_cmd *cmd)
+int	check_only_heredoc(t_node *node)
 {
-	int			status;
-	t_fd_pipe	fd;
-
-	pipe(fd.pipe_fd);
-	g_info.pid_child = fork();
-	if (g_info.pid_child == 0)
+	while (node && node->type != PIPE)
 	{
-		close(fd.pipe_fd[0]);
-		dup2(fd.pipe_fd[1], 1);
-		execute_cmds_pipe(node, cmd, &fd);
-		close(fd.pipe_fd[1]);
-		ft_exit_minishell(g_info.exit_code, &cmd);
-	}
-	else if (g_info.pid_child > 0)
-	{
-		//waitpid(g_info.pid_child, &status, 0);
-		close(fd.pipe_fd[1]);
-		if (check_heredoc_fd(node))
-			dup2(fd.pipe_fd[0], 0);
-		close(fd.pipe_fd[0]);
-		g_info.pid_child = 0;
-		g_info.exit_code = WEXITSTATUS(status);
-		ft_move_to_last(node);
-		ft_update_last_env((*node)->str);
-	}
-}
-
-void	ft_exec_pipe(t_node *node, t_cmd *cmd)
-{
-	t_node	*tmp;
-	int		i;
-	int		pipe_count;
-	t_fd	fd;
-
-	i = 0;
-	ft_set_fd(&fd);
-	pipe_count = count_pipe(node);
-	tmp = node->prev;
-	while (node != tmp && i < pipe_count)
-	{
-		execute_pipe(&node, cmd);
-		if (node->next && node->next->type == PIPE)
-		{
-			i++;
-			node = node->next;
-		}
+		if (node->type == DLEFT)
+			return (1);
 		if (node->next)
 			node = node->next;
 		else
 			break ;
 	}
-	execute_cmds(&node, cmd);
-	ft_close_fd(&fd);
-	wait(NULL);
+	return (0);
+}
+
+int	next_cmd_heredoc(t_node *node)
+{
+	if (!check_next_pipe_node(&node))
+		return (0);
+	while (node)
+	{
+		if (node->type == DLEFT)
+			return (1);
+		if (node->next)
+			node = node->next;
+		else
+			break ;
+	}
+	return (0);
+}
+
+void	execute_pipe_child(t_node **node, t_cmd *cmd, t_fd_pipe *fd)
+{
+	close(fd->pipe_fd[0]);
+	dup2(fd->pipe_fd[1], 1);
+	execute_cmds_pipe(node, cmd, fd);
+	close(fd->pipe_fd[1]);
+	ft_exit_minishell(g_info.exit_code, &cmd);
 }

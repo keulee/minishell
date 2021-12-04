@@ -6,7 +6,7 @@
 /*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 00:59:39 by keulee            #+#    #+#             */
-/*   Updated: 2021/12/01 17:10:36 by keulee           ###   ########.fr       */
+/*   Updated: 2021/12/04 16:26:57 by keulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,12 @@
 # include <unistd.h>
 # include <dirent.h>
 # include <errno.h>
+# include <limits.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <sys/sysctl.h>
 
 # include "../libft/libft.h"
 
@@ -44,6 +46,11 @@
 # define ARG		12
 # define FILE		13
 # define LIMITER	14
+
+# ifndef PID_MAX_LIMIT
+
+#  define PID_MAX_LIMIT 99999
+# endif
 
 # define TRUE 1
 # define FALSE 0
@@ -80,9 +87,11 @@ typedef struct s_info
 {
 	struct s_envp	*envp;
 	pid_t			pid_child;
+	pid_t			pid_pipe_child[PID_MAX_LIMIT];
 	int				exit_code;
 	int				flag_pwd;
 	char			*last_env_str;
+	char			*home;
 	int				pipe_flag;
 }				t_info;
 
@@ -188,6 +197,7 @@ void			ft_initial(char **env, int ac, char **av);
 void			ft_free_env(t_envp *envp);
 void			ft_exit(int exit_code);
 void			ft_exit_minishell(int exit_code, t_cmd **cmd);
+void			reset_pid(void);
 
 /* 
  * list of cmd line
@@ -241,6 +251,7 @@ int				check_dleft_error(t_node **node);
 void			ft_add_cmd_path(char **path, char *split_str);
 char			*ft_get_relative_path(char *str);
 char			*ft_reset_cmd_path(char *str);
+void			ft_error_message_home(t_cmd *cmd_start);
 
 /* execute_pipe.c */
 int				check_cmd(t_node *node);
@@ -262,8 +273,13 @@ int				check_dleft(t_node *node);
 int				check_dleft_next_cmd(t_node *node);
 int				check_dleft_file(t_node *node);
 int				check_heredoc_fd(t_node **node);
-void			execute_pipe(t_node **node, t_cmd *cmd);
+void			execute_pipe(t_node **node, t_cmd *cmd, int i);
 void			ft_exec_pipe(t_node *node, t_cmd *cmd);
+void			wait_pid(int pipe_count);
+void			execute_pipe_child(t_node **node, t_cmd *cmd,
+					t_fd_pipe *fd);
+int				check_only_heredoc(t_node *node);
+int				next_cmd_heredoc(t_node *node);
 
 /* expansion.c */
 void			ft_del_list_one_node(t_cmd *cmd, t_node *node);
@@ -314,6 +330,7 @@ char			*ft_getenv_pwd(void);
 void			ft_pwd(t_node **cmd);
 
 /* ft_env.c */
+void			ft_usleep(int i);
 void			ft_update_last_env(char	*path);
 void			ft_env(t_node **cmd);
 
@@ -368,9 +385,9 @@ int				ft_check_error(char **path, char *new_path);
 int				ft_exec_chdir(char **path, char *new_path, char *path_tmp,
 					char **split_new_path);
 int				ft_exec_dir(char **path, char *new_path);
-int				ft_get_path_home(char **path);
+int				ft_get_path_home(char **path, char *str);
 void			ft_update_path_oldpath(char *path_env, char *old_pwd);
-void			ft_exec_home(void);
+void			ft_exec_home(char *str);
 void			ft_exec_path(char *new_path);
 int				ft_num_arg_cd(t_node *cmd);
 char			*ft_strjoin_cd(char *s1, char *s2);
@@ -382,6 +399,7 @@ void			ft_cd(t_node **cmd);
 void			ft_exec_root_path(char *old_path);
 void			check_root_path(char **path, char *new_path);
 int				ft_is_slash(char *str);
+void			ft_exec_old_path(void);
 
 /* ft_echo.c */
 int				ft_check_option(char *str);

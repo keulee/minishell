@@ -1,7 +1,19 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: keulee <keulee@student.42.fr>              +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2021/12/02 00:18:37 by hyungyoo          #+#    #+#              #
+#    Updated: 2021/12/04 16:27:39 by keulee           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = minishell
 
 SRCS = srcs/minishell.c \
-		srcs/signal.c \
+		srcs/signal/signal.c \
 		srcs/copy_env.c \
 		srcs/list.c \
 		srcs/ascii_logo.c \
@@ -23,6 +35,7 @@ SRCS = srcs/minishell.c \
 		srcs/execute/execute_pipe/execute_pipe2.c \
 		srcs/execute/execute_pipe/execute_pipe3.c \
 		srcs/execute/execute_pipe/execute_pipe4.c \
+		srcs/execute/execute_pipe/execute_pipe5.c \
 		srcs/execute/execute_cmd/execute_cmd.c \
 		srcs/execute/execute_cmd/execute_cmd2.c \
 		srcs/execute/execute_cmd/execute_cmd3.c \
@@ -65,13 +78,17 @@ SRCS_DIR = ./srcs
 
 LIB = -L. -lft -lreadline -L /Users/$(USER)/homebrew/opt/readline/lib
 LI = -L. -lft -lreadline -L /usr/local/opt/readline/lib
+#~/.brew/opt/readline/lib  // ecole42 complie
+#/usr/local/opt/readline/lib //keulee home complie
 
 INC = -I/Users/$(USER)/homebrew/opt/readline/include
 IN = -I /usr/local/opt/readline/include
+#~/.brew/opt/readline/include // ecole42 complie
+#/usr/local/opt/readline/include //keulee home complie
 
 CC = clang
 
-CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g3 #-fsanitize=address
 
 LIBFT = libft.a
 
@@ -95,22 +112,22 @@ all: $(NAME)
 	@printf "➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n"
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) -lncurses $(OBJS) $(LI) -o $(NAME)
+	@$(CC) $(CFLAGS) -lncurses $(OBJS) $(LIB) -o $(NAME)
 
 $(LIBFT):
-	$(MAKE) -C libft
-	mv libft/$(LIBFT) .
+	@$(MAKE) -C libft
+	@mv libft/$(LIBFT) .
 
 %.o : %.c $(HEADER)
-	$(CC) $(CFLAGS) -c $< -o $@ $(IN)
+	@$(CC) $(CFLAGS) -c $< -o $@ $(INC)
 
 clean:
-	$(MAKE) -C libft clean
-	$(RM) $(OBJS)
+	@$(MAKE) -C libft clean
+	@$(RM) $(OBJS)
 
 fclean: clean
-	$(MAKE) -C libft fclean
-	$(RM) $(NAME) $(LIBFT)
+	@$(MAKE) -C libft fclean
+	@$(RM) $(NAME) $(LIBFT)
 
 re: fclean all
 

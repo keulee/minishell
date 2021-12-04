@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_type_dir.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keulee <keulee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hyungyoo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 13:06:17 by hyungyoo          #+#    #+#             */
-/*   Updated: 2021/12/03 11:08:04 by keulee           ###   ########.fr       */
+/*   Updated: 2021/11/19 17:28:58 by hyungyoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,6 @@ void	ft_change_type(t_node **node)
 		(*node) = (*node)->next;
 		if (!check_redir(*node))
 			(*node)->type = FILE;
-		else if (check_redir(*node) && (*node)->next && !check_redir((*node)->next))
-			(*node)->next->type = FILE;
 	}
 }
 

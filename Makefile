@@ -78,13 +78,9 @@ SRCS_DIR = ./srcs
 
 LIB = -L. -lft -lreadline -L /Users/$(USER)/homebrew/opt/readline/lib
 LI = -L. -lft -lreadline -L /usr/local/opt/readline/lib
-#~/.brew/opt/readline/lib  // ecole42 complie
-#/usr/local/opt/readline/lib //keulee home complie
 
 INC = -I/Users/$(USER)/homebrew/opt/readline/include
 IN = -I /usr/local/opt/readline/include
-#~/.brew/opt/readline/include // ecole42 complie
-#/usr/local/opt/readline/include //keulee home complie
 
 CC = clang
 
@@ -112,14 +108,14 @@ all: $(NAME)
 	@printf "➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n"
 
 $(NAME): $(LIBFT) $(OBJS)
-	@$(CC) $(CFLAGS) -lncurses $(OBJS) $(LIB) -o $(NAME)
+	@$(CC) $(CFLAGS) -lncurses $(OBJS) $(LI) -o $(NAME)
 
 $(LIBFT):
 	@$(MAKE) -C libft
 	@mv libft/$(LIBFT) .
 
 %.o : %.c $(HEADER)
-	@$(CC) $(CFLAGS) -c $< -o $@ $(INC)
+	@$(CC) $(CFLAGS) -c $< -o $@ $(IN)
 
 clean:
 	@$(MAKE) -C libft clean
